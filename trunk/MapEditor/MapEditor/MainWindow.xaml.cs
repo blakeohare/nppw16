@@ -48,6 +48,13 @@ namespace MapEditor
 					new ResizeDialog(this.ActiveModel).ShowDialog();
 				}
 			};
+			this.menu_edit_maptype.Click += (sender, e) =>
+			{
+				if (this.ActiveModel != null)
+				{
+					new MapTypeDialog(this.ActiveModel).ShowDialog();
+				}
+			};
 
 			this.SizeChanged += (sender, e) =>
 			{
