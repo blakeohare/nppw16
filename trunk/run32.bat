@@ -1,3 +1,3 @@
 @echo OFF
-%py32%\python.exe util/concat.py
-%py32%\python.exe rungame.py
+"%py32%"\python.exe util/concat.py
+"%py32%"\python.exe rungame.py
