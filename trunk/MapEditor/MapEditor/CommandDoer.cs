@@ -50,7 +50,7 @@ namespace MapEditor
 		public static void Open(MainWindow window, Model model)
 		{
 			bool goAhead = true;
-			if (mode != null && model.IsDirty && !CommandDoer.PromptSave(window, model))
+			if (model != null && model.IsDirty && !CommandDoer.PromptSave(window, model))
 			{
 				goAhead = false;
 			}
