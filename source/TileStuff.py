@@ -31,4 +31,13 @@ class TileTemplate:
 		self.images = []
 		for path in imagePaths:
 			self.images.append(getImage('tiles/' + path))
-		
+		self.staticImage = None
+		if len(self.images) == 1:
+			self.staticImage = self.images[0]
+		self.imageCount = len(self.images)
+	
+	def getImage(self, rc):
+		img = self.staticImage
+		if img == None:
+			return self.images[(rc // 4) % self.imageCount]
+		return img

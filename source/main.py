@@ -10,6 +10,11 @@ def main():
 	
 	activeScene = OpeningScene()
 	renderCounter = 0
+	
+	pressedActions = {}
+	for action in 'left up down right A B start'.split():
+		pressedActions[action] = False
+	
 	while activeScene != None:
 		begin = time.time()
 		events = []
@@ -27,14 +32,19 @@ def main():
 				down = event.type == pygame.KEYDOWN
 				if event.key == pygame.K_RETURN:
 					events.append(MyEvent('start', down))
+					pressedActions['start'] = down
 				elif event.key == pygame.K_LEFT:
 					events.append(MyEvent('left', down))
+					pressedActions['left'] = down
 				elif event.key == pygame.K_RIGHT:
 					events.append(MyEvent('right', down))
+					pressedActions['right'] = down
 				elif event.key == pygame.K_UP:
 					events.append(MyEvent('up', down))
+					pressedActions['up'] = down
 				elif event.key == pygame.K_DOWN:
 					events.append(MyEvent('down', down))
+					pressedActions['down'] = down
 					
 		if quitAttempt:
 			activeScene = None
@@ -42,7 +52,7 @@ def main():
 		if activeScene != None:
 			largeScreen = 'W' in activeScene.flags
 			
-			activeScene.processInput(events, {})
+			activeScene.processInput(events, pressedActions)
 			activeScene.update()
 			if largeScreen:
 				activeScene.render(real_screen, renderCounter)
