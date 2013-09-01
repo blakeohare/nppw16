@@ -19,11 +19,12 @@ namespace MapEditor
 	/// </summary>
 	public partial class Palette : UserControl
 	{
+		private static readonly StringComparer STRING_COMPARER = StringComparer.CurrentCulture;
 		public Palette(string[] palettes)
 		{
 			InitializeComponent();
 
-			this.palettesCombobox.ItemsSource = palettes;
+			this.palettesCombobox.ItemsSource = palettes.OrderBy<string, string>(key => key.ToUpperInvariant(), STRING_COMPARER).ToArray();
 			this.palettesCombobox.SelectionChanged += (sender, e) => { this.PickPalette(); };
 			this.palettesCombobox.SelectedIndex = 0;
 		}
