@@ -12,7 +12,7 @@
 		<ComboBox x:Name="palettesCombobox">
 			
 		</ComboBox>
-		<ListBox x:Name="listbox" Grid.Row="1">
+		<ListBox x:Name="listbox" Grid.Row="1" Focusable="False">
 			<ListBox.ItemTemplate>
 				<DataTemplate>
 					<Grid>
