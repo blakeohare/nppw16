@@ -14,14 +14,17 @@
 			</MenuItem>
 		</Menu>
 		
+		<StatusBar x:Name="statusBar" DockPanel.Dock="Bottom" Height="24">
+			<TextBlock x:Name="statusText" Text="Have a nice day."/>
+		</StatusBar>
+		
 		<Grid Width="200" DockPanel.Dock="Left" Background="White" x:Name="paletteHost">
 			
 		</Grid>
 		
 		<Grid Background="#FF404040">
-			<ScrollViewer>
-				
-			</ScrollViewer>
+			<Image x:Name="artboard" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+			<Grid x:Name="clickCatcher" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 		</Grid>
 	</DockPanel>
 </Window>
