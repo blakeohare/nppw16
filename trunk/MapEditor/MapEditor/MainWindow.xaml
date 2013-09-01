@@ -18,8 +18,16 @@
 			<TextBlock x:Name="statusText" Text="Have a nice day."/>
 		</StatusBar>
 		
-		<Grid Width="200" DockPanel.Dock="Left" Background="White" x:Name="paletteHost">
-			
+		<Grid Width="200" DockPanel.Dock="Left" Background="White">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="*" />
+			</Grid.RowDefinitions>
+
+			<Button x:Name="layerToggle"></Button>
+			<Button Grid.Row="1" x:Name="gridToggle"></Button>
+			<Grid Grid.Row="2" x:Name="paletteHost"></Grid>
 		</Grid>
 		
 		<Grid Background="#FF404040">

@@ -23,7 +23,12 @@ namespace MapEditor
 
 		private Palette palette;
 
-		public Model ActiveModel  { get; set; }
+		public Model ActiveModel { get; set; }
+
+		private TileTemplate[][] drawThis = new TileTemplate[][] { null, null };
+
+		private bool isUpperActive = true;
+		private bool isGridOn = false;
 
 		public MainWindow()
 		{
@@ -43,6 +48,9 @@ namespace MapEditor
 				this.RedrawTheWholeDamnThing();
 			};
 
+			this.layerToggle.Click += (sender, e) => { this.LayerToggle(); };
+			this.gridToggle.Click += (sender, e) => { this.GridToggle(); };
+
 			this.clickCatcher.MouseDown += (sender, e) => { this.HandleMouseClick(e.GetPosition(this.clickCatcher), true, e.ChangedButton == MouseButton.Left); };
 			this.clickCatcher.MouseUp += (sender, e) => { this.HandleMouseClick(e.GetPosition(this.clickCatcher), false, e.ChangedButton == MouseButton.Left); };
 			this.clickCatcher.MouseMove += (sender, e) => { this.HandleMouseMove(e.GetPosition(this.clickCatcher)); };
@@ -51,6 +59,20 @@ namespace MapEditor
 			this.KeyUp += (sender, e) => { this.HandleKey(e.Key, false); };
 
 			this.Loaded += (sender, e) => { this.Initialize(); };
+			this.LayerToggle();
+		}
+
+		private void LayerToggle()
+		{
+			this.isUpperActive = !this.isUpperActive;
+			this.layerToggle.Content = "Current Layer: " + (this.isUpperActive ? "TOP" : "BOTTOM");
+		}
+
+		private void GridToggle()
+		{
+			this.isGridOn = !this.isGridOn;
+			this.gridToggle.Content = "Grid: " + (this.isGridOn ? "ON" : "OFF");
+			this.RedrawTheWholeDamnThing();
 		}
 
 		private bool isMouseDown = false;
@@ -82,15 +104,15 @@ namespace MapEditor
 				}
 				else
 				{
-						this.isMouseDown = true;
-						this.clickCatcher.CaptureMouse();
-						this.panMode = Keyboard.IsKeyDown(Key.Space);
-						this.isEraseMode = !isPrimary;
-						this.drawBeginPixelX = (int)p.X;
-						this.drawBeginPixelY = (int)p.Y;
-						this.drawEndPixelX = this.drawBeginPixelX;
-						this.drawEndPixelY = this.drawBeginPixelY;
-						this.InvalidateDrawing();
+					this.isMouseDown = true;
+					this.clickCatcher.CaptureMouse();
+					this.panMode = Keyboard.IsKeyDown(Key.Space);
+					this.isEraseMode = !isPrimary;
+					this.drawBeginPixelX = (int)p.X;
+					this.drawBeginPixelY = (int)p.Y;
+					this.drawEndPixelX = this.drawBeginPixelX;
+					this.drawEndPixelY = this.drawBeginPixelY;
+					this.InvalidateDrawing();
 				}
 			}
 			else if (this.isMouseDown)
@@ -198,7 +220,7 @@ namespace MapEditor
 			int xEnd = (this.drawEndPixelX - this.cameraX) >> 4;
 			int yStart = (this.drawBeginPixelY - this.cameraY) >> 4;
 			int yEnd = (this.drawEndPixelY - this.cameraY) >> 4;
-			
+
 			int t;
 
 			if (xEnd < xStart)
@@ -250,15 +272,23 @@ namespace MapEditor
 			this.RedrawTheWholeDamnThing();
 		}
 
-		private TileTemplate[][] drawThis = new TileTemplate[][] { null, null };
-
-		private bool isUpperActive = true;
-
 		private void HandleKey(Key key, bool down)
 		{
 			bool shiftPressed = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
 			bool ctrlPressed = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
-			
+
+			if (down && !shiftPressed && !ctrlPressed)
+			{
+				if (key == Key.G)
+				{
+					this.GridToggle();
+				}
+				else if (key == Key.L)
+				{
+					this.LayerToggle();
+				}
+			}
+
 			if (ctrlPressed)
 			{
 				switch (key)
@@ -297,7 +327,7 @@ namespace MapEditor
 			if (this.artboardBitmap == null)
 			{
 				int width = (int)(this.clickCatcher.ActualWidth + .5);
-				int height = (int)(this.clickCatcher.ActualHeight +.5);
+				int height = (int)(this.clickCatcher.ActualHeight + .5);
 
 				this.artboardBitmap = new WriteableBitmap(width, height, 96, 96, PixelFormats.Bgra32, null);
 				this.pixels = new int[width * height];
@@ -313,7 +343,7 @@ namespace MapEditor
 			{
 				this.pixels[i] = bgColor;
 			}
-			
+
 			if (this.ActiveModel != null && this.TileTemplateLookup != null)
 			{
 				int columns = this.ActiveModel.Width;
@@ -343,11 +373,73 @@ namespace MapEditor
 						y += 16;
 					}
 				}
+
+				if (this.isGridOn)
+				{
+					int width = columns * 16;
+					int height = rows * 16;
+					for (int x = 0; x <= columns; ++x)
+					{
+						this.drawLine(this.pixels, this.artboardWidth, this.cameraX + x * 16, this.cameraY, this.cameraX + x * 16, this.cameraY + rows * 16);
+					}
+
+					for (int y = 0; y <= rows; ++y)
+					{
+						this.drawLine(this.pixels, this.artboardWidth, this.cameraX, this.cameraY + y * 16, this.cameraX + columns * 16, this.cameraY + y * 16);
+					}
+				}
 			}
 
 			this.artboardBitmap.Lock();
 			this.artboardBitmap.WritePixels(new Int32Rect(0, 0, this.artboardWidth, this.artboardHeight), this.pixels, this.artboardWidth * 4, 0);
 			this.artboardBitmap.Unlock();
+		}
+
+		// horizontal or vertical is assumed. No arbitrary angles
+		private void drawLine(int[] targetPixels, int pixelWidth, int startX, int startY, int endX, int endY)
+		{
+			int x, y;
+			int width = pixelWidth;
+			int height = targetPixels.Length / pixelWidth;
+
+			if (startX > endX)
+			{
+				x = startX;
+				startX = endX;
+				endX = x;
+			}
+			if (startY > endY)
+			{
+				y = startY;
+				startY = endY;
+				endY = y;
+			}
+			int index;
+			if (endX == startX)
+			{
+				x = endX;
+				if (x < 0 || x >= width) return;
+				if (startY < 0) startY = 0;
+				if (endY >= height) endY = height - 1;
+				index = startY * width + x;
+				for (y = startY; y <= endY; ++y)
+				{
+					targetPixels[index] = 255 << 24; // black
+					index += width;
+				}
+			}
+			else
+			{
+				y = endY;
+				if (y < 0 || y >= height) return;
+				if (startX < 0) startX = 0;
+				if (endX >= width) endX = width - 1;
+				index = y * width + startX;
+				for (x = startX; x <= endX; ++x)
+				{
+					targetPixels[index++] = 255 << 24; //black
+				}
+			}
 		}
 
 		private void blit(int[] sourcePixels, int[] targetPixels, int x, int y, int targetWidth, int sourceWidth)
@@ -401,7 +493,7 @@ namespace MapEditor
 			{
 				sourceIndex = sourceY * sourceWidth + sourceStartX;
 				targetIndex = y * targetWidth + x;
-				for (sourceX = sourceStartX; sourceX < sourceEndX; ++sourceX)
+				for (sourceX = sourceStartX; sourceX <= sourceEndX; ++sourceX)
 				{
 					color = sourcePixels[sourceIndex++];
 					if (((color >> 24) & 255) == 0)
@@ -439,6 +531,8 @@ namespace MapEditor
 
 			this.palette = new Palette(this.Templates.Keys.ToArray());
 			this.paletteHost.Children.Add(this.palette);
+
+			this.GridToggle();
 		}
 
 		public TileTemplate ActiveTile { get; set; }
