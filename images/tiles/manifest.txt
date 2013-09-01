@@ -20,3 +20,29 @@ ter5	x	surface/terrace-top-left.png
 ter6	x	surface/terrace-top-right.png
 ter7	x	surface/terrace-bottom-left.png
 ter8	x	surface/terrace-bottom-right.png
+rockyTopL	x	rocky/topleft.png
+rockyTop	x	rocky/topmiddle.png
+rockyTopR	x	rocky/topright.png
+rockyLeft		rocky/left.png
+rockyMiddle		rocky/middle.png
+rockyRight		rocky/right.png
+rockyBottomL		rocky/bottomleft.png
+rockyBottom		rocky/bottom.png
+rockyBottomR		rocky/bottomright.png
+crater		rocky/crater.png
+bigcrater1		rocky/bigcrater1.png
+bigcrater2		rocky/bigcrater2.png
+bigcrater3		rocky/bigcrater3.png
+bigcrater4		rocky/bigcrater4.png
+black		background/black.png
+stars1		background/stars1.png
+stars2		background/stars2.png
+stars3		background/stars3.png
+stars4		background/stars4.png
+stars5		background/stars5.png
+spikes		spikes/spikes.png
+spiketip		spikes/spiketip.png
+spikebase		spikes/spikebase.png
+stalactites		spikes/stalactites.png
+stalactitebase		spikes/stalactitebase.png
+stalactitetip		spikes/stalactitetip.png
