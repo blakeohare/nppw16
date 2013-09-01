@@ -46,3 +46,9 @@ spikebase		spikes/spikebase.png
 stalactites		spikes/stalactites.png
 stalactitebase		spikes/stalactitebase.png
 stalactitetip		spikes/stalactitetip.png
+water		fluids/water.png
+watertop		fluids/water1.png,fluids/water2.png
+waterfall		fluids/waterfall1.png,fluids/waterfall2.png
+lava		fluids/lava.png
+lavatop		fluids/lava1.png,fluids/lava2.png,fluids/lava3.png,fluids/lava4.png
+lavafall		fluids/lavafall1.png,fluids/lavafall2.png
