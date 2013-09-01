@@ -41,6 +41,13 @@ namespace MapEditor
 			this.menu_file_open.Click += (sender, e) => { CommandDoer.Open(this, this.ActiveModel); };
 			this.menu_file_save.Click += (sender, e) => { CommandDoer.Save(this, this.ActiveModel); };
 			this.menu_file_saveas.Click += (sender, e) => { CommandDoer.SaveAs(this, this.ActiveModel); };
+			this.menu_edit_resize.Click += (sender, e) =>
+			{
+				if (this.ActiveModel != null)
+				{
+					new ResizeDialog(this.ActiveModel).ShowDialog();
+				}
+			};
 
 			this.SizeChanged += (sender, e) =>
 			{

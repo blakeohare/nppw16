@@ -7,6 +7,11 @@ namespace MapEditor
 {
 	public static class CommandDoer
 	{
+		public static void Resize(MainWindow window, Model model)
+		{
+
+		}
+
 		// returns false if next action should be canceled.
 		private static bool PromptSave(MainWindow window, Model model) {
 			System.Windows.MessageBoxResult result = System.Windows.MessageBox.Show("Document has unsaved changes. Do you wish to save?", "SKWIRLZ!", System.Windows.MessageBoxButton.YesNoCancel);

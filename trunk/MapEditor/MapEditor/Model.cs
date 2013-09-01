@@ -83,5 +83,49 @@ namespace MapEditor
 		{
 			this.values = values;
 		}
+
+		public void ChangeSize(int newWidth, int newHeight, bool anchorLeft, bool anchorTop)
+		{
+			TileTemplate[] newUpperTiles = new TileTemplate[newWidth * newHeight];
+			TileTemplate[] newLowerTiles = new TileTemplate[newWidth * newHeight];
+
+			TileTemplate[] source, target;
+			int oldWidth = this.Width;
+			int oldHeight = this.Height;
+
+			foreach (bool isUpper in new bool[] { true, false })
+			{
+				source = isUpper ? this.TilesUpper : this.TilesLower;
+				target = isUpper ? newUpperTiles : newLowerTiles;
+				int offsetX = anchorLeft ? 0 : newWidth - this.Width;
+				int offsetY = anchorTop ? 0 : newHeight - this.Height;
+				int tx, ty;
+				for (int y = 0; y < this.Height; ++y)
+				{
+					ty = y + offsetY;
+					for (int x = 0; x < this.Width; ++x)
+					{
+						tx = x + offsetX;
+						if (tx < 0 || tx >= newWidth || ty < 0 || ty >= newHeight)
+						{
+						}
+						else
+						{
+							target[ty * newWidth + tx] = source[y * oldWidth + x];
+						}
+					}
+				}
+			}
+
+			this.Width = newWidth;
+			this.Height = newHeight;
+
+			this.TilesLower = newLowerTiles;
+			this.TilesUpper = newUpperTiles;
+
+			this.IsDirty = true;
+			MainWindow.Instance.UpdateTitle();
+			MainWindow.Instance.InvalidateDrawing();
+		}
 	}
 }
