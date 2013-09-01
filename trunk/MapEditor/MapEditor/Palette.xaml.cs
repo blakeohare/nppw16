@@ -19,15 +19,26 @@ namespace MapEditor
 	/// </summary>
 	public partial class Palette : UserControl
 	{
-		public Palette()
+		public Palette(string[] palettes)
 		{
 			InitializeComponent();
+
+			this.palettesCombobox.ItemsSource = palettes;
+			this.palettesCombobox.SelectionChanged += (sender, e) => { this.PickPalette(); };
+			this.palettesCombobox.SelectedIndex = 0;
+		}
+
+		private void PickPalette()
+		{
+			string key = this.palettesCombobox.SelectedItem.ToString();
+			this.Update(MainWindow.Instance.Templates[key]);
 		}
 
 		public void Update(TileTemplate[] activePalette)
 		{
 			this.listbox.ItemsSource = activePalette;
 			this.listbox.SelectionChanged += (sender, e) => { MainWindow.Instance.SetActiveTile(this.listbox.SelectedItem as TileTemplate); };
+
 		}
 	}
 }
