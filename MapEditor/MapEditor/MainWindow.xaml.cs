@@ -28,8 +28,6 @@ namespace MapEditor
 			MainWindow.Instance = this; // >:[
 
 			InitializeComponent();
-			this.palette = new Palette();
-			this.paletteHost.Children.Add(this.palette);
 
 			this.Loaded += (sender, e) => { this.Initialize(); };
 		}
@@ -40,12 +38,15 @@ namespace MapEditor
 		{
 			this.Templates = ManifestReader.Initialize();
 
-			this.palette.Update(this.Templates["test"]);
+			this.palette = new Palette(this.Templates.Keys.ToArray());
+			this.paletteHost.Children.Add(this.palette);
 		}
+
+		public TileTemplate ActiveTile { get; set; }
 
 		public void SetActiveTile(TileTemplate template)
 		{
-
+			this.ActiveTile = template;
 		}
 	}
 }
