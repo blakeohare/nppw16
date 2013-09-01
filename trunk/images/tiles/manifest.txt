@@ -1,0 +1,13 @@
+
+
+# Format (columns, tab delimited):
+# 	ID
+#	Flags
+#	Image Paths (comma delimited for animations)
+
+
+# flag key
+#	x - solid
+
+test1	x	test/test1.png
+test2	x	test/test2.png
