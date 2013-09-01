@@ -1,6 +1,6 @@
 FPS = 30
-WIDTH = 800
-HEIGHT = 600
+WIDTH = int(256 * 3.4)
+HEIGHT = 224 * 3
 
 def main():
 	pygame.init()
