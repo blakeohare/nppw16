@@ -551,6 +551,63 @@ namespace MapEditor
 			this.paletteHost.Children.Add(this.palette);
 
 			this.GridToggle();
+			/*
+			try
+			{
+				string keys =
+					" !     '    ,-./" +
+					"0123456789: <=>?" + 
+					"*ABCDEFGHIJKLMNO" +
+					"PQRSTUVWXYZ(&)  ";
+				int keyIndex = 0;
+				BitmapImage bmp = ImageLoader.LoadImage("C:\\Users\\Blake\\Desktop\\font.png");
+				int[] pixels = ImageLoader.GetPixels(bmp);
+				int index = 0;
+				bool isWhite;
+				List<string> letters = new List<string>();
+				for (int cy = 0; cy < bmp.PixelHeight; cy += 8)
+				{
+					for (int cx = 0; cx < bmp.PixelWidth; cx += 8)
+					{
+						List<string> output = new List<string>();
+						char key = keys[keyIndex++];
+						if (key != ' ')
+						{
+							output.Add("chars['" + key + "'] = [");
+							for (int x = 0; x < 8; ++x)
+							{
+								if (x > 0) output.Add(",");
+								output.Add("[");
+								for (int y = 0; y < 8; ++y)
+								{
+									if (y > 0) output.Add(",");
+									index = (128 * (y + cy) + x + cx);
+									isWhite = pixels[index] == -1;
+									output.Add(isWhite ? "1" : "0");
+								}
+								output.Add("]");
+							}
+							output.Add("]");
+							if (key == 'L')
+							{
+								string foo = string.Join("", output);
+							}
+							letters.Add(string.Join("", output));
+						}
+					}
+				}
+
+				string finalOutput = string.Join("\n", letters);
+				System.IO.File.WriteAllText("C:\\users\\blake\\desktop\\fonts.txt", finalOutput);
+			}
+			catch (Exception)
+			{
+
+			}
+			finally
+			{
+
+			}//*/
 		}
 
 		public TileTemplate ActiveTile { get; set; }
