@@ -64,6 +64,9 @@
     <Compile Include="Palette.xaml.cs">
       <DependentUpon>Palette.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ResizeDialog.xaml.cs">
+      <DependentUpon>ResizeDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TileTemplate.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -78,6 +81,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Palette.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ResizeDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

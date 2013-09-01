@@ -12,6 +12,10 @@
 				<Separator />
 				<MenuItem x:Name="menu_file_exit" Header="Exit" />
 			</MenuItem>
+			
+			<MenuItem Header="Edit">
+				<MenuItem x:Name="menu_edit_resize" Header="Resize" />
+			</MenuItem>
 		</Menu>
 		
 		<StatusBar x:Name="statusBar" DockPanel.Dock="Bottom" Height="24">
