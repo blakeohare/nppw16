@@ -60,6 +60,9 @@
     <Compile Include="Context.cs" />
     <Compile Include="ImageLoader.cs" />
     <Compile Include="MapParser.cs" />
+    <Compile Include="MapTypeDialog.xaml.cs">
+      <DependentUpon>MapTypeDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Model.cs" />
     <Compile Include="Palette.xaml.cs">
       <DependentUpon>Palette.xaml</DependentUpon>
@@ -80,6 +83,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="MapTypeDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Palette.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

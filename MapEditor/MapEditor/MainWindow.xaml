@@ -15,6 +15,7 @@
 			
 			<MenuItem Header="Edit">
 				<MenuItem x:Name="menu_edit_resize" Header="Resize" />
+				<MenuItem x:Name="menu_edit_maptype" Header="Map Type" />
 			</MenuItem>
 		</Menu>
 		

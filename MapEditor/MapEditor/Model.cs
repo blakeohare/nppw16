@@ -14,6 +14,8 @@ namespace MapEditor
 		public int Width { get; set; }
 		public int Height { get; set; }
 
+		public bool IsSideScroll { get; set; }
+
 		// High frequency access, field that behaves like a property for performance.
 		public TileTemplate[] TilesUpper;
 		public TileTemplate[] TilesLower;
@@ -28,6 +30,7 @@ namespace MapEditor
 			this.TilesLower = new TileTemplate[width * height];
 			this.TilesUpper = new TileTemplate[width * height];
 			this.values = new Dictionary<string, string>();
+			this.IsSideScroll = true;
 		}
 
 		public string DisplayName
@@ -51,6 +54,7 @@ namespace MapEditor
 			this.values["height"] = "" + this.Height;
 			this.values["upper"] = this.SerializeTiles(this.TilesUpper);
 			this.values["lower"] = this.SerializeTiles(this.TilesLower);
+			this.values["view"] = this.IsSideScroll ? "side" : "over";
 
 			List<string> output = new List<string>();
 			foreach (string key in this.values.Keys)

@@ -73,6 +73,7 @@ namespace MapEditor
 			model.SetRawFileData(values);
 
 			model.Path = filename;
+			model.IsSideScroll = !values.ContainsKey("view") || values["view"].Trim().ToLowerInvariant() != "over";
 
 			return model;
 		}
