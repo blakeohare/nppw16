@@ -1,6 +1,7 @@
 class TitleScene:
 	def __init__(self):
 		self.next = self
+		self.flags = ''
 	
 	def processInput(self, events, pressedKeys):
 		pass
