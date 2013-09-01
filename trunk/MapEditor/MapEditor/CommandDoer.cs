@@ -38,6 +38,7 @@ namespace MapEditor
 		public static void New(MainWindow window, Model model)
 		{
 			window.ActiveModel = new Model(16, 14);
+			window.InvalidateDrawing();
 		}
 
 		public static string MapsDirectory
@@ -61,8 +62,10 @@ namespace MapEditor
 				if (result == System.Windows.Forms.DialogResult.OK)
 				{
 					string filename = ofd.FileName;
-					MapParser mapParser = new MapParser(filename, window.Templates);
+					MapParser mapParser = new MapParser(filename, window.TileTemplateLookup);
 					window.ActiveModel = mapParser.Parse();
+					window.RedrawTheWholeDamnThing();
+					window.UpdateTitle();
 				}
 			}
 		}

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MapEditor
 {
-	public  class Model
+	public class Model
 	{
 		public bool IsDirty { get; set; }
 
@@ -22,6 +22,8 @@ namespace MapEditor
 			this.Width = width;
 			this.Height = height;
 			this.IsDirty = true;
+			this.TilesLower = new TileTemplate[width * height];
+			this.TilesUpper = new TileTemplate[width * height];
 		}
 
 		public string Serialize()

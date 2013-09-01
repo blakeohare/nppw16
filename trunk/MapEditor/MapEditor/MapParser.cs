@@ -52,8 +52,17 @@ namespace MapEditor
 
 			for (int i = width * height - 1; i >= 0; --i)
 			{
-				topLayer[i] = this.tileLookup[tileIdsUpper[i].Trim()];
-				bottomLayer[i] = this.tileLookup[tileIdsLower[i].Trim()];
+				string tileId = tileIdsUpper[i].Trim();
+				if (tileId.Length > 0)
+				{
+					topLayer[i] = this.tileLookup[tileId];
+				}
+
+				tileId = tileIdsLower[i].Trim();
+				if (tileId.Length > 0)
+				{
+					bottomLayer[i] = this.tileLookup[tileId];
+				}
 			}
 
 			// TODO: other fields
