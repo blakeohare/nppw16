@@ -11,3 +11,12 @@
 
 test1	x	test/test1.png
 test2	x	test/test2.png
+ground		surface/ground.png
+ter1	x	surface/terrace-top.png
+ter2	x	surface/terrace-bottom.png
+ter3	x	surface/terrace-left.png
+ter4	x	surface/terrace-right.png
+ter5	x	surface/terrace-top-left.png
+ter6	x	surface/terrace-top-right.png
+ter7	x	surface/terrace-bottom-left.png
+ter8	x	surface/terrace-bottom-right.png
