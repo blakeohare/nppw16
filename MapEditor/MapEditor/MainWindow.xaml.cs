@@ -60,6 +60,7 @@ namespace MapEditor
 
 			this.Loaded += (sender, e) => { this.Initialize(); };
 			this.LayerToggle();
+			this.UpdateTitle();
 		}
 
 		private void LayerToggle()
@@ -89,6 +90,9 @@ namespace MapEditor
 		private void HandleMouseClick(Point p, bool down, bool isPrimary)
 		{
 			if (this.ActiveModel == null) return;
+
+			this.mousePreviousX = (int)p.X;
+			this.mousePreviousY = (int)p.Y;
 
 			if (down)
 			{
@@ -163,15 +167,22 @@ namespace MapEditor
 			if (right >= width) right = width - 1;
 			if (bottom >= height) bottom = height - 1;
 
+			bool changed = false;
 			TileTemplate[] layer = this.isUpperActive ? this.ActiveModel.TilesUpper : this.ActiveModel.TilesLower;
 			for (int y = top; y <= bottom; ++y)
 			{
 				for (int x = left; x <= right; ++x)
 				{
+					changed = true;
 					layer[y * width + x] = this.isEraseMode ? null : this.ActiveTile;
 				}
 			}
-			this.ActiveModel.IsDirty = true;
+
+			if (changed)
+			{
+				this.ActiveModel.IsDirty = true;
+				this.UpdateTitle();
+			}
 		}
 
 		private void HandleMouseMove(Point p)
@@ -546,7 +557,7 @@ namespace MapEditor
 
 		public void UpdateTitle()
 		{
-			this.Title = "TODO: this";
+			this.Title = this.ActiveModel == null ? "Space Squirrel Map Editor" : "Space Squirrel Map Editor: " + this.ActiveModel.DisplayName;
 		}
 	}
 }

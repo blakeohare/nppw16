@@ -72,6 +72,8 @@ namespace MapEditor
 
 			model.SetRawFileData(values);
 
+			model.Path = filename;
+
 			return model;
 		}
 	}

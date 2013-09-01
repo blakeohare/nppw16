@@ -9,6 +9,8 @@ namespace MapEditor
 	{
 		public bool IsDirty { get; set; }
 
+		public string Path { get; set; }
+
 		public int Width { get; set; }
 		public int Height { get; set; }
 
@@ -19,11 +21,28 @@ namespace MapEditor
 
 		public Model(int width, int height)
 		{
+			this.Path = null;
 			this.Width = width;
 			this.Height = height;
 			this.IsDirty = true;
 			this.TilesLower = new TileTemplate[width * height];
 			this.TilesUpper = new TileTemplate[width * height];
+			this.values = new Dictionary<string, string>();
+		}
+
+		public string DisplayName
+		{
+			get
+			{
+				return
+					(this.Path == null
+						? "Untitled.map"
+						: System.IO.Path.GetFileName(this.Path)) +
+					(this.IsDirty
+						? "*"
+						: "");
+
+			}
 		}
 
 		public string Serialize()
@@ -44,7 +63,7 @@ namespace MapEditor
 
 		private string SerializeTiles(IList<TileTemplate> tiles)
 		{
-			return string.Join(",", tiles.Select<TileTemplate, string>(tile => tile.ID));
+			return string.Join(",", tiles.Select<TileTemplate, string>(tile => tile == null ? "" : tile.ID));
 		}
 
 		public void SetTiles(TileTemplate[] tiles, bool upperLayer)
