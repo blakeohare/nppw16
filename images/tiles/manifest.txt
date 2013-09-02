@@ -13,6 +13,7 @@
 #	R - top of a 2-tile door (sidescroll mode)
 #	r - 1-tile door (overworld)
 #	L - Ladder
+#	J - Jump-through
 
 
 test1	x	test/test1.png
@@ -86,3 +87,9 @@ cbottomleftconcave		crevasse/bottomleftconcave.png
 cbottomrightconcave		crevasse/bottomrightconcave.png
 cbottomleftconvex	x	crevasse/bottomleftconvex.png
 cbottomrightconvex	x	crevasse/bottomrightconvex.png
+rockypassTopL	J	rocky-passthrough/topleft.png
+rockypassTop	J	rocky-passthrough/top.png
+rockypassTopR	J	rocky-passthrough/topright.png
+rockypassLeft		rocky-passthrough/left.png
+rockypassMiddle		rocky-passthrough/middle.png
+rockypassRight		rocky-passthrough/right.png
