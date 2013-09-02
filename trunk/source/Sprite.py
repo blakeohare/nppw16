@@ -110,11 +110,13 @@ class Sprite:
 			# side-to-side calcuation is done first, independent of whether you are on the ground.
 			if self.dx != 0:
 				newX = self.modelX + self.dx
+				
 				# isCollision ignores collisions near the sprite's feet
 				# if you are near ground, you will be automatically placed standing
 				# upon it at the end of the vertical adjustment phase.
 				if not scene.isCollision(newX, areaTop, newX, areaBottom):
 					self.modelX = newX
+				self.dx = 0
 			
 			# vertical adjustment phase
 			# assume sprite is flying through the air unless you see ground
