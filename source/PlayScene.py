@@ -45,7 +45,14 @@ class PlayScene:
 		
 		self.player = Sprite('player_' + ('over' if self.side else 'side'), startCol * 16 + 8, startRow * 16 + 8)
 		self.sprites = [self.player]
-		
+	
+	def playersTile(self):
+		if self.player == None: return None
+		p = self.player
+		tx = int(p.modelX / 16)
+		ty = int(p.modelY / 16)
+		return self.tiles[tx][ty]
+	
 	def processInput(self, events, pressed):
 		if self.side:
 			dx = 0
@@ -55,6 +62,16 @@ class PlayScene:
 				dx = -v
 			elif pressed['right']:
 				dx = v
+			elif pressed['up']:
+				pt = self.playersTile()
+				if pt != None and pt.isLadder:
+					self.player.cling = True
+					#self.player.onGround = False
+					self.player.ladderDY = -2
+			elif pressed['down']:
+				pt = self.playersTile()
+				if pt != None and pt.isLadder:
+					self.player.ladderDY = 2
 			
 			if self.player != None:
 				self.player.dx = dx
@@ -62,8 +79,10 @@ class PlayScene:
 			for event in events:
 				if event.action == 'A':
 					if event.down:
-						if self.player.onGround:
+						if self.player.onGround or self.player.cling:
 							self.player.onGround = False
+							self.player.cling = False
+							self.player.ladderDY = 0
 							self.player.vy = JUMPING_VY
 					else:
 						if self.player.vy < 0:
