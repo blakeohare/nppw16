@@ -39,13 +39,13 @@ class JoystickConfigScreen:
 		
 		for i in range(js.get_numaxes()):
 			value = js.get_axis(i)
-			if value > 0.3:
+			if value > 0.5:
 				key = "A" + str(i) + '+'
 				if not self.configs_taken.get(key, False):
 					self.configs_taken[key] = True
 					self.config[button] = ('A', i, True)
 					return True
-			elif value < -0.3:
+			elif value < -0.5:
 				key = "A" + str(i) + '-'
 				if not self.configs_taken.get(key, False):
 					self.configs_taken[key] = True

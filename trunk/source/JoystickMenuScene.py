@@ -4,10 +4,11 @@ class JoystickMenuScene:
 		self.flags = ''
 		self.options = ['None'] + get_joystick_manifest()
 		self.index = 0 if (active_joystick == None) else (1 + joysticks_present[active_joystick])
+		self.blink_counter = 0
 	
 	def processInput(self, events, pressedActions):
 		for event in events:
-			if event.down:
+			if event.down and self.blink_counter <= 0:
 				if event.action == 'up':
 					self.index -= 1
 				elif event.action == 'down':
@@ -17,7 +18,7 @@ class JoystickMenuScene:
 						active_joystick = None
 						self.next = TitleScene()
 					else:
-						self.next = JoystickConfigScreen(self.index - 1, self)
+						self.blink_counter = 30
 				if self.index < 0:
 					self.index = 0
 				if self.index >= len(self.options):
@@ -25,7 +26,10 @@ class JoystickMenuScene:
 				
 	
 	def update(self):
-		pass
+		self.blink_counter -= 1
+		if self.blink_counter == 1:
+			self.next = JoystickConfigScreen(self.index - 1, self)
+			self.blink_counter = 0
 	
 	def render(self, screen, rc):
 		title = getText((255, 255, 0), "Joystick Selection")
@@ -35,9 +39,13 @@ class JoystickMenuScene:
 		y = 32
 		index = 0
 		for option in self.options:
+			selected = False
 			if index == self.index:
 				screen.blit(cursor, (16, y))
-			screen.blit(getText((255, 255, 255), option), (32, y))
+				selected = True
+			
+			if not selected or self.blink_counter <= 0 or rc % 4 < 2:
+				screen.blit(getText((255, 255, 255), option), (32, y))
 			index += 1
 			y += 16
 		
