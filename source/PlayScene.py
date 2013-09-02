@@ -16,6 +16,7 @@ class PlayScene:
 		self.tiles = makeGrid(self.cols, self.rows)
 		
 		doorTiles = []
+		ladderTiles = {}
 		
 		y = 0
 		while y < self.rows:
@@ -26,8 +27,18 @@ class PlayScene:
 				self.tiles[x][y] = t
 				if t.isDoor:
 					doorTiles.append((str(x) + '|' + str(y), t))
+				if t.isLadder:
+					ladderTiles[str(x) + '|' + str(y)] = (x, y)
 				x += 1
 			y += 1
+		
+		for lk in ladderTiles.keys():
+			coord = ladderTiles[lk]
+			x = coord[0]
+			y = coord[1]
+			if y > 0:
+				if ladderTiles.get(str(x) + "|" + str(y - 1)) == None:
+					self.tiles[x][y].isTop = True
 		
 		doorLookup = {}
 		for door in map.doors:
@@ -46,12 +57,14 @@ class PlayScene:
 		self.player = Sprite('player_' + ('over' if self.side else 'side'), startCol * 16 + 8, startRow * 16 + 8)
 		self.sprites = [self.player]
 	
-	def playersTile(self):
+	def playersTile(self, offsetX=0, offsetY=0):
 		if self.player == None: return None
 		p = self.player
-		tx = int(p.modelX / 16)
-		ty = int(p.modelY / 16)
-		return self.tiles[tx][ty]
+		tx = int(p.modelX / 16) + offsetX
+		ty = int(p.modelY / 16) + offsetY
+		if tx >= 0 and ty >= 0 and tx < self.cols and ty < self.rows:
+			return self.tiles[tx][ty]
+		return None
 	
 	def processInput(self, events, pressed):
 		if self.side:
@@ -72,6 +85,12 @@ class PlayScene:
 				pt = self.playersTile()
 				if pt != None and pt.isLadder:
 					self.player.ladderDY = 2
+				else:
+					pt = self.playersTile(0, 1)
+					if pt != None and pt.isLadder:
+						self.player.modelY += 8
+						self.player.ladderDY = 2
+						self.player.cling = True
 			
 			if self.player != None:
 				self.player.dx = dx
