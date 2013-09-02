@@ -117,3 +117,17 @@ purple3	AC	balloons/purple3.png
 purple4	ABD	balloons/purple4.png
 purple5	x	balloons/purple5.png
 purple6	ABC	balloons/purple6.png
+vtop1		volcano/top1.png
+vtop2	BCD	volcano/top2.png
+vtop3	ACD	volcano/top3.png
+vtop4		volcano/top4.png
+vmid1	BCD	volcano/mid1.png
+vmid2	x	volcano/mid2.png
+vmid3	x	volcano/mid3.png
+vmid4	ACD	volcano/mid4.png
+vbot1	ABD	volcano/bot1.png
+vbot2	x	volcano/bot2.png
+vbot3	x	volcano/bot3.png
+vbot4	ABC	volcano/bot4.png
+vtop2active	BCD	volcano/top2active.png
+vtop3active	ACD	volcano/top3active.png
