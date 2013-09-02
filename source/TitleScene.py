@@ -66,9 +66,12 @@ class TitleScene:
 			index += 1
 			y += 16
 		
-		
-		#if showText:
-			#pressStart = renderText((255, 255, 255), "< Press Start >")
-			
-			#x = (screen.get_width() - pressStart.get_width()) // 2
-			#screen.blit(pressStart, (x, 140))
+		y += 32
+		active_js = getText((128, 128, 128), "Active joystick: ")
+		screen.blit(active_js, (8, y))
+		x = 8 + active_js.get_width()
+		if active_joystick == None:
+			js_name = getText((255, 0, 0), "None")
+		else:
+			js_name = getText((255, 255, 255), active_joystick)
+		screen.blit(js_name, (x, y))
