@@ -13,6 +13,16 @@ class PlayScene:
 		self.lower = map.lower
 		self.side = map.side
 		
+		self.passable = makeGrid(self.cols, self.rows)
+		y = 0
+		while y < self.rows:
+			x = 0
+			while x < self.cols:
+				solid = (self.lower[x][y] != None and self.lower[x][y].solid) or (self.upper[x][y] != None and self.upper[x][y].solid)
+				self.passable[x][y] = not solid
+				x += 1
+			y += 1
+		
 		self.cameraX = 0
 		self.cameraY = 0
 		
