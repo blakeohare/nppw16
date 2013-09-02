@@ -99,6 +99,8 @@ class PlayScene:
 			self.next = PlayScene(door.target, door.tx, door.ty)
 	
 	def isCollision(self, pLeft, pTop, pRight, pBottom):
+		if pLeft < 0: return True
+		if pTop < 0: return True
 		tLeft = int(pLeft / 16)
 		tRight = tLeft if (pRight == pLeft) else int(pRight / 16)
 		tTop = int(pTop / 16)
@@ -107,10 +109,10 @@ class PlayScene:
 		# bottom row of sprite is technically top row of ground below. This intersection should be ignored.
 		tBottom = int((pBottom - 3) / 16) 
 		
-		if tLeft < 0: tLeft = 0
-		if tTop < 0: tTop = 0
-		if tRight >= self.cols: tRight = self.width - 1
-		if tBottom >= self.rows: tBottom = self.height - 1
+		if tLeft < 0: return True
+		if tTop < 0: return True
+		if tRight >= self.cols: return True
+		if tBottom >= self.rows: return True
 		
 		y = tTop
 		while y <= tBottom:
