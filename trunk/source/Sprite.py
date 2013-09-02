@@ -1,5 +1,7 @@
 NEIGHBOR_RANGE = (-1, 0, 1)
 
+JUMPING_VY = -14
+
 SPRITE_HEIGHT = {
 	'player_side': 32
 }
@@ -171,6 +173,8 @@ class Sprite:
 				self.modelY = newBottom - 8
 			self.x = int(self.modelX)
 			self.y = int(self.modelY)
+			self.dy = 0
+			self.dy = 0
 		else:
 			if self.dx != 0 or self.dy != 0:
 				xs = self.xs
