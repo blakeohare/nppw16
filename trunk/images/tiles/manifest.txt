@@ -33,20 +33,20 @@ ter12	x	surface/terrace-concave-top-right.png
 rockyTopL	x	rocky/topleft.png
 rockyTop	x	rocky/topmiddle.png
 rockyTopR	x	rocky/topright.png
-rockyLeft		rocky/left.png
-rockyMiddle		rocky/middle.png
-rockyRight		rocky/right.png
-rockyBottomL		rocky/bottomleft.png
-rockyBottom		rocky/bottom.png
-rockyBottomR		rocky/bottomright.png
+rockyLeft	x	rocky/left.png
+rockyMiddle	x	rocky/middle.png
+rockyRight	x	rocky/right.png
+rockyBottomL	x	rocky/bottomleft.png
+rockyBottom	x	rocky/bottom.png
+rockyBottomR	x	rocky/bottomright.png
 rocks1	x	rocky/rocks1.png
 rocks2	x	rocky/rocks2.png
 rocks3	x	rocky/rocks3.png
 crater		rocky/crater.png
-bigcrater1		rocky/bigcrater1.png
-bigcrater2		rocky/bigcrater2.png
-bigcrater3		rocky/bigcrater3.png
-bigcrater4		rocky/bigcrater4.png
+bigcrater1	x	rocky/bigcrater1.png
+bigcrater2	x	rocky/bigcrater2.png
+bigcrater3	x	rocky/bigcrater3.png
+bigcrater4	x	rocky/bigcrater4.png
 black		background/black.png
 stars1		background/stars1.png
 stars2		background/stars2.png
@@ -67,3 +67,21 @@ lavatop		fluids/lava1.png,fluids/lava2.png,fluids/lava3.png,fluids/lava4.png
 lavafall		fluids/lavafall1.png,fluids/lavafall2.png
 ladder		basics/ladder.png
 rope		basics/rope.png
+darkness	x	crevasse/darkness.png
+ctop1	x	crevasse/top1.png
+ctop2	x	crevasse/top2.png
+ctopleftconcave1	x	crevasse/topleftconcave1.png
+ctopleftconcave2	x	crevasse/topleftconcave2.png
+ctoprightconcave1	x	crevasse/toprightconcave1.png
+ctoprightconcave2	x	crevasse/toprightconcave2.png
+ctopleftconvex1	x	crevasse/topleftconvex1.png
+ctopleftconvex2	x	crevasse/topleftconvex2.png
+ctoprightconvex1	x	crevasse/toprightconvex1.png
+ctoprightconvex2	x	crevasse/toprightconvex2.png
+cleft	x	crevasse/left.png
+cright	x	crevasse/right.png
+cbottom		crevasse/bottom.png
+cbottomleftconcave		crevasse/bottomleftconcave.png
+cbottomrightconcave		crevasse/bottomrightconcave.png
+cbottomleftconvex	x	crevasse/bottomleftconvex.png
+cbottomrightconvex	x	crevasse/bottomrightconvex.png
