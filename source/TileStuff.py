@@ -31,6 +31,7 @@ class TileTemplate:
 		self.coveredD = False
 		self.isDoor = False
 		self.isLadder = False
+		self.isTop = False
 		for flag in flags:
 			if flag == 'x':
 				self.solid = True
@@ -46,6 +47,8 @@ class TileTemplate:
 				self.isDoor = True
 			elif flag == 'L':
 				self.isLadder = True
+			elif flag == 'J':
+				self.isTop = True
 		self.images = []
 		for path in imagePaths:
 			self.images.append(getImage('tiles/' + path))
@@ -67,6 +70,7 @@ class Tile:
 		self.templates = []
 		self.isDoor = False
 		self.isLadder = False
+		self.isTop = False
 		self.door = None
 		if lower != None:
 			self.templates.append(lower)
@@ -74,13 +78,16 @@ class Tile:
 				self.isDoor = True
 			if lower.isLadder:
 				self.isLadder = True
+			if lower.isTop:
+				self.isTop = True
 		if upper != None:
 			self.templates.append(upper)
 			if upper.isDoor:
 				self.isDoor = True
 			if upper.isLadder:
 				self.isLadder = True
-		
+			if upper.isTop:
+				self.isTop = True
 		self.collisions = []
 		self.solid = False
 		
@@ -149,4 +156,8 @@ class Tile:
 			c[3] = c[1] + c[3] * 8
 			self.collisions[i] = c
 			i += 1
+		
+		if self.solid:
+			self.isTop = False
+			self.isLadder = False
 		
