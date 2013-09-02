@@ -4,6 +4,9 @@ HEIGHT = 224 * 3
 
 def main():
 	pygame.init()
+
+	configureJoysticksFromFile()
+	getJoysticksPresent()	
 	
 	real_screen = pygame.display.set_mode((WIDTH, HEIGHT))
 	virtual_screen = pygame.Surface((256, 224))

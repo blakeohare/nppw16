@@ -100,3 +100,6 @@ _textEngine = Text(chars)
 
 def renderText(color, text):
 	return _textEngine.render(color, text)
+
+# Because I keep accidentally using this one
+getText = renderText
