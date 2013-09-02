@@ -12,7 +12,7 @@ AXIS:
 
 cached_joysticks = {} # NAME to CONFIGURATION
 
-
+previous_active_joystick = None
 joysticks_present = {} # NAME to INDEX
 joystick_instances = [] # INDEX to INSTANCE
 
@@ -24,9 +24,16 @@ def configureJoysticksFromFile():
 		t = trim(c.read()).split('\n')
 		c.close()
 		configs = {}
-		
+		first = True
+		active = None
 		for line in t:
+			if first:
+				if len(line) > 0:
+					active = line
+				first = False
 			parts = line[:-1].split('|')
+			if len(parts) < 8:
+				continue
 			cfgs = []
 			cfgs += [('A', parts[0])]
 			cfgs += [('B', parts[1])]
@@ -65,7 +72,13 @@ def configureJoysticksFromFile():
 				configs[name][button] = cfg
 			if ignoreMe:
 				configs.pop(name)
-			
+			else:
+				cached_joysticks[name] = configs[name]
+		
+		if cached_joysticks.get(active, None) != None:
+			global previous_active_joystick
+			previous_active_joystick = active
+		
 
 def getJoysticksPresent():
 	for i in range(pygame.joystick.get_count()):
@@ -78,6 +91,10 @@ def getJoysticksPresent():
 
 
 BUTTONS = 'A B up down left right start'.split(' ')
+
+def set_active_joystick(name):
+	global active_joystick
+	active_joystick = name
 
 active_joystick = None # joystick NAME
 active_joystick_snapshot = {}
@@ -133,4 +150,29 @@ def poll_active_joystick(events_out, pressedActions):
 			else:
 				pressed = state < -0.3
 		else: pass # Destroy the universe and start over. Or just ignore.
+
+def serialize_joystick_config():
+	output = []
+	if active_joystick == None:
+		output.append('')
+	else:
+		output.append(active_joystick)
+	for key in cached_joysticks.keys():
+		line = []
+		config = cached_joysticks[key]
+		for button in 'A B up down left right start'.split(' '):
+			cfg = config[button]
+			if cfg[0] == 'B':
+				line.append('B^' + str(cfg[1]))
+			elif cfg[0] == 'H':
+				line.append('H^' + str(cfg[1]) + '^' + str(cfg[2]) + '^' + str('+' if cfg[3] else '-'))
+			elif cfg[0] == 'A':
+				line.append('A^' + str(cfg[1]) + '^' + str('+' if cfg[2] else '-'))
+		line.append(key)
+		line.append('')
 		
+		output.append('|'.join(line))
+	output = '\n'.join(output)
+	c = open('js_cache.txt', 'wt')
+	c.write(output)
+	c.close()

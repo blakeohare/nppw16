@@ -7,7 +7,8 @@ def main():
 
 	configureJoysticksFromFile()
 	getJoysticksPresent()	
-	
+	if joysticks_present.get(previous_active_joystick) != None:
+		set_active_joystick(previous_active_joystick)
 	real_screen = pygame.display.set_mode((WIDTH, HEIGHT))
 	virtual_screen = pygame.Surface((256, 224))
 	
