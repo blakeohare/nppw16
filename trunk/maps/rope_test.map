@@ -1,0 +1,5 @@
+#width:16
+#height:14
+#upper:,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+#lower:,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,rocks1,,,,,,,,,,,,,,rockyTopL,rockyTop,rockyTop,rockyTop,rockyTop,rockyTopR,ladder,rockyTopL,rockyTop,rockyTop,rockyTopR,,,,,,rockyBottomL,rockyBottom,rockyBottom,rockyBottom,rockyBottom,rockyBottomR,ladder,rockyBottomL,rockyBottom,rockyBottom,rockyBottomR,,,,,,,,,,,,ladder,,,,,,,,,,,,,,,,ladder,,,,,,,rockyTopL,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyTopR,rockyLeft,rockyMiddle,rockyMiddle,rockyMiddle,rockyMiddle,rockyMiddle,rockyMiddle,rockyMiddle,rockyMiddle,rockyMiddle,rockyMiddle,rockyMiddle,rockyMiddle,rockyMiddle,rockyMiddle,rockyRight
+#view:side
