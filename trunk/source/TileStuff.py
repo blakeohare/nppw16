@@ -25,9 +25,21 @@ class TileTemplate:
 	def __init__(self, id, flags, imagePaths):
 		self.id = id
 		self.solid = False
+		self.coveredA = False
+		self.coveredB = False
+		self.coveredC = False
+		self.coveredD = False
 		for flag in flags:
 			if flag == 'x':
 				self.solid = True
+			elif flag == 'A':
+				self.coveredA = True
+			elif flag == 'B':
+				self.coveredB = True
+			elif flag == 'C':
+				self.coveredC = True
+			elif flag == 'D':
+				self.coveredD = True
 		self.images = []
 		for path in imagePaths:
 			self.images.append(getImage('tiles/' + path))
@@ -108,7 +120,7 @@ class Tile:
 		
 		i = 0
 		while i < len(self.collisions):
-			c = self.collsions[i]
+			c = self.collisions[i]
 			c[0] = c[0] * 8 + col * 16
 			c[1] = c[1] * 8 + row * 16
 			c[2] = c[0] + c[2] * 8
