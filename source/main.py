@@ -22,9 +22,13 @@ def main():
 	while activeScene != None:
 		begin = time.time()
 		events = []
+		
+		poll_active_joystick(events, pressedActions)
+		
 		quitAttempt = False
 		pressedKeys = pygame.key.get_pressed()
 		altPressed = pressedKeys[pygame.K_LALT] or pressedKeys[pygame.K_RALT]
+		
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				quitAttempt = True

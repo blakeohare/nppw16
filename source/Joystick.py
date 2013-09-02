@@ -16,6 +16,7 @@ previous_active_joystick = None
 joysticks_present = {} # NAME to INDEX
 joystick_instances = [] # INDEX to INSTANCE
 
+JOYSTICK_BUTTON_ORDER = 'A B up down left right start'.split(' ')
 #def get_joystick_config(
 
 def configureJoysticksFromFile():
@@ -47,9 +48,9 @@ def configureJoysticksFromFile():
 			configs[name] = {}
 			ignoreMe = False
 			for i in range(len(cfgs)):
-				cfg = cfgs[i].split('^')
-				button = cfg[0]
-				cfg = cfg[1]
+			
+				button = cfgs[i][0]
+				cfg = cfgs[i][1].split('^')
 				type = cfg[0]
 				if type == 'B': # button
 					num = int(cfg[1])
@@ -124,7 +125,7 @@ def poll_active_joystick(events_out, pressedActions):
 	ajs = active_joystick_snapshot
 	js = joystick_instances[index]
 	config = cached_joysticks[name]
-	for button in buttons:
+	for button in JOYSTICK_BUTTON_ORDER:
 		cfg = config[button]
 		type = cfg[0]
 		if type == 'B':
@@ -146,9 +147,13 @@ def poll_active_joystick(events_out, pressedActions):
 		elif type == 'A':
 			state = js.get_axis(cfg[1])
 			if cfg[2]:
-				pressed = state > 0.3
+				pressed = state > 0.5
 			else:
-				pressed = state < -0.3
+				pressed = state < -0.5
+			if ajs[button] != pressed:
+				ajs[button] = pressed
+				events_out.append(MyEvent(button, pressed))
+				pressedActions[button] = pressed
 		else: pass # Destroy the universe and start over. Or just ignore.
 
 def serialize_joystick_config():
