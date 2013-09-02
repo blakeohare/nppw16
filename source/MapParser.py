@@ -19,11 +19,27 @@ class MapParser:
 		m = StemCell()
 		m.width = int(self.values['width'])
 		m.height = int(self.values['height'])
-		m.side = self.values['view'].lower() == 'side'
+		m.side = self.values.get('view', 'side').lower() == 'side'
 		m.upper = self.getTiles(self.values['upper'], m.width, m.height)
 		m.lower = self.getTiles(self.values['lower'], m.width, m.height)
+		m.doors = self.getDoors(self.values.get('doors', ''))
 		return m
-		
+	
+	def getDoors(self, doorString):
+		doorString = trim(doorString)
+		if len(doorString) == 0:
+			return []
+		doors = []
+		for door in doorString.split(','):
+			door = door.split('|')
+			d = StemCell()
+			d.target = door[0]
+			d.sx = int(door[1])
+			d.sy = int(door[2])
+			d.tx = int(door[3])
+			d.ty = int(door[4])
+			doors.append(d)
+		return doors
 		
 	def getTiles(self, ids, width, height):
 		output = []
