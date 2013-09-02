@@ -1,7 +1,25 @@
 NEIGHBOR_RANGE = (-1, 0, 1)
 
-def SPRITE_renderPlayerOver(sprite, screen, offsetX, offsetY, rc):
-	pygame.draw.rect(screen, (0, 255, 0), pygame.Rect(sprite.x + offsetX - 8, sprite.y + offsetY - 8, 16, 16))
+SPRITE_HEIGHT = {
+	'player_side': 32
+}
+
+G = 0.7
+
+def getSpriteHeight(type):
+	return SPRITE_HEIGHT.get(type, 16)
+
+
+def SPRITE_renderPlayerOver(sprite, scene, screen, offsetX, offsetY, rc):
+	left = sprite.x + offsetX - 8
+	top = sprite.y + offsetY - 8
+	width = 16
+	height = 16
+	if scene.side:
+		top -= 16
+		height = 32
+	
+	pygame.draw.rect(screen, (0, 255, 0), pygame.Rect(left, top, width, height))
 
 XY_PAIRINGS = [
 	(0, 0),
@@ -23,9 +41,12 @@ class Sprite:
 		self.modelY = py + 0.0
 		self.xs = [None] * 5
 		self.ys = [None] * 5
-		
+		self.vy = 0
+		self.onGround = False
 		self.neighbors = [None] * 36
 		self.renderImpl = SPRITE_renderPlayerOver
+		self.dx = 0
+		self.dy = 0
 		
 	def checkNeighborCollision(self, scene, col, row, targetX, targetY):
 		area_left = targetX - 5
@@ -75,7 +96,81 @@ class Sprite:
 		
 	def update(self, scene):
 		if scene.side:
-			pass
+			# hotspot is located in the center of the bottom most tile
+			areaX = self.modelX
+			areaBottom = self.modelY + 8
+			heightFromHotSpot = getSpriteHeight(self.type) - 8 - 4
+			areaTop = self.modelY - heightFromHotSpot
+			
+			width = scene.cols
+			height = scene.rows
+			
+			# side-to-side calcuation is done first, independent of whether you are on the ground.
+			if self.dx != 0:
+				newX = self.modelX + self.dx
+				# isCollision ignores collisions near the sprite's feet
+				# if you are near ground, you will be automatically placed standing
+				# upon it at the end of the vertical adjustment phase.
+				if not scene.isCollision(newX, areaTop, newX, areaBottom):
+					self.modelX = newX
+			
+			# vertical adjustment phase
+			# assume sprite is flying through the air unless you see ground
+			wasOnGround = self.onGround # save the previous ground state. If you weren't on ground before but suddenly are, then you "landed" and a sound should be played. 
+			self.onGround = False
+			if wasOnGround:
+				self.vy = 0
+			else:
+				self.vy += G
+			
+			self.dy += self.vy
+			
+			if self.dy > 10:
+				self.dy = 10
+			
+			tileX = int(self.modelX / 16)
+			
+			newBottom = areaBottom + self.dy
+			newTop = areaTop + self.dy
+			no = False
+			if self.dy < 0:
+				# Going Up
+				if newTop < 0:
+					# TODO: do top transitions here.
+					no = True
+				else:
+					newTileTop = int(newTop / 16)
+					if scene.tiles[tileX][newTileTop].solid:	
+						no = False
+						self.vy = 0
+						playNoise('hit_head')
+			else:
+				# Going Down (or staying the same)
+				# The philosophy here is different. When you encounter a collision,
+				# rather than stop the movement, you find where the top of the collided
+				# tile is and place the sprite there.
+				
+				newTileBottom = int(newBottom / 16)
+				
+				# If the player fell off the bottom
+				if newTileBottom >= height:
+					# TODO: check if there is a transition registered with the map.
+					# If so begin that transition instead of killing the player.
+					playNoise('DEATH')
+					scene.next = DeathScene()
+					no = True
+				else:
+					if scene.tiles[tileX][newTileBottom].solid:
+						no = True
+						self.onGround = True
+						self.modelY = newTileBottom * 16 - 8
+						if not wasOnGround:
+							playNoise('land_on_ground')
+					
+			if not no:
+				self.modelY = newBottom - 8
+			self.x = int(self.modelX)
+			self.y = int(self.modelY)
 		else:
 			if self.dx != 0 or self.dy != 0:
 				xs = self.xs
@@ -108,5 +203,5 @@ class Sprite:
 				self.dx = 0
 				self.dy = 0
 	
-	def render(self, screen, offsetX, offsetY, rc):
-		self.renderImpl(self, screen, offsetX, offsetY, rc)
+	def render(self, scene, screen, offsetX, offsetY, rc):
+		self.renderImpl(self, scene, screen, offsetX, offsetY, rc)

@@ -48,8 +48,27 @@ class PlayScene:
 		
 	def processInput(self, events, pressed):
 		if self.side:
-			print("TODO: side scroller part")
-			z = 1 / 0
+			dx = 0
+			dy = 0
+			v = 3
+			if pressed['left']:
+				dx = -v
+			elif pressed['right']:
+				dx = v
+			
+			if self.player != None:
+				self.player.dx = dx
+			
+			for event in events:
+				if event.action == 'A':
+					if event.down:
+						if self.player.onGround:
+							self.player.onGround = False
+							self.player.vy = -5
+					else:
+						if self.player.vy < 0:
+							self.player.vy = self.player.vy / 4.0 # maybe set to 0 instead?
+							
 		else:
 			v = 3
 			dx = 0
@@ -79,6 +98,30 @@ class PlayScene:
 			door = activeTile.door
 			self.next = PlayScene(door.target, door.tx, door.ty)
 	
+	def isCollision(self, pLeft, pTop, pRight, pBottom):
+		tLeft = int(pLeft / 16)
+		tRight = tLeft if (pRight == pLeft) else int(pRight / 16)
+		tTop = int(pTop / 16)
+		
+		# potentially a bug
+		# bottom row of sprite is technically top row of ground below. This intersection should be ignored.
+		tBottom = int((pBottom - 3) / 16) 
+		
+		if tLeft < 0: tLeft = 0
+		if tTop < 0: tTop = 0
+		if tRight >= self.cols: tRight = self.width - 1
+		if tBottom >= self.rows: tBottom = self.height - 1
+		
+		y = tTop
+		while y <= tBottom:
+			x = tLeft
+			while x <= tRight:
+				if self.tiles[x][y].solid:
+					return True
+				x += 1
+			y += 1
+		return False
+		
 	def render(self, screen, rc):
 		screen.fill((0, 0, 0))
 		
@@ -122,4 +165,4 @@ class PlayScene:
 			row += 1
 		
 		for sprite in self.sprites:
-			sprite.render(screen, offsetX, offsetY, rc)
+			sprite.render(self, screen, offsetX, offsetY, rc)

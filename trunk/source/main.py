@@ -45,6 +45,9 @@ def main():
 				elif event.key == pygame.K_DOWN:
 					events.append(MyEvent('down', down))
 					pressedActions['down'] = down
+				elif event.key == pygame.K_SPACE:
+					events.append(MyEvent('A', down))
+					pressedActions['A'] = down
 					
 		if quitAttempt:
 			activeScene = None
