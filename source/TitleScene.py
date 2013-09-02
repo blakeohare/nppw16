@@ -6,7 +6,7 @@ class TitleScene:
 	
 	def processInput(self, events, pressedKeys):
 		for event in events:
-			if event.down and event.action == 'start':
+			if self.flash_counter < 0 and event.down and event.action == 'start':
 				self.flash_counter = 30
 				# TODO: play sound
 	
