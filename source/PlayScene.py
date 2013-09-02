@@ -64,7 +64,7 @@ class PlayScene:
 					if event.down:
 						if self.player.onGround:
 							self.player.onGround = False
-							self.player.vy = -5
+							self.player.vy = JUMPING_VY
 					else:
 						if self.player.vy < 0:
 							self.player.vy = self.player.vy / 4.0 # maybe set to 0 instead?
