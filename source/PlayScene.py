@@ -48,14 +48,11 @@ class PlayScene:
 	def render(self, screen, rc):
 		screen.fill((0, 0, 0))
 		
-		left = self.player.x - 128
-		top = self.player.y - 112
+		colStart = 0
+		colEnd = self.cols - 1
 		
 		rowStart = 0
 		rowEnd = self.rows - 1
-		
-		colStart = 0
-		colEnd = self.cols - 1
 		
 		offsetX = -(self.player.x - 128)
 		offsetY = -(self.player.y - 112)
@@ -63,10 +60,16 @@ class PlayScene:
 		if offsetX > 0: offsetX = 0
 		if offsetY > 0: offsetY = 0
 		
-		right = self.cols * 16 - 256
-		if offsetX > right: offsetX = right
-		bottom = self.rows * 16 - 224
-		if offsetY > bottom: offsetY = bottom
+		right = -(self.cols * 16 - 256)
+		if offsetX < right: offsetX = right
+		
+		bottom = -(self.rows * 16 - 224)
+		if offsetY < bottom: offsetY = bottom
+		
+		if self.cols * 16 < 256:
+			offsetX = (256 - self.cols * 16) // 2
+		if self.rows * 16 < 224:
+			offsetY = (224 - self.rows * 16) // 2
 		
 		row = rowStart
 		while row <= rowEnd:
