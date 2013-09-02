@@ -35,6 +35,9 @@ rockyRight		rocky/right.png
 rockyBottomL		rocky/bottomleft.png
 rockyBottom		rocky/bottom.png
 rockyBottomR		rocky/bottomright.png
+rocks1	x	rocky/rocks1.png
+rocks2	x	rocky/rocks2.png
+rocks3	x	rocky/rocks3.png
 crater		rocky/crater.png
 bigcrater1		rocky/bigcrater1.png
 bigcrater2		rocky/bigcrater2.png
@@ -59,3 +62,4 @@ lava		fluids/lava.png
 lavatop		fluids/lava1.png,fluids/lava2.png,fluids/lava3.png,fluids/lava4.png
 lavafall		fluids/lavafall1.png,fluids/lavafall2.png
 ladder		basics/ladder.png
+rope		basics/rope.png
