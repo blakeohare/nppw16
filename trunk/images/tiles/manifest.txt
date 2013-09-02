@@ -12,6 +12,7 @@
 #	D - bottom right corner is solid
 #	R - top of a 2-tile door (sidescroll mode)
 #	r - 1-tile door (overworld)
+#	L - Ladder
 
 
 test1	x	test/test1.png
@@ -65,8 +66,8 @@ waterfall		fluids/waterfall1.png,fluids/waterfall2.png
 lava		fluids/lava.png
 lavatop		fluids/lava1.png,fluids/lava2.png,fluids/lava3.png,fluids/lava4.png
 lavafall		fluids/lavafall1.png,fluids/lavafall2.png
-ladder		basics/ladder.png
-rope		basics/rope.png
+ladder	L	basics/ladder.png
+rope	L	basics/rope.png
 darkness	x	crevasse/darkness.png
 ctop1	x	crevasse/top1.png
 ctop2	x	crevasse/top2.png
