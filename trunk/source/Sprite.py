@@ -182,7 +182,15 @@ class Sprite:
 					scene.next = DeathScene()
 					no = True
 				else:
-					if scene.tiles[tileX][newTileBottom].solid:
+					t = scene.tiles[tileX][newTileBottom]
+					topStop = False
+					if t.isTop:
+						oldTileBottom = int(areaBottom / 16)
+						if newTileBottom > oldTileBottom:
+							topStop = True
+						elif newTileBottom == oldTileBottom and areaBottom == newBottom:
+							topStop = True
+					if t.solid or topStop:
 						no = True
 						self.onGround = True
 						self.modelY = newTileBottom * 16 - 8
