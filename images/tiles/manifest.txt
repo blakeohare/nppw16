@@ -26,6 +26,10 @@ ter5	BCD	surface/terrace-top-left.png
 ter6	ACD	surface/terrace-top-right.png
 ter7	x	surface/terrace-bottom-left.png
 ter8	x	surface/terrace-bottom-right.png
+ter9	x	surface/terrace-concave-bottom-left.png
+ter10	x	surface/terrace-concave-bottom-right.png
+ter11	x	surface/terrace-concave-top-left.png
+ter12	x	surface/terrace-concave-top-right.png
 rockyTopL	x	rocky/topleft.png
 rockyTop	x	rocky/topmiddle.png
 rockyTopR	x	rocky/topright.png
