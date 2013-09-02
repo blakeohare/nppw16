@@ -74,36 +74,39 @@ class Sprite:
 		return True
 		
 	def update(self, scene):
-		if self.dx != 0 or self.dy != 0:
-			xs = self.xs
-			ys = self.ys
-			
-			xs[0] = self.modelX + self.dx
-			xs[1] = self.modelX + self.dx * 3.0 / 4
-			xs[2] = self.modelX + self.dx / 2.0
-			xs[3] = self.modelX + self.dx / 4.0
-			xs[4] = self.modelX
-			
-			ys[0] = self.modelY + self.dy
-			ys[1] = self.modelY + self.dy * 3.0 / 4
-			ys[2] = self.modelY + self.dy / 2.0
-			ys[3] = self.modelY + self.dy / 4.0
+		if scene.side:
+			pass
+		else:
+			if self.dx != 0 or self.dy != 0:
+				xs = self.xs
+				ys = self.ys
+				
+				xs[0] = self.modelX + self.dx
+				xs[1] = self.modelX + self.dx * 3.0 / 4
+				xs[2] = self.modelX + self.dx / 2.0
+				xs[3] = self.modelX + self.dx / 4.0
+				xs[4] = self.modelX
+				
+				ys[0] = self.modelY + self.dy
+				ys[1] = self.modelY + self.dy * 3.0 / 4
+				ys[2] = self.modelY + self.dy / 2.0
+				ys[3] = self.modelY + self.dy / 4.0
 
-			for pairing in XY_PAIRINGS:
-				newx = xs[pairing[0]]
-				newy = ys[pairing[1]]
-				col = int(newx / 16)
-				row = int(newy / 16)
+				for pairing in XY_PAIRINGS:
+					newx = xs[pairing[0]]
+					newy = ys[pairing[1]]
+					col = int(newx / 16)
+					row = int(newy / 16)
 
-				if self.checkNeighborCollision(scene, col, row, newx, newy):
-					self.modelX = newx
-					self.modelY = newy
-					self.x = int(self.modelX)
-					self.y = int(self.modelY)
-					break
-			
-			self.dx = 0
-			self.dy = 0
+					if self.checkNeighborCollision(scene, col, row, newx, newy):
+						self.modelX = newx
+						self.modelY = newy
+						self.x = int(self.modelX)
+						self.y = int(self.modelY)
+						break
+				
+				self.dx = 0
+				self.dy = 0
 	
 	def render(self, screen, offsetX, offsetY, rc):
 		self.renderImpl(self, screen, offsetX, offsetY, rc)
