@@ -35,17 +35,22 @@ class JoystickMenuScene:
 		title = getText((255, 255, 0), "Joystick Selection")
 		cursor = getText((255, 255, 255), ">")
 		screen.fill((0, 0, 0))
-		screen.blit(title, (32, 16))
+		
+		left = 32
+		drawBox(screen, left - 16, 16, 30, (len(self.options) + 1) * 2 + 3)
+		
 		y = 32
+		screen.blit(title, (32, y))
+		y += 16
 		index = 0
 		for option in self.options:
 			selected = False
 			if index == self.index:
-				screen.blit(cursor, (16, y))
+				screen.blit(cursor, (left, y))
 				selected = True
 			
 			if not selected or self.blink_counter <= 0 or rc % 4 < 2:
-				screen.blit(getText((255, 255, 255), option), (32, y))
+				screen.blit(getText((255, 255, 255), option), (left + 16, y))
 			index += 1
 			y += 16
 		

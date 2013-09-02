@@ -55,13 +55,17 @@ class TitleScene:
 		
 		index = 0
 		y = 136
+		left = 64
+		
+		drawBox(screen, left - 32, y - 16, 24, 9)
+		
 		for option in self.options:
 			
 			if index == self.index:
-				screen.blit(getText((255, 255, 255), ">"), (64, y))
+				screen.blit(getText((255, 255, 255), ">"), (left - 16, y))
 			
 			if index != self.index or showText:
-				screen.blit(getText((255, 255, 255), option[1]), (80, y))
+				screen.blit(getText((255, 255, 255), option[1]), (left, y))
 			
 			index += 1
 			y += 16
