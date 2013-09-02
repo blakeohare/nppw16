@@ -14,12 +14,17 @@ class Sprite:
 		
 	def update(self, scene):
 		if self.dx != 0 or self.dy != 0:
-			self.modelX += self.dx
-			self.modelY += self.dy
+			newx = self.modelX + self.dx
+			newy = self.modelY + self.dy
+			col = int(newx / 16)
+			row = int(newy / 16)
+			if scene.passable[col][row]:
+				self.modelX = newx
+				self.modelY = newy
+				self.x = int(self.modelX)
+				self.y = int(self.modelY)
 			self.dx = 0
 			self.dy = 0
-			self.x = int(self.modelX)
-			self.y = int(self.modelY)
 	
 	def render(self, screen, offsetX, offsetY, rc):
 		self.renderImpl(self, screen, offsetX, offsetY, rc)
