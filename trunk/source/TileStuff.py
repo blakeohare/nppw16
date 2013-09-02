@@ -29,6 +29,7 @@ class TileTemplate:
 		self.coveredB = False
 		self.coveredC = False
 		self.coveredD = False
+		self.isDoor = False
 		for flag in flags:
 			if flag == 'x':
 				self.solid = True
@@ -40,6 +41,8 @@ class TileTemplate:
 				self.coveredC = True
 			elif flag == 'D':
 				self.coveredD = True
+			elif flag == 'r' or flag == 'R':
+				self.isDoor = True
 		self.images = []
 		for path in imagePaths:
 			self.images.append(getImage('tiles/' + path))
@@ -57,10 +60,16 @@ class TileTemplate:
 class Tile:
 	def __init__(self, lower, upper, col, row):
 		self.templates = []
+		self.isDoor = False
+		self.door = None
 		if lower != None:
 			self.templates.append(lower)
+			if lower.isDoor:
+				self.isDoor = True
 		if upper != None:
 			self.templates.append(upper)
+			if upper.isDoor:
+				self.isDoor = True
 		
 		self.collisions = []
 		

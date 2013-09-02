@@ -15,13 +15,30 @@ class PlayScene:
 		
 		self.tiles = makeGrid(self.cols, self.rows)
 		
+		doorTiles = []
+		
 		y = 0
 		while y < self.rows:
 			x = 0
 			while x < self.cols:
-				self.tiles[x][y] = Tile(self.lower[x][y], self.upper[x][y], x, y)
+				
+				t = Tile(self.lower[x][y], self.upper[x][y], x, y)
+				self.tiles[x][y] = t
+				if t.isDoor:
+					doorTiles.append((str(x) + '|' + str(y), t))
 				x += 1
 			y += 1
+		
+		doorLookup = {}
+		for door in map.doors:
+			doorLookup[str(door.sx) + '|' + str(door.sy)] = door
+		
+		for doorTile in doorTiles:
+			dk = doorTile[0]
+			door = doorLookup.get(dk, None)
+			if door != None:
+				doorTile[1].door = door
+				doorTile[1].collisions = []
 		
 		self.cameraX = 0
 		self.cameraY = 0
@@ -54,6 +71,13 @@ class PlayScene:
 	def update(self):
 		for sprite in self.sprites:
 			sprite.update(self)
+			
+		player_tx = int(self.player.modelX / 16)
+		player_ty = int(self.player.modelY / 16)
+		activeTile = self.tiles[player_tx][player_ty]
+		if activeTile.door != None:
+			door = activeTile.door
+			self.next = PlayScene(door.target, door.tx, door.ty)
 	
 	def render(self, screen, rc):
 		screen.fill((0, 0, 0))
