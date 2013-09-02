@@ -52,3 +52,4 @@ waterfall		fluids/waterfall1.png,fluids/waterfall2.png
 lava		fluids/lava.png
 lavatop		fluids/lava1.png,fluids/lava2.png,fluids/lava3.png,fluids/lava4.png
 lavafall		fluids/lavafall1.png,fluids/lavafall2.png
+ladder		basics/ladder.png
