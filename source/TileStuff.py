@@ -59,6 +59,8 @@ class TileTemplate:
 
 class Tile:
 	def __init__(self, lower, upper, col, row):
+		self.col = col
+		self.row = row
 		self.templates = []
 		self.isDoor = False
 		self.door = None
@@ -72,6 +74,7 @@ class Tile:
 				self.isDoor = True
 		
 		self.collisions = []
+		self.solid = False
 		
 		coveredA = False
 		coveredB = False
@@ -84,6 +87,7 @@ class Tile:
 				coveredB = True
 				coveredC = True
 				coveredD = True
+				self.solid = True
 			else:
 				coveredA = coveredA or t.coveredA
 				coveredB = coveredB or t.coveredB
@@ -101,6 +105,7 @@ class Tile:
 			coveredB = False
 			coveredC = False
 			coveredD = False
+			self.solid = True
 		elif leftCovered:
 			self.collisions.append([0, 0, 1, 2])
 			coveredA = False
