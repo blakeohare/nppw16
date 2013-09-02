@@ -10,10 +10,13 @@
 #	B - top right corner is solid
 #	C - bottom left corner is solid
 #	D - bottom right corner is solid
+#	R - top of a 2-tile door (sidescroll mode)
+#	r - 1-tile door (overworld)
 
 
 test1	x	test/test1.png
 test2	x	test/test2.png
+cave	r	doors/cave.png
 ground		surface/ground.png
 ter1	CD	surface/terrace-top.png
 ter2	x	surface/terrace-bottom.png
