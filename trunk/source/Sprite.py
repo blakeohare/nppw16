@@ -49,6 +49,8 @@ class Sprite:
 		self.renderImpl = SPRITE_renderPlayerOver
 		self.dx = 0
 		self.dy = 0
+		self.cling = False
+		self.ladderDY = 0
 		
 	def checkNeighborCollision(self, scene, col, row, targetX, targetY):
 		area_left = targetX - 5
@@ -127,12 +129,26 @@ class Sprite:
 			else:
 				self.vy += G
 			
-			self.dy += self.vy
+			# If you're clinging to a ladder, then throw out the vy entirely.
+			# Use self.ladderDY instead
+			if self.cling:
+				self.dy = self.ladderDY
+				self.vy = 0
+			else:
+				self.dy += self.vy
+			
+			self.ladderDY = 0
 			
 			if self.dy > 10:
 				self.dy = 10
+			elif self.dy < -10:
+				self.dy = -10
 			
 			tileX = int(self.modelX / 16)
+			tileY = int(self.modelY / 16)
+			
+			wasCling = self.cling
+			movedUp = False
 			
 			newBottom = areaBottom + self.dy
 			newTop = areaTop + self.dy
@@ -148,6 +164,8 @@ class Sprite:
 						no = False
 						self.vy = 0
 						playNoise('hit_head')
+					else:
+						movedUp = True
 			else:
 				# Going Down (or staying the same)
 				# The philosophy here is different. When you encounter a collision,
@@ -177,6 +195,17 @@ class Sprite:
 			self.y = int(self.modelY)
 			self.dy = 0
 			self.dy = 0
+			
+			tileY = int(self.modelY / 16)
+			
+			if scene.tiles[tileX][tileY].isLadder:
+				pass
+			else:
+				self.cling = False
+			
+			if movedUp and wasCling and not self.cling:
+				self.modelY = 16 * tileY # maybe?
+			
 		else:
 			if self.dx != 0 or self.dy != 0:
 				xs = self.xs
