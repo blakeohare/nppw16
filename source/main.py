@@ -14,6 +14,11 @@ def main():
 	
 	activeScene = OpeningScene()
 	renderCounter = 0
+
+	pygame.display.set_caption("Space Squirrel")
+	ico = getImage('sprites/space_overworld_right_2.png')
+	ico = pygame.transform.scale2x(ico)
+	pygame.display.set_icon(ico)
 	
 	pressedActions = {}
 	for action in 'left up down right A B start'.split():
