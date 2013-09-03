@@ -12,7 +12,7 @@ class PlayScene:
 		self.hasAtmosphere = False
 
 		self.bg = getBackground(levelname)
-		stars = legacyMap(lambda x:getImage('tiles/background/stars' + str(x) + '.png'), [1, 2, 3, 4, 5]) + ([None] * 5)
+		stars = legacyMap(lambda x:getImage('tiles/background/stars' + str(x) + '.png'), [1, 2, 3, 4, 5]) + ([None] * 10)
 		stars *= 3
 		random.shuffle(stars)
 		self.stars = stars
