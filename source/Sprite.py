@@ -1,12 +1,14 @@
 NEIGHBOR_RANGE = (-1, 0, 1)
 
 JUMPING_VY = -14
+RUN_JUMPING_VY = -16
 
 SPRITE_HEIGHT = {
 	'player_side': 32
 }
 
 G = 0.7
+STRONG_G = 1.55
 
 def getSpriteHeight(type):
 	return SPRITE_HEIGHT.get(type, 16)
@@ -170,7 +172,10 @@ class Sprite:
 			if wasOnGround:
 				self.vy = 0
 			else:
-				self.vy += G
+				if scene.context.gravity:
+					self.vy += STRONG_G
+				else:
+					self.vy += G
 			
 			# If you're clinging to a ladder, then throw out the vy entirely.
 			# Use self.ladderDY instead

@@ -16,6 +16,10 @@ class PlayScene:
 		stars *= 3
 		random.shuffle(stars)
 		self.stars = stars
+		self.runCounter = 0
+		self.runCounterValidFor = ':P'
+		
+		self.gravity = self.context.gravity
 		
 		self.cols = map.width
 		self.rows = map.height
@@ -80,11 +84,30 @@ class PlayScene:
 		if self.side:
 			dx = 0
 			dy = 0
-			v = 3
+			running = False
+			if self.gravity:
+				if pressed['B']:
+					running = True
+					v = 5
+				else:
+					v = 3
+			else:
+				v = 2.5
+				
 			if pressed['left']:
 				dx = -v
+				if running and self.runCounterValidFor == 'left':
+					self.runCounter += 1
+				else:
+					self.runCounter = 0
+					self.runCounterValidFor = 'left'
 			elif pressed['right']:
 				dx = v
+				if running and self.runCounterValidFor == 'right':
+					self.runCounter += 1
+				else:
+					self.runCounter = 0
+					self.runCounterValidFor = 'right'
 			elif pressed['up']:
 				pt = self.playersTile()
 				if pt != None and pt.isLadder:
@@ -101,7 +124,10 @@ class PlayScene:
 						self.player.modelY += 8
 						self.player.ladderDY = 2
 						self.player.cling = True
-			
+			else:
+				self.runCounter = 0
+				self.runCounterValidFor = 'nothing'
+				
 			if self.player != None:
 				self.player.dx = dx
 			
@@ -113,6 +139,8 @@ class PlayScene:
 							self.player.cling = False
 							self.player.ladderDY = 0
 							self.player.vy = JUMPING_VY
+							if self.runCounter > 5 and self.context.gravity:
+								self.player.vy = RUN_JUMPING_VY
 					else:
 						if self.player.vy < 0:
 							self.player.vy = self.player.vy / 4.0 # maybe set to 0 instead?
