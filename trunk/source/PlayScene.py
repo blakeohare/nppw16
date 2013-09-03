@@ -31,9 +31,9 @@ class PlayScene:
 		
 		doorTiles = []
 		ladderTiles = {}
-		
-		y = 0
-		while y < self.rows:
+		lowerdoors = []
+		y = self.rows - 1
+		while y >= 0:
 			x = 0
 			while x < self.cols:
 				
@@ -41,10 +41,16 @@ class PlayScene:
 				self.tiles[x][y] = t
 				if t.isDoor:
 					doorTiles.append((str(x) + '|' + str(y), t))
+					if self.side and y + 1 < self.rows:
+						# add the tile below the door to the potential door tiles
+						# the door list from the map parser will check for the tile below a door iff it's a tall door and is 
+						# expecting to find it in this list. If not, then this gets safely ignored
+						doorTiles.append((str(x) + '|' + str(y + 1), self.tiles[x][y + 1]))
+						
 				if t.isLadder:
 					ladderTiles[str(x) + '|' + str(y)] = (x, y)
 				x += 1
-			y += 1
+			y -= 1 # go backwards so doors can add lower neighbor
 		
 		for lk in ladderTiles.keys():
 			coord = ladderTiles[lk]
@@ -56,7 +62,11 @@ class PlayScene:
 		
 		doorLookup = {}
 		for door in map.doors:
-			doorLookup[str(door.sx) + '|' + str(door.sy)] = door
+			xys = [(door.sx, door.sy)]
+			if self.side:
+				xys.append((door.sx, door.sy + 1))
+			for xy in xys:
+				doorLookup[str(xy[0]) + '|' + str(xy[1])] = door
 		
 		for doorTile in doorTiles:
 			dk = doorTile[0]
@@ -64,6 +74,7 @@ class PlayScene:
 			if door != None:
 				doorTile[1].door = door
 				doorTile[1].collisions = []
+				doorTile[1].solid = False
 		
 		self.cameraX = 0
 		self.cameraY = 0
