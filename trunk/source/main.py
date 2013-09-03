@@ -90,7 +90,7 @@ def main():
 		if delay > 0:
 			time.sleep(delay)
 		else:
-			print ("FRAME DROPPING:", 100.0 / diff, "FPS")
+			print ("FRAME DROPPING:", 1.0 / diff, "FPS")
 
 
 main()
