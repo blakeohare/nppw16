@@ -2,12 +2,12 @@
 
 CAVE_BG = [
 
-	'rope_test',
 	'grav_descent',
 	'grav_descent_secret'
 ]
 
 STARS_BG = [
+	'rope_test'
 ]
 
 
