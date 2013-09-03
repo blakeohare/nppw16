@@ -1,5 +1,6 @@
 class PlayScene:
-	def __init__(self, map, startCol, startRow):
+	def __init__(self, map, startCol, startRow, context):
+		self.context = context
 		self.next = self
 		self.flags = ''
 		if not map.endswith('.map'):
@@ -136,7 +137,7 @@ class PlayScene:
 		activeTile = self.tiles[player_tx][player_ty]
 		if activeTile.door != None:
 			door = activeTile.door
-			self.next = PlayScene(door.target, door.tx, door.ty)
+			self.next = PlayScene(door.target, door.tx, door.ty, self.context)
 	
 	def isCollision(self, pLeft, pTop, pRight, pBottom):
 		if pLeft < 0: return True
