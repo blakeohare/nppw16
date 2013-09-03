@@ -220,7 +220,14 @@ class PlayScene:
 						trigger == 'waterC' and ctx.balloonC)):
 						target = swap[1]
 						break
-			self.next = PlayScene(target, door.tx, door.ty, self.context)
+			
+			for special in self.special:
+				if special.hasDoorTrigger:
+					target = special.doorTrigger(target)
+					break
+			
+			if target != None:
+				self.next = PlayScene(target, door.tx, door.ty, self.context)
 		
 		for special in self.special:
 			if special.hasUpdate:
