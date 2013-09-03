@@ -2,6 +2,7 @@ NEIGHBOR_RANGE = (-1, 0, 1)
 
 JUMPING_VY = -14
 RUN_JUMPING_VY = -16
+WATER_JUMPING_VY = -5
 
 SPRITE_HEIGHT = {
 	'player_side': 32
@@ -9,6 +10,7 @@ SPRITE_HEIGHT = {
 
 G = 0.7
 STRONG_G = 1.55
+WATER_G = 0.3
 
 def getSpriteHeight(type):
 	return SPRITE_HEIGHT.get(type, 16)
@@ -24,8 +26,6 @@ def SPRITE_renderPlayerOver(sprite, scene, screen, offsetX, offsetY, arc):
 		height = 32
 	
 	if scene.side:
-		
-		
 		base = 'basic' if scene.hasAtmosphere else 'space'
 		moving = sprite.moving
 		if sprite.cling:
@@ -165,6 +165,9 @@ class Sprite:
 						self.lastDirection = 'left'
 				self.dx = 0
 			
+			tileX = int(self.modelX / 16)
+			tileY = int(self.modelY / 16)
+			
 			# vertical adjustment phase
 			# assume sprite is flying through the air unless you see ground
 			wasOnGround = self.onGround # save the previous ground state. If you weren't on ground before but suddenly are, then you "landed" and a sound should be played. 
@@ -172,7 +175,9 @@ class Sprite:
 			if wasOnGround:
 				self.vy = 0
 			else:
-				if scene.context.gravity:
+				if scene.tiles[tileX][tileY].isWater:
+					self.vy += WATER_G
+				elif scene.context.gravity:
 					self.vy += STRONG_G
 				else:
 					self.vy += G
@@ -191,9 +196,6 @@ class Sprite:
 				self.dy = 10
 			elif self.dy < -10:
 				self.dy = -10
-			
-			tileX = int(self.modelX / 16)
-			tileY = int(self.modelY / 16)
 			
 			wasCling = self.cling
 			movedUp = False
