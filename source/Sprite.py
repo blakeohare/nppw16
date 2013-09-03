@@ -48,7 +48,14 @@ def SPRITE_renderPlayerOver(sprite, scene, screen, offsetX, offsetY, arc):
 			img = getImage('sprites/' + path +'.png')
 			left = left + 16 - img.get_width()
 	else:
-		img = getImage('sprites/space_overworld_down_1.png')
+		counter = '1232'[arc % 4] if sprite.moving else '2'
+		dir = sprite.lastDirection
+		reverse = False
+		if dir == 'left':
+			reverse = True
+			dir = 'right'
+		path = 'sprites/space_overworld_' + dir + '_' + counter + '.png'
+		img = getBackwardsImage(path) if reverse else getImage(path) 
 	screen.blit(img, (left, top))
 
 XY_PAIRINGS = [
@@ -251,7 +258,19 @@ class Sprite:
 				self.modelY = 16 * tileY # maybe?
 			
 		else:
+			self.moving = False
 			if self.dx != 0 or self.dy != 0:
+				self.moving = True
+				
+				if self.dy < 0:
+					self.lastDirection = 'up'
+				elif self.dy > 0:
+					self.lastDirection = 'down'
+				elif self.dx < 0:
+					self.lastDirection = 'left'
+				else:
+					self.lastDirection = 'right'
+					
 				xs = self.xs
 				ys = self.ys
 				
