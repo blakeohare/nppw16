@@ -34,7 +34,17 @@ def SPRITE_renderAcorn(sprite, scene, screen, offsetX, offsetY, arc):
 	else:
 		img = getImage(path)
 	screen.blit(img, (left, top))
-		
+
+def SPRITE_renderAcornTop(sprite, scene, screen, offsetX, offsetY, arc):
+	left = sprite.x + offsetX - 8
+	top = sprite.y + offsetY - 8
+	width = 16
+	height = 16
+	path = 'acorn_projectile_1'
+	path = 'sprites/' + path + '.png'
+	img = getImage(path)
+	screen.blit(img, (left, top))
+
 #arc = adjusted render counter (slowed down for animation frames, so I don't have to do rc = (rc // 4) to slow things down
 def SPRITE_renderPlayerOver(sprite, scene, screen, offsetX, offsetY, arc):
 	left = sprite.x + offsetX - 8
@@ -112,9 +122,20 @@ class Sprite:
 		self.lastDirection = 'right'
 		self.onGround = False
 		self.neighbors = [None] * 36
+		self.spawns = None
+		self.dead = False
+		self.deleteWhenOffScreen = False
+		self.ghost = False
 		self.renderImpl = SPRITE_renderPlayerOver
+		self.automation = None
 		if type == 'acorn':
 			self.renderImpl = SPRITE_renderAcorn
+			self.automation = AcornAutomation(self)
+		elif type == 'acorntop':
+			self.renderImpl = SPRITE_renderAcornTop
+			self.automation = AcornTopAutomation(self)
+			self.acorntopdir = 'left'
+		
 		self.dx = 0
 		self.dy = 0
 		self.ddx = 0 # "damage dx", will stay set until you land on the ground or blink counter goes < 0
@@ -122,6 +143,7 @@ class Sprite:
 		self.cling = False
 		self.ladderDY = 0
 		self.blinkCounter = -1
+		
 		
 	def checkNeighborCollision(self, scene, col, row, targetX, targetY):
 		area_left = targetX - 5
@@ -170,6 +192,10 @@ class Sprite:
 		return True
 		
 	def update(self, scene):
+		
+		if self.automation != None:
+			self.automation.doStuff(scene)
+		
 		self.blinkCounter -= 1
 		if self.blinkCounter < 0 or self.onGround:
 			self.ddx = 0
