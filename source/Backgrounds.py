@@ -7,7 +7,8 @@ CAVE_BG = [
 ]
 
 STARS_BG = [
-	'rope_test'
+	'rope_test',
+	'ship_1'
 ]
 
 
