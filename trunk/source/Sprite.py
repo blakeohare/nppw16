@@ -6,7 +6,9 @@ WATER_JUMPING_VY = -5
 
 SPRITE_HEIGHT = {
 	'player_side': 32,
-	'acorn': 16
+	'acorn': 16,
+	'acorntop': 16,
+	'gravity_device': 16
 }
 
 G = 0.7
@@ -15,6 +17,12 @@ WATER_G = 0.3
 
 def getSpriteHeight(type):
 	return SPRITE_HEIGHT.get(type, 16)
+
+def SPRITE_renderGravityDevice(sprite, scene, screen, offsetX, offsetY, arc):
+	left = sprite.x + offsetX - 8
+	top = sprite.y + offsetY - 8
+	
+	screen.blit(getImage('sprites/gravity_device.png'), (left, top))
 
 def SPRITE_renderAcorn(sprite, scene, screen, offsetX, offsetY, arc):
 	left = sprite.x + offsetX - 8
@@ -135,7 +143,10 @@ class Sprite:
 			self.renderImpl = SPRITE_renderAcornTop
 			self.automation = AcornTopAutomation(self)
 			self.acorntopdir = 'left'
-		
+		elif type == 'gravity_device':
+			self.renderImpl = SPRITE_renderGravityDevice
+			self.automation = None
+			
 		self.dx = 0
 		self.dy = 0
 		self.ddx = 0 # "damage dx", will stay set until you land on the ground or blink counter goes < 0
