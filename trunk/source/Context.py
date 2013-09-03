@@ -9,7 +9,7 @@ class Context:
 		self.balloonA = False
 		self.balloonB = False
 		self.balloonC = False
-		self.gravity = False
+		self.gravity = True
 	
 	def convertToPassword(self):
 		password = 0
