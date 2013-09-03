@@ -49,13 +49,6 @@ bigcrater1	x	rocky/bigcrater1.png
 bigcrater2	x	rocky/bigcrater2.png
 bigcrater3	x	rocky/bigcrater3.png
 bigcrater4	x	rocky/bigcrater4.png
-black		background/black.png
-stars1		background/stars1.png
-stars2		background/stars2.png
-stars3		background/stars3.png
-stars4		background/stars4.png
-stars5		background/stars5.png
-cave		background/cave.png
 spikes		spikes/spikes.png
 spiketip		spikes/spiketip.png
 spikebase		spikes/spikebase.png
