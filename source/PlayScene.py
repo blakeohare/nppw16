@@ -73,6 +73,7 @@ class PlayScene:
 		
 		for enemy in map.enemies:
 			sprite = Sprite(enemy.id, enemy.col * 16 + 8, enemy.row * 16 + 8)
+			sprite.isEnemy = True
 			self.sprites.append(sprite)
 		
 	
@@ -174,8 +175,13 @@ class PlayScene:
 			self.player.dy = dy
 	
 	def update(self):
+		playerX = self.player.modelX
+		playerY = self.player.modelY
 		for sprite in self.sprites:
 			sprite.update(self)
+			if sprite.isEnemy and self.player != None:
+				if sprite.isCollision(self.player):
+					self.playerHit()
 			
 		player_tx = int(self.player.modelX / 16)
 		player_ty = int(self.player.modelY / 16)
@@ -183,6 +189,10 @@ class PlayScene:
 		if activeTile.door != None:
 			door = activeTile.door
 			self.next = PlayScene(door.target, door.tx, door.ty, self.context)
+	
+	def playerHit(self):
+		if self.player.blinkCounter < 0:
+			self.player.hit()
 	
 	def isCollision(self, pLeft, pTop, pRight, pBottom):
 		if pLeft < 0: return True
@@ -295,5 +305,6 @@ class PlayScene:
 		arc = rc // 4
 		for sprite in self.sprites:
 			sprite.render(self, screen, offsetX, offsetY, arc)
-		
+			
+				
 		self.renderOverlay(screen)

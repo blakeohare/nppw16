@@ -94,6 +94,8 @@ XY_PAIRINGS = [
 class Sprite:
 	def __init__(self, type, px, py):
 		self.type = type
+		self.isEnemy = False
+		self.height = getSpriteHeight(type)
 		self.x = px
 		self.y = py
 		self.modelX = px + 0.0
@@ -110,8 +112,10 @@ class Sprite:
 			self.renderImpl = SPRITE_renderAcorn
 		self.dx = 0
 		self.dy = 0
+		self.ddx = 0 # "damage dx", will stay set until you land on the ground or blink counter goes < 0
 		self.cling = False
 		self.ladderDY = 0
+		self.blinkCounter = -1
 		
 	def checkNeighborCollision(self, scene, col, row, targetX, targetY):
 		area_left = targetX - 5
@@ -160,6 +164,10 @@ class Sprite:
 		return True
 		
 	def update(self, scene):
+		self.blinkCounter -= 1
+		if self.blinkCounter < 0 or self.onGround:
+			self.ddx = 0
+		self.dx += self.ddx
 		if scene.side:
 			# hotspot is located in the center of the bottom most tile
 			areaX = self.modelX
@@ -267,6 +275,7 @@ class Sprite:
 						no = True
 						self.onGround = True
 						self.modelY = newTileBottom * 16 - 8
+						self.vy = 0
 						if not wasOnGround:
 							playNoise('land_on_ground')
 					
@@ -332,4 +341,34 @@ class Sprite:
 				self.dy = 0
 	
 	def render(self, scene, screen, offsetX, offsetY, rc):
-		self.renderImpl(self, scene, screen, offsetX, offsetY, rc)
+		if self.blinkCounter < 0 or (self.blinkCounter & 1) == 0:
+			self.renderImpl(self, scene, screen, offsetX, offsetY, rc)
+	
+	def isCollision(self, other):
+		left = self.x - 8
+		oleft = other.x - 8
+		right = left + 16
+		oright = oleft + 16
+		
+		if left >= oright or right <= oleft:
+			return False
+		
+		bottom = self.y + 8
+		obottom = other.y + 8
+		top = bottom - self.height
+		otop = obottom - other.height
+		
+		if top >= obottom or otop >= bottom:
+			return False
+		return True
+	
+	def hit(self):
+		self.blinkCounter = 40
+		self.blinkDirection = self.lastDirection
+		if self.lastDirection == 'left':
+			self.ddx = 6
+		else:
+			self.ddx = -6
+		self.onGround = False
+		self.dy = -9
+			
