@@ -19,6 +19,8 @@
 test1	x	test/test1.png
 test2	x	test/test2.png
 cave	r	doors/cave.png
+ld1	R	doors/lightdoor1.png
+ld2		doors/lightdoor2.png
 ground		surface/ground.png
 ter1	CD	surface/terrace-top.png
 ter2	x	surface/terrace-bottom.png
