@@ -24,7 +24,26 @@ class MapParser:
 		m.lower = self.getTiles(self.values['lower'], m.width, m.height)
 		m.doors = self.getDoors(self.values.get('doors', ''))
 		m.enemies = self.getEnemies(self.values.get('enemies', ''))
+		m.doorswaps = self.getDoorswaps(self.values.get('doorswaps', ''))
 		return m
+	
+	# door swap output format:
+	# { original ID => List[ Pair<trigger, swapped ID> ] }
+	def getDoorswaps(self, strValue):
+		strValue = trim(strValue)
+		if len(strValue) == 0:
+			return {}
+		swaps = {}
+		for swap in strValue.split(','):
+			parts = swap.split('|')
+			trigger = trim(parts[0])
+			original = trim(parts[1])
+			swapped = trim(parts[2])
+			
+			swaps[original] = swaps.get(original, [])
+			swaps[original].append((trigger, swapped))
+		return swaps
+		
 	
 	def getEnemies(self, enemyString):
 		enemyString = trim(enemyString)
