@@ -3,12 +3,19 @@ class PlayScene:
 		self.context = context
 		self.next = self
 		self.flags = ''
+		levelname = map.split('.')[0]
 		if not map.endswith('.map'):
 			map += '.map'
 		mapParser = MapParser(map)
 		map = mapParser.parse()
 		
 		self.hasAtmosphere = False
+
+		self.bg = getBackground(levelname)
+		stars = legacyMap(lambda x:getImage('tiles/background/stars' + str(x) + '.png'), [1, 2, 3, 4, 5]) + ([None] * 5)
+		stars *= 3
+		random.shuffle(stars)
+		self.stars = stars
 		
 		self.cols = map.width
 		self.rows = map.height
@@ -164,9 +171,20 @@ class PlayScene:
 				x += 1
 			y += 1
 		return False
-		
+	
+	def renderOverlay(self, screen):
+		pygame.draw.rect(screen, (0, 0, 0), pygame.Rect(0, 0, 256, 8))
+		screen.blit(getImage('misc/lives.png'), (0, 0))
+		txt = getText((255, 255, 255), 'x' + str(self.context.lives))
+		screen.blit(txt, (8, 0))
+	
 	def render(self, screen, rc):
-		screen.fill((0, 0, 40))
+		if self.bg == 'stars':
+			screen.fill((0, 0, 0))
+		elif self.bg == 'cave':
+			pass
+		else:
+			screen.fill((0, 0, 40)) # sky
 		
 		colStart = 0
 		colEnd = self.cols - 1
@@ -191,18 +209,28 @@ class PlayScene:
 		if self.rows * 16 < 224:
 			offsetY = (224 - self.rows * 16) // 2
 		
+		cave = getImage('tiles/background/cave.png')
+		starlen = len(self.stars)
+		stars = self.stars
 		row = rowStart
 		while row <= rowEnd:
 			col = colStart
 			while col <= colEnd:
-				
+				x = col * 16 + offsetX
+				y = row * 16 + offsetY
+				pt = (x, y)
+				if self.bg == 'cave':
+					screen.blit(cave, pt)
+				elif self.bg == 'stars':
+					bgimg = stars[(col + self.rows * row + row * row) % starlen]
+					if bgimg != None:
+						screen.blit(bgimg, pt)
 				tile = self.lower[col][row]
 				if tile != None:
-					screen.blit(tile.getImage(rc), (col * 16 + offsetX, row * 16 + offsetY))
+					screen.blit(tile.getImage(rc), pt)
 				tile = self.upper[col][row]
 				if tile != None:
-					screen.blit(tile.getImage(rc), (col * 16 + offsetX, row * 16 + offsetY))
-				
+					screen.blit(tile.getImage(rc), pt)
 				
 				col += 1
 			row += 1
@@ -210,3 +238,5 @@ class PlayScene:
 		arc = rc // 4
 		for sprite in self.sprites:
 			sprite.render(self, screen, offsetX, offsetY, arc)
+		
+		self.renderOverlay(screen)
