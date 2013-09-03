@@ -9,7 +9,7 @@ class IntroScene:
 		pass 
 	
 	def update(self):
-		self.next = PlayScene('main', 1, 1)
+		self.next = PlayScene('main', 1, 1, Context())
 	
 	def render(self, screen, rc):
 		pass
