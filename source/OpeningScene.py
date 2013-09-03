@@ -59,7 +59,7 @@ class OpeningScene:
 		for event in events:
 			
 			if self.mode == 'open':
-				if event.down and event.action == 'start':
+				if event.down and event.action in ('start', 'A', 'B'):
 					self.mode = 'starting'
 					self.mode_counter = 0
 			

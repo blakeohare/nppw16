@@ -1,7 +1,8 @@
 
 class Context:
-	def __inint__(self):
+	def __init__(self):
 		self.lifemeter = 10
+		self.lives = 3
 		self.volcanoA = False
 		self.volcanoB = False
 		self.volcanoC = False

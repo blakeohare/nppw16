@@ -40,3 +40,8 @@ def drawBox(screen, x, y, cols, rows):
 	
 	pygame.draw.rect(screen, (0, 0, 0), pygame.Rect(left + 8, top + 8, right - left - 8, bottom - top - 8))
 	
+def legacyMap(fun, things):
+	output = []
+	for thing in things:
+		output.append(fun(thing))
+	return output
