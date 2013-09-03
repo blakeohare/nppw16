@@ -7,6 +7,8 @@ class PlayScene:
 		mapParser = MapParser(map)
 		map = mapParser.parse()
 		
+		self.hasAtmosphere = False
+		
 		self.cols = map.width
 		self.rows = map.height
 		self.upper = map.upper
@@ -163,7 +165,7 @@ class PlayScene:
 		return False
 		
 	def render(self, screen, rc):
-		screen.fill((0, 0, 0))
+		screen.fill((0, 0, 40))
 		
 		colStart = 0
 		colEnd = self.cols - 1
@@ -204,5 +206,6 @@ class PlayScene:
 				col += 1
 			row += 1
 		
+		arc = rc // 4
 		for sprite in self.sprites:
-			sprite.render(self, screen, offsetX, offsetY, rc)
+			sprite.render(self, screen, offsetX, offsetY, arc)
