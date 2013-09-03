@@ -70,6 +70,11 @@ class PlayScene:
 		
 		self.player = Sprite('player_' + ('side' if self.side else 'over'), startCol * 16 + 8, startRow * 16 + 8)
 		self.sprites = [self.player]
+		
+		for enemy in map.enemies:
+			sprite = Sprite(enemy.id, enemy.col * 16 + 8, enemy.row * 16 + 8)
+			self.sprites.append(sprite)
+		
 	
 	def playersTile(self, offsetX=0, offsetY=0):
 		if self.player == None: return None

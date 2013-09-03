@@ -23,7 +23,25 @@ class MapParser:
 		m.upper = self.getTiles(self.values['upper'], m.width, m.height)
 		m.lower = self.getTiles(self.values['lower'], m.width, m.height)
 		m.doors = self.getDoors(self.values.get('doors', ''))
+		m.enemies = self.getEnemies(self.values.get('enemies', ''))
 		return m
+	
+	def getEnemies(self, enemyString):
+		enemyString = trim(enemyString)
+		if len(enemyString) == 0:
+			return []
+		enemies = []
+		for value in enemyString.split(','):
+			parts = value.split('|')
+			id = parts[0]
+			col = int(parts[1])
+			row = int(parts[2])
+			e = StemCell()
+			e.id = id
+			e.col = col
+			e.row = row
+			enemies.append(e)
+		return enemies
 	
 	def getDoors(self, doorString):
 		doorString = trim(doorString)
