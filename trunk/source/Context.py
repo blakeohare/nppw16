@@ -10,6 +10,10 @@ class Context:
 		self.balloonB = False
 		self.balloonC = False
 		self.gravity = False
+		self.transmission1 = False
+		self.transmission2 = False
+		self.transmission3 = False
+		self.transmission4 = False
 	
 	def convertToPassword(self):
 		password = 0
