@@ -1,7 +1,8 @@
 # Add maps to this list to alter what background they'll have
 
 CAVE_BG = [
-
+	'grav_ascent',
+	'grav_core',
 	'grav_descent',
 	'grav_descent_secret'
 ]

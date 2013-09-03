@@ -19,8 +19,6 @@ class PlayScene:
 		self.runCounter = 0
 		self.runCounterValidFor = ':P'
 		
-		self.gravity = self.context.gravity
-		
 		self.cols = map.width
 		self.rows = map.height
 		self.upper = map.upper
@@ -28,6 +26,8 @@ class PlayScene:
 		self.side = map.side
 		
 		self.tiles = makeGrid(self.cols, self.rows)
+		
+		self.doorSwaps = map.doorswaps
 		
 		doorTiles = []
 		ladderTiles = {}
@@ -203,7 +203,24 @@ class PlayScene:
 		activeTile = self.tiles[player_tx][player_ty]
 		if activeTile.door != None:
 			door = activeTile.door
-			self.next = PlayScene(door.target, door.tx, door.ty, self.context)
+			target = door.target
+			swaps = self.doorSwaps.get(target)
+			
+			if swaps != None:
+				ctx = self.context
+				for swap in swaps:
+					trigger = swap[0]
+					if ((
+						trigger == 'gravity' and ctx.gravity) or (
+						trigger == 'lavaA' and ctx.volcanoA) or (
+						trigger == 'lavaB' and ctx.volcanoB) or (
+						trigger == 'lavaC' and ctx.volcanoC) or (
+						trigger == 'waterA' and ctx.balloonA) or (
+						trigger == 'waterB' and ctx.balloonB) or (
+						trigger == 'waterC' and ctx.balloonC)):
+						target = swap[1]
+						break
+			self.next = PlayScene(target, door.tx, door.ty, self.context)
 		
 		for special in self.special:
 			if special.hasUpdate:

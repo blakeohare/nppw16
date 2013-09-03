@@ -4,4 +4,4 @@
 #lower:rockyMiddle,rockyBottom,rockyBottom,rockyBottom,rockyBottom,rockyBottom,rockyBottom,rockyBottom,rockyBottom,rockyBottom,rockyBottom,rockyBottom,rockyBottom,rockyBottom,rockyBottom,rockyMiddle,rockyRight,,,,,,,,,,rocks3,rocks3,rocks3,,,rockyLeft,rockyRight,,,,,,,,,,rocks3,rocks3,rocks3,,,rockyLeft,rockyRight,,,,,,,,,rocks3,rocks3,rocks3,rocks3,rocks3,,rockyLeft,rockyRight,,,,,,,,,,rocks3,rocks3,rocks3,,,rockyLeft,rockyRight,,,,,,,,,,,rocks3,,,,rockyLeft,rockyRight,,,,,,,,,,,,,,,rockyLeft,rockyRight,,,,,,,,,,,,,,,rockyLeft,rockyRight,,,,,,,,,,,,,,,rockyLeft,rockyRight,,,,,,,,,,,,,,,rockyLeft,rockyRight,,,,,,,,,,,test2,,,,rockyLeft,rockyRight,,cave,,,,,,,,rockypassTopL,rockypassTop,rockypassTopR,,,rockyLeft,rockyRight,,cave2,,,,,,,,rockypassLeft,rockypassMiddle,rockypassRight,,,rockyLeft,rockyMiddle,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyLeft
 #view:side
 #doors:grav_descent|2|11|28|54
-#doorswap:gravity|grav_descent|grav_ascent
+#doorswaps:gravity|grav_descent|grav_ascent
