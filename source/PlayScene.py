@@ -250,10 +250,29 @@ class PlayScene:
 		cave = getImage('tiles/background/cave.png')
 		starlen = len(self.stars)
 		stars = self.stars
+		counter = 0
+		
+		idealColStart = -int(offsetX / 16) - 1
+		if idealColStart > colStart:
+			colStart = idealColStart
+		
+		idealColEnd = colStart + 17
+		if idealColEnd < colEnd:
+			colEnd = idealColEnd
+		
+		idealRowStart = -int(offsetY / 16) - 1
+		if idealRowStart > rowStart:
+			rowStart = idealRowStart
+		
+		idealRowEnd = rowStart + 15
+		if idealRowEnd < rowEnd:
+			rowEnd = idealRowEnd
+		
 		row = rowStart
 		while row <= rowEnd:
 			col = colStart
 			while col <= colEnd:
+				counter += 1
 				x = col * 16 + offsetX
 				y = row * 16 + offsetY
 				pt = (x, y)
@@ -272,6 +291,8 @@ class PlayScene:
 				
 				col += 1
 			row += 1
+		
+		print("should be about 224:", counter)
 		
 		arc = rc // 4
 		for sprite in self.sprites:
