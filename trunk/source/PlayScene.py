@@ -351,3 +351,7 @@ class PlayScene:
 			
 				
 		self.renderOverlay(screen)
+	
+	def triggerDialog(self, id, slightDelay=False):
+		self.next = DialogScene(self, id, slightDelay)
+		
