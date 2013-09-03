@@ -1,0 +1,7 @@
+#width:16
+#height:14
+#upper:,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+#lower:rockyMiddle,rockyBottom,rockyBottom,rockyBottom,rockyBottom,rockyBottom,rockyBottom,rockyBottom,rockyBottom,rockyBottom,rockyBottom,rockyBottom,rockyBottom,rockyBottom,rockyBottom,rockyMiddle,rockyRight,,,,,,,,,,,,,,,rockyLeft,rockyRight,,,,,,,,,,,,,,,rockyLeft,rockyRight,,,,,,,,,,,,,,,rockyLeft,rockyRight,,,,,,,,,,,,,,,rockyLeft,rockyRight,,,,,,,,,,,,,,,rockyLeft,rockyRight,,,,,,,,,,,,,,,rockyLeft,rockyRight,,,,,,,,,,,,,,,rockyLeft,rockyRight,,,,,,,,,,,,,,,rockyLeft,rockyRight,,,,,,,,,,,,,,,rockyLeft,rockyRight,,,,,,,,,,,test2,,,,rockyLeft,rockyRight,,,,,,,,,,rockypassTopL,rockypassTop,rockypassTopR,,,rockyLeft,rockyRight,,cave,,,,,,,,rockypassLeft,rockypassMiddle,rockypassRight,,,rockyLeft,rockyMiddle,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyTop,rockyLeft
+#view:side
+#doors:grav_descent|2|11|29|54
+#lavadoors:grav_ascent|2|11|29|54
