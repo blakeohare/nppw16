@@ -154,4 +154,37 @@ lbottomleftconcave	x	surfacefluids/lbottomleftconcave.png
 lbottomrightconcave	x	surfacefluids/lbottomrightconcave.png
 lbottomleftconvex	x	surfacefluids/lbottomleftconvex.png
 lbottomrightconvex	x	surfacefluids/lbottomrightconvex.png
-
+antenna1	x	ship/antenna1.png
+antenna2	x	ship/antenna2.png
+antenna3	x	ship/antenna3.png
+antenna4	x	ship/antenna4.png
+antenna5	x	ship/antenna5.png
+horizontalside	x	ship/horizontalside.png
+verticalside	x	ship/verticalside.png
+diagonalside1	x	ship/diagonalside1.png
+diagonalside2	x	ship/diagonalside2.png
+diagonalside3	x	ship/diagonalside3.png
+diagonalside4	x	ship/diagonalside4.png
+shipdoortop	R	ship/doortop.png
+shipdoorbottom		ship/doorbottom.png
+consoleleft		ship/consoleleft.png
+consoleright		ship/consoleright.png
+consolea		ship/consolea.png
+consoleb		ship/consoleb.png
+footleft	x	ship/footleft.png
+footmiddle	x	ship/footmiddle.png
+footright	x	ship/footright.png
+shipwalla		ship/walla.png
+shipwallb		ship/wallb.png
+statictop1		screen-static/screentop1a.png,screen-static/screentop1b.png
+statictop2		screen-static/screentop2a.png,screen-static/screentop2b.png
+statictop3		screen-static/screentop3a.png,screen-static/screentop3b.png
+statictop4		screen-static/screentop4a.png,screen-static/screentop4b.png
+staticmiddle1		screen-static/screenmiddle1a.png,screen-static/screenmiddle1b.png
+staticmiddle2		screen-static/screenmiddle2a.png,screen-static/screenmiddle2b.png
+staticmiddle3		screen-static/screenmiddle3a.png,screen-static/screenmiddle3b.png
+staticmiddle4		screen-static/screenmiddle4a.png,screen-static/screenmiddle4b.png
+staticbottom1		screen-static/screenbottom1a.png,screen-static/screenbottom1b.png
+staticbottom2		screen-static/screenbottom2a.png,screen-static/screenbottom2b.png
+staticbottom3		screen-static/screenbottom3a.png,screen-static/screenbottom3b.png
+staticbottom4		screen-static/screenbottom4a.png,screen-static/screenbottom4b.png
