@@ -127,7 +127,7 @@ class Sprite:
 		self.ys = [None] * 5
 		self.vy = 0
 		self.moving = False
-		self.lastDirection = 'right'
+		self.lastDirection = 'left'
 		self.onGround = False
 		self.neighbors = [None] * 36
 		self.spawns = None
