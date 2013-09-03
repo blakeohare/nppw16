@@ -1,0 +1,6 @@
+#width:16
+#height:14
+#upper:rocks1,rocks1,rocks1,rocks1,rocks1,rocks1,rocks1,rocks1,rocks1,rocks1,rocks1,rocks1,rocks1,rocks1,rocks1,rocks1,rocks1,,,,,,,,,,,,,,,rocks1,rocks1,,,,,,,,,,,,,,,rocks1,rocks1,,,,,,,,,,,,,,,rocks1,rocks1,,,,,,,,,,,,,,,rocks1,rocks1,,,,,,,,,,,,,,,rocks1,rocks1,,,,,,,,,,,,,,,rocks1,rocks1,,,,,,,,,,,,,,,rocks1,rocks1,,,,,,,,,,,,,,,rocks1,rocks1,,,,,,,,,,,,,,,rocks1,rocks1,,,,,,,,,,,,,,,rocks1,rocks1,,,,,,,,,,,,,,,rocks1,rocks1,,,,,,,,,,,,,,,rocks1,rocks1,rocks1,rocks1,rocks1,rocks1,rocks1,rocks1,rocks1,rocks1,rocks1,rocks1,rocks1,rocks1,rocks1,rocks1,rocks1
+#lower:,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,ld1,,,,,,,,,,,ld1,,,,,ld2,,,,,,,,,,,ld2,,,,,,,,,,,,,,,,,,
+#view:side
+#doors:main|2|11|7|20,main|13|11|7|14
