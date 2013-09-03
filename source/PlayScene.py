@@ -292,8 +292,6 @@ class PlayScene:
 				col += 1
 			row += 1
 		
-		print("should be about 224:", counter)
-		
 		arc = rc // 4
 		for sprite in self.sprites:
 			sprite.render(self, screen, offsetX, offsetY, arc)
