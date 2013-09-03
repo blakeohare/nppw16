@@ -87,6 +87,10 @@ class PlayScene:
 			sprite.isEnemy = True
 			self.sprites.append(sprite)
 		
+		self.special = getSpecialLevelStuff(levelname, self)
+		for special in self.special:
+			if special.hasPostInit:
+				special.postInit()
 	
 	def playersTile(self, offsetX=0, offsetY=0):
 		if self.player == None: return None
@@ -102,7 +106,7 @@ class PlayScene:
 			dx = 0
 			dy = 0
 			running = False
-			if self.gravity:
+			if self.context.gravity:
 				if pressed['B']:
 					running = True
 					v = 5
@@ -200,6 +204,10 @@ class PlayScene:
 		if activeTile.door != None:
 			door = activeTile.door
 			self.next = PlayScene(door.target, door.tx, door.ty, self.context)
+		
+		for special in self.special:
+			if special.hasUpdate:
+				special.update()
 	
 	def playerHit(self):
 		if self.player.blinkCounter < 0:
