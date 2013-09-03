@@ -5,7 +5,8 @@ RUN_JUMPING_VY = -16
 WATER_JUMPING_VY = -5
 
 SPRITE_HEIGHT = {
-	'player_side': 32
+	'player_side': 32,
+	'acorn': 16
 }
 
 G = 0.7
@@ -15,6 +16,25 @@ WATER_G = 0.3
 def getSpriteHeight(type):
 	return SPRITE_HEIGHT.get(type, 16)
 
+def SPRITE_renderAcorn(sprite, scene, screen, offsetX, offsetY, arc):
+	left = sprite.x + offsetX - 8
+	top = sprite.y + offsetY - 8
+	width = 16
+	height = 16
+	
+	if sprite.moving:
+		path = 'acorn_' + '13'[(arc // 2) & 1]
+	else:
+		path = 'acorn_2'
+	
+	path = 'sprites/' + path + '.png'
+	reverse = sprite.lastDirection == 'left'
+	if reverse:
+		img = getBackwardsImage(path)
+	else:
+		img = getImage(path)
+	screen.blit(img, (left, top))
+		
 #arc = adjusted render counter (slowed down for animation frames, so I don't have to do rc = (rc // 4) to slow things down
 def SPRITE_renderPlayerOver(sprite, scene, screen, offsetX, offsetY, arc):
 	left = sprite.x + offsetX - 8
@@ -86,6 +106,8 @@ class Sprite:
 		self.onGround = False
 		self.neighbors = [None] * 36
 		self.renderImpl = SPRITE_renderPlayerOver
+		if type == 'acorn':
+			self.renderImpl = SPRITE_renderAcorn
 		self.dx = 0
 		self.dy = 0
 		self.cling = False
