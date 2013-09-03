@@ -32,6 +32,7 @@ class TileTemplate:
 		self.isDoor = False
 		self.isLadder = False
 		self.isTop = False
+		self.isWater = id in ('water', 'watertop')
 		for flag in flags:
 			if flag == 'x':
 				self.solid = True
@@ -71,23 +72,20 @@ class Tile:
 		self.isDoor = False
 		self.isLadder = False
 		self.isTop = False
+		self.isWater = False
 		self.door = None
-		if lower != None:
-			self.templates.append(lower)
-			if lower.isDoor:
-				self.isDoor = True
-			if lower.isLadder:
-				self.isLadder = True
-			if lower.isTop:
-				self.isTop = True
-		if upper != None:
-			self.templates.append(upper)
-			if upper.isDoor:
-				self.isDoor = True
-			if upper.isLadder:
-				self.isLadder = True
-			if upper.isTop:
-				self.isTop = True
+		
+		for tile in (lower, upper):
+			if tile != None:
+				self.templates.append(tile)
+				if tile.isDoor:
+					self.isDoor = True
+				if tile.isLadder:
+					self.isLadder = True
+				if tile.isTop:
+					self.isTop = True
+				if tile.isWater:
+					self.isWater = True
 		self.collisions = []
 		self.solid = False
 		

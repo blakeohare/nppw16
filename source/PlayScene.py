@@ -134,13 +134,18 @@ class PlayScene:
 			for event in events:
 				if event.action == 'A':
 					if event.down:
-						if self.player.onGround or self.player.cling:
+						pt = self.playersTile()
+						if self.player.onGround or self.player.cling or (pt != None and pt.isWater):
 							self.player.onGround = False
 							self.player.cling = False
 							self.player.ladderDY = 0
-							self.player.vy = JUMPING_VY
-							if self.runCounter > 5 and self.context.gravity:
-								self.player.vy = RUN_JUMPING_VY
+							if pt.isWater:
+								self.player.vy += WATER_JUMPING_VY
+							else:
+								self.player.vy = JUMPING_VY
+								if self.runCounter > 5 and self.context.gravity:
+									self.player.vy = RUN_JUMPING_VY
+								
 					else:
 						if self.player.vy < 0:
 							self.player.vy = self.player.vy / 4.0 # maybe set to 0 instead?
