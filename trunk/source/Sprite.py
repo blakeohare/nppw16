@@ -11,8 +11,8 @@ G = 0.7
 def getSpriteHeight(type):
 	return SPRITE_HEIGHT.get(type, 16)
 
-
-def SPRITE_renderPlayerOver(sprite, scene, screen, offsetX, offsetY, rc):
+#arc = adjusted render counter (slowed down for animation frames, so I don't have to do rc = (rc // 4) to slow things down
+def SPRITE_renderPlayerOver(sprite, scene, screen, offsetX, offsetY, arc):
 	left = sprite.x + offsetX - 8
 	top = sprite.y + offsetY - 8
 	width = 16
@@ -21,7 +21,35 @@ def SPRITE_renderPlayerOver(sprite, scene, screen, offsetX, offsetY, rc):
 		top -= 16
 		height = 32
 	
-	pygame.draw.rect(screen, (0, 255, 0), pygame.Rect(left, top, width, height))
+	if scene.side:
+		
+		
+		base = 'basic' if scene.hasAtmosphere else 'space'
+		moving = sprite.moving
+		if sprite.cling:
+			path = base + '_climb_'
+			if moving:
+				path += '1232'[arc % 4]
+			else:
+				path += '2'
+		else:
+			path = base + '_'
+			if moving:
+				# TODO: running, cut RC in half
+				path += '1213'[arc % 4]
+			else:
+				path += '1'
+		reverse = sprite.lastDirection == 'left'
+		x = left
+		y = top
+		if reverse:
+			img = getBackwardsImage('sprites/' + path +'.png')
+		else:
+			img = getImage('sprites/' + path +'.png')
+			left = left + 16 - img.get_width()
+	else:
+		img = getImage('sprites/space_overworld_down_1.png')
+	screen.blit(img, (left, top))
 
 XY_PAIRINGS = [
 	(0, 0),
@@ -44,6 +72,8 @@ class Sprite:
 		self.xs = [None] * 5
 		self.ys = [None] * 5
 		self.vy = 0
+		self.moving = False
+		self.lastDirection = 'right'
 		self.onGround = False
 		self.neighbors = [None] * 36
 		self.renderImpl = SPRITE_renderPlayerOver
@@ -109,6 +139,8 @@ class Sprite:
 			width = scene.cols
 			height = scene.rows
 			
+			self.moving = self.dx != 0 or self.dy != 0
+			
 			# side-to-side calcuation is done first, independent of whether you are on the ground.
 			if self.dx != 0:
 				newX = self.modelX + self.dx
@@ -118,6 +150,10 @@ class Sprite:
 				# upon it at the end of the vertical adjustment phase.
 				if not scene.isCollision(newX, areaTop, newX, areaBottom):
 					self.modelX = newX
+					if self.dx > 0:
+						self.lastDirection = 'right'
+					else:
+						self.lastDirection = 'left'
 				self.dx = 0
 			
 			# vertical adjustment phase
