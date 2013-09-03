@@ -385,4 +385,4 @@ class Sprite:
 			self.ddx = -3
 		self.onGround = False
 		self.vy = -6
-			
+		playNoise('hit')
