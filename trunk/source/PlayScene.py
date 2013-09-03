@@ -68,7 +68,7 @@ class PlayScene:
 		self.cameraX = 0
 		self.cameraY = 0
 		
-		self.player = Sprite('player_' + ('over' if self.side else 'side'), startCol * 16 + 8, startRow * 16 + 8)
+		self.player = Sprite('player_' + ('side' if self.side else 'over'), startCol * 16 + 8, startRow * 16 + 8)
 		self.sprites = [self.player]
 	
 	def playersTile(self, offsetX=0, offsetY=0):

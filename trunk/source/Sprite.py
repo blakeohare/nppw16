@@ -210,9 +210,10 @@ class Sprite:
 					no = True
 				else:
 					newTileTop = int(newTop / 16)
-					if scene.tiles[tileX][newTileTop].solid:	
+					if scene.tiles[tileX][newTileTop].solid:
 						no = False
 						self.vy = 0
+						self.dy = 0
 						playNoise('hit_head')
 					else:
 						movedUp = True
