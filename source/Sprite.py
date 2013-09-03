@@ -61,7 +61,12 @@ def SPRITE_renderPlayerOver(sprite, scene, screen, offsetX, offsetY, arc):
 				path += '1213'[arc % 4]
 			else:
 				path += '1'
-		reverse = sprite.lastDirection == 'left'
+		if sprite.damageDir != None:
+			dir = sprite.damageDir
+		else:
+			dir = sprite.lastDirection
+		reverse = dir == 'left'
+		
 		x = left
 		y = top
 		if reverse:
@@ -113,6 +118,7 @@ class Sprite:
 		self.dx = 0
 		self.dy = 0
 		self.ddx = 0 # "damage dx", will stay set until you land on the ground or blink counter goes < 0
+		self.damageDir = None
 		self.cling = False
 		self.ladderDY = 0
 		self.blinkCounter = -1
@@ -167,6 +173,13 @@ class Sprite:
 		self.blinkCounter -= 1
 		if self.blinkCounter < 0 or self.onGround:
 			self.ddx = 0
+			if self.damageDir != None:
+				self.lastDirection = self.damageDir
+			self.damageDir = None
+		
+		if self.damageDir != None:
+			self.dx = 0
+		
 		self.dx += self.ddx
 		if scene.side:
 			# hotspot is located in the center of the bottom most tile
@@ -365,10 +378,11 @@ class Sprite:
 	def hit(self):
 		self.blinkCounter = 40
 		self.blinkDirection = self.lastDirection
+		self.damageDir = self.lastDirection
 		if self.lastDirection == 'left':
-			self.ddx = 6
+			self.ddx = 3
 		else:
-			self.ddx = -6
+			self.ddx = -3
 		self.onGround = False
-		self.dy = -9
+		self.vy = -6
 			
