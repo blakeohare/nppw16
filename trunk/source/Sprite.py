@@ -412,7 +412,7 @@ class Sprite:
 			return False
 		return True
 	
-	def hit(self):
+	def hit(self, scene):
 		self.blinkCounter = 40
 		self.blinkDirection = self.lastDirection
 		self.damageDir = self.lastDirection
@@ -423,3 +423,4 @@ class Sprite:
 		self.onGround = False
 		self.vy = -6
 		playNoise('hit')
+		scene.context.adjustHealth(scene, -1)

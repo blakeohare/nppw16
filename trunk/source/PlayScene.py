@@ -1,5 +1,6 @@
 GOOD_HEALTH_COLOR = (255, 255, 255)
 POOR_HEALTH_COLOR = (255, 128, 128)
+WHITE = (255, 255, 255)
 
 class PlayScene:
 	def __init__(self, map, startCol, startRow, context):
@@ -238,7 +239,7 @@ class PlayScene:
 	
 	def playerHit(self):
 		if self.player.blinkCounter < 0:
-			self.player.hit()
+			self.player.hit(self)
 	
 	def isCollision(self, pLeft, pTop, pRight, pBottom):
 		if pLeft < 0: return True
@@ -270,11 +271,11 @@ class PlayScene:
 		pygame.draw.rect(screen, (0, 0, 0), pygame.Rect(0, 0, 256, 8))
 		
 		screen.blit(getImage('misc/lives.png'), (0, 0))
-		txt = getText((255, 255, 255), 'x' + str(self.context.lives))
+		txt = getText(WHITE, 'x' + str(self.context.lives))
 		screen.blit(txt, (8, 0))
 		
 		x = 112
-		txt = getText((255, 255, 255), 'HEALTH')
+		txt = getText(WHITE, 'HEALTH')
 		screen.blit(txt, (x, 0))
 		
 		x += txt.get_width() + 8
