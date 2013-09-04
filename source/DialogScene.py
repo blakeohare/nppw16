@@ -21,7 +21,8 @@ class DialogScene:
 					self.textCursor = 0
 		else:
 			if pressed['A'] or pressed['B'] or pressed['start']:
-				self.textCursor += 1.2
+				if self.delayCounter < 0:
+					self.textCursor += 1.2
 		
 	
 	def update(self):
