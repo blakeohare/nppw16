@@ -51,7 +51,7 @@ class Context:
 		self.lifemeter += amount
 		if self.lifemeter <= 0:
 			self.lifemeter = 0
-			# TODO: death sequence
+			scene.next = DeathOverrideScene(scene, 'collapse')
 		else:
 			if amount < 0:
 				if self.lifemeter < 4:
