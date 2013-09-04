@@ -87,7 +87,7 @@ def SPRITE_renderPlayerOver(sprite, scene, screen, offsetX, offsetY, arc):
 		
 		x = left
 		y = top
-		if sprite.deathState != None:
+		if sprite.deathState != None and sprite.deathState != 'fall':
 			if sprite.deathState == 'collapse':
 				img = getImage('sprites/' + base + '_death.png')
 				top += 16
@@ -95,6 +95,7 @@ def SPRITE_renderPlayerOver(sprite, scene, screen, offsetX, offsetY, arc):
 			elif sprite.deathState == 'lava':
 				img = pygame.Surface((16, 32))
 				img.fill((0, 0, 0))
+			
 				
 		else:
 			if reverse:
@@ -323,8 +324,8 @@ class Sprite:
 				if newTileBottom >= height:
 					# TODO: check if there is a transition registered with the map.
 					# If so begin that transition instead of killing the player.
-					playNoise('DEATH')
-					scene.next = DeathScene()
+					playNoise('fall_to_death')
+					scene.next = DeathOverrideScene(scene, 'fall')
 					no = True
 				else:
 					t = scene.tiles[tileX][newTileBottom]
