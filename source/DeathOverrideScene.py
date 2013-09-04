@@ -2,6 +2,7 @@ class DeathOverrideScene:
 	# type = "lava", "collapse"
 	def __init__(self, bg, type):
 		self.bg = bg
+		self.context = bg.context
 		self.flags = ''
 		self.next = self
 		self.type = type
@@ -21,7 +22,13 @@ class DeathOverrideScene:
 			self.bg.player.y = int(self.bg.player.modelY)
 			
 		if self.counter > 100:
-			self.next = None
+			self.context.lifemeter = 10
+			self.context.lives -= 1
+			if self.context.lives == 0:
+				self.context.lives = 3
+				self.next = GameOverScene(self.context)
+			else:
+				self.next = ReadyScene(self.bg, self.context)
 			# TODO: game over or beginning of same map at same door entrance
 		
 	

@@ -4,6 +4,7 @@ WHITE = (255, 255, 255)
 
 class PlayScene:
 	def __init__(self, map, startCol, startRow, context):
+		self.startArgs = (map, startCol, startRow)
 		self.context = context
 		self.next = self
 		self.flags = ''
