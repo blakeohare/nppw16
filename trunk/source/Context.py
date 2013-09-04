@@ -116,7 +116,7 @@ class Context:
 		p4 = self.enforceLetter(password[3])
 		
 		if p1 in 'ABC':
-			if p2 <= ord('M'):
+			if ord(p2) <= ord('M'):
 				self.gravity = True
 		
 		if p1 in 'BC':
