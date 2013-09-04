@@ -22,6 +22,7 @@ cave	r	doors/cave.png
 cave2	r	doors/cave2.png
 ld1	R	doors/lightdoor1.png
 ld2		doors/lightdoor2.png
+vdoor	r	doors/volcano_door.png
 ground		surface/ground.png
 ter1	CD	surface/terrace-top.png
 ter2	x	surface/terrace-bottom.png
