@@ -58,3 +58,9 @@ class DialogScene:
 		for line in self.showLines:
 			screen.blit(line, (x, y))
 			y += 8
+		if self.blink and ((rc // 7) & 1) == 0:
+			pos = (256 - 40, 72)
+			if self.stanzaIndex == len(self.stanzas) - 1:
+				pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(pos[0], pos[1], 8, 8))
+			else:
+				screen.blit(getText((255, 255, 255), '^'), pos)
