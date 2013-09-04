@@ -200,3 +200,24 @@ ship3	ACD	ship-exterior/ship3.png
 ship4	x	ship-exterior/ship4.png
 ship5	r	ship-exterior/ship5.png
 ship6	x	ship-exterior/ship6.png
+iceTopL	x	ice/topleft.png
+iceTop	x	ice/topmiddle.png
+iceTopR	x	ice/topright.png
+iceLeft	x	ice/middleleft.png
+iceMiddle	x	ice/middle.png
+iceRight	x	ice/middleright.png
+iceBottomL	x	ice/bottomleft.png
+iceBottom	x	ice/bottom.png
+iceBottomR	x	ice/bottomright.png
+icepassTopL	J	ice-passthrough/topleft.png
+icepassTop	J	ice-passthrough/topmiddle.png
+icepassTopR	J	ice-passthrough/topright.png
+icepassLeft		ice-passthrough/middleleft.png
+icepassMiddle		ice-passthrough/middle.png
+icepassRight		ice-passthrough/middleright.png
+icepassBottomL		ice-passthrough/bottomleft.png
+icepassBottom		ice-passthrough/bottommiddle.png
+icepassBottomR		ice-passthrough/bottomright.png
+icepassSingleL	J	ice-passthrough/singleleft.png
+icepassSingle	J	ice-passthrough/singlemiddle.png
+icepassSingleR	J	ice-passthrough/singleright.png
