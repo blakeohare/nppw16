@@ -9,7 +9,13 @@ CAVE_BG = [
 ]
 
 VOLCANO_BG = [
-	
+	'volcano_1_ascent',
+	'volcano_1_core',
+	'volcano_1_descent',
+	'lava_gate_2',
+	'lava_gate_2_active',
+	'lava_gate_3',
+	'lava_gate_3_active'
 ]
 
 STARS_BG = [
