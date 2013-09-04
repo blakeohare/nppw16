@@ -15,7 +15,10 @@ files = getFiles('source')
 all = []
 header = ''
 footer = ''
-
+priority = []
+priority_files = [
+	'LevelSpecial.py'
+]
 for file in files:
 	c = open(file, 'rt')
 	contents = c.read()
@@ -25,10 +28,12 @@ for file in files:
 		footer = contents
 	elif file == 'source' + os.sep + 'header.py':
 		header = contents
+	elif file.split(os.sep)[-1] in priority_files:
+		priority.append(contents)
 	else:
 		all.append(contents)
 
-all = [header] + all + [footer]
+all = [header] + priority + all + [footer]
 
 output = '\n\n'.join(all)
 
