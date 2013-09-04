@@ -12,6 +12,12 @@ class DialogScene:
 		self.textCursor = 0
 		self.showLines = []
 		self.blink = False
+		
+		
+		 # The epitome of a PyWeek hack
+		self.generalLoc = None
+		if len(dialogId) == 2 and dialogId[0] == 'T':
+			self.generalLoc = (4 * 16, 6 * 16)
 	
 	def processInput(self, events, pressed):
 		if self.blink:
@@ -54,6 +60,10 @@ class DialogScene:
 		self.bg.render(screen, rc)
 		
 		if self.delayCounter > 0: return
+		
+		if self.generalLoc != None:
+			path = 'tiles/screen-static/screen' + ('', '1', '2', '3')[(rc // 4) & 3] + '.png'
+			screen.blit(getImage(path), self.generalLoc)
 		
 		drawBox(screen, 16, 16, 28, 9)
 		x = 32
