@@ -91,11 +91,11 @@ rockypassLeft		rocky-passthrough/left.png
 rockypassMiddle		rocky-passthrough/middle.png
 rockypassRight		rocky-passthrough/right.png
 rockypassBottomL		rocky-passthrough/bottomleft.png
-rockypassBottom		rocky-passthrough/bottommiddle.png
+rockypassBottom		rocky-passthrough/bottomiddle.png
 rockypassBottomR		rocky-passthrough/bottomright.png
-rockypassSingleL	J	rocky-passthrough/bottomsingle.png
-rockypassSingle	J	rocky-passthrough/bottomsingle.png
-rockypassSingleR	J	rocky-passthrough/bottomsingle.png
+rockypassSingleL	J	rocky-passthrough/singleleft.png
+rockypassSingle	J	rocky-passthrough/singlemiddle.png
+rockypassSingleR	J	rocky-passthrough/singleright.png
 aqua1	BCD	balloons/aqua1.png
 aqua2	x	balloons/aqua2.png
 aqua3	AC	balloons/aqua3.png
