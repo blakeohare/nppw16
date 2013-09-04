@@ -4,7 +4,8 @@ CAVE_BG = [
 	'grav_ascent',
 	'grav_core',
 	'grav_descent',
-	'grav_descent_secret'
+	'grav_descent_secret',
+	'grav_gate'
 ]
 
 STARS_BG = [
