@@ -89,8 +89,7 @@ def SPRITE_renderPlayerOver(sprite, scene, screen, offsetX, offsetY, arc):
 		y = top
 		if sprite.deathState != None:
 			if sprite.deathState == 'collapse':
-				img = pygame.Surface((32, 16))
-				img.fill((255, 255, 0))
+				img = getImage('sprites/' + base + '_death.png')
 				top += 16
 				left -= 8
 			elif sprite.deathState == 'lava':
