@@ -222,3 +222,16 @@ icepassBottomR		ice-passthrough/bottomright.png
 icepassSingleL	J	ice-passthrough/singleleft.png
 icepassSingle	J	ice-passthrough/singlemiddle.png
 icepassSingleR	J	ice-passthrough/singleright.png
+bmiddle	x	basin/middle.png
+btop	x	basin/top.png
+bleft	x	basin/left.png
+bright	x	basin/right.png
+bbottom	x	basin/bottom.png
+btopleftconcave	x	basin/topleftconcave.png
+btoprightconcave	x	basin/toprightconcave.png
+btopleftconvex	x	basin/topleftconvex.png
+btoprightconvex	x	basin/toprightconvex.png
+bbottomleftconcave	x	basin/bottomleftconcave.png
+bbottomrightconcave	x	basin/bottomrightconcave.png
+bbottomleftconvex	x	basin/bottomleftconvex.png
+bbottomrightconvex	x	basin/bottomrightconvex.png
