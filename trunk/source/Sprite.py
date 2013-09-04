@@ -51,6 +51,7 @@ class Sprite:
 		self.ghost = False
 		self.renderImpl = SPRITE_renderPlayerOver
 		self.automation = None
+		self.floats = False
 		self.deathState = None
 		if type == 'acorn':
 			self.renderImpl = SPRITE_renderAcorn
@@ -168,7 +169,7 @@ class Sprite:
 			# assume sprite is flying through the air unless you see ground
 			wasOnGround = self.onGround # save the previous ground state. If you weren't on ground before but suddenly are, then you "landed" and a sound should be played. 
 			self.onGround = False
-			if wasOnGround:
+			if wasOnGround or self.floats:
 				self.vy = 0
 			else:
 				if scene.tiles[tileX][tileY].isWater:

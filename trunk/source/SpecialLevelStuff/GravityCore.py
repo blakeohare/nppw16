@@ -12,7 +12,7 @@ class GravityCorePlacement(SpecialLevelStuff):
 		tx = int(player.x / 16)
 		ty = int(player.y / 16)
 	
-		if tx == self.col and ty == self.row and not self.done:
+		if tx == self.col and abs(ty - self.row) < 2 and not self.done:
 			self.addGDevice()
 	
 	def postInit(self):
@@ -22,4 +22,6 @@ class GravityCorePlacement(SpecialLevelStuff):
 	def addGDevice(self):
 		self.done = True
 		self.context.gravity = True
-		self.scene.sprites.append(Sprite('gravity_device', self.col * 16 + 8, self.row * 16 + 8))
+		gd = Sprite('gravity_device', self.col * 16, self.row * 16)
+		gd.floats = True
+		self.scene.sprites.append(gd)

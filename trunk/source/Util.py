@@ -45,3 +45,7 @@ def legacyMap(fun, things):
 	for thing in things:
 		output.append(fun(thing))
 	return output
+
+def abs(x):
+	if x < 0: return -x
+	return x
