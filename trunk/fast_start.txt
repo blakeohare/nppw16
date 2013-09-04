@@ -1,0 +1,27 @@
+# How to use this file
+# first non empty line is either the map name (without "maps/" or ".map")
+# second line is the x, y coordinate (commad delimited)
+# lines afterwards are flags that are to be set when the game starts
+# flgas:
+# - GRAVITY
+# - VOLCANO1
+# - VOLCANO2
+# - VOLCANO3
+# - WATER1
+# - WATER2
+# - WATER3
+
+# ---Example---
+# grav_core
+# 3, 3
+# GRAVITY
+# VOLCANO1
+
+# ^ this example starts you towards the top left corner of
+# the grav_core map after the gravity and first volcano
+# missions are complete.
+
+# On the other hand just change the contents to "IGNORE"
+# and this file will be ignored outright.
+
+IGNORE
