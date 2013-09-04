@@ -87,11 +87,23 @@ def SPRITE_renderPlayerOver(sprite, scene, screen, offsetX, offsetY, arc):
 		
 		x = left
 		y = top
-		if reverse:
-			img = getBackwardsImage('sprites/' + path +'.png')
+		if sprite.deathState != None:
+			if sprite.deathState == 'collapse':
+				img = pygame.Surface((32, 16))
+				img.fill((255, 255, 0))
+				top += 16
+				left -= 8
+			elif sprite.deathState == 'lava':
+				img = pygame.Surface((16, 32))
+				img.fill((0, 0, 0))
+				
 		else:
-			img = getImage('sprites/' + path +'.png')
-			left = left + 16 - img.get_width()
+			if reverse:
+				img = getBackwardsImage('sprites/' + path +'.png')
+			else:
+				img = getImage('sprites/' + path +'.png')
+				left = left + 16 - img.get_width()
+			
 	else:
 		counter = '1232'[arc % 4] if sprite.moving else '2'
 		dir = sprite.lastDirection
@@ -136,6 +148,7 @@ class Sprite:
 		self.ghost = False
 		self.renderImpl = SPRITE_renderPlayerOver
 		self.automation = None
+		self.deathState = None
 		if type == 'acorn':
 			self.renderImpl = SPRITE_renderAcorn
 			self.automation = AcornAutomation(self)
