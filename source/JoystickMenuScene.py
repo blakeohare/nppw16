@@ -15,7 +15,7 @@ class JoystickMenuScene:
 					self.index += 1
 				elif event.action in ['A', 'B', 'start']:
 					if self.index == 0:
-						active_joystick = None
+						set_active_joystick(None)
 						self.next = TitleScene()
 					else:
 						self.blink_counter = 30
