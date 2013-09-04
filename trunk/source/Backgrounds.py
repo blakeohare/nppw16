@@ -8,6 +8,10 @@ CAVE_BG = [
 	'grav_gate'
 ]
 
+VOLCANO_BG = [
+	
+]
+
 STARS_BG = [
 	'rope_test',
 	'ship_1'
@@ -22,6 +26,8 @@ STARS_BG = [
 _bg = {}
 for cbg in CAVE_BG:
 	_bg[cbg] = 'cave'
+for vbg in VOLCANO_BG:
+	_bg[vbg] = 'volcano'
 for sbg in STARS_BG:
 	_bg[sbg] = 'stars'
 
