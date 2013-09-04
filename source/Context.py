@@ -47,3 +47,20 @@ class Context:
 		self.balloonB = (password[3] & 1) == 0
 		self.balloonC = (password[3] & 2) != 0
 		
+	def adjustHealth(self, scene, amount):
+		self.lifemeter += amount
+		if self.lifemeter <= 0:
+			self.lifemeter = 0
+			# TODO: death sequence
+		else:
+			if amount < 0:
+				if self.lifemeter < 4:
+					playNoise('low_health')
+				else:
+					playNoise('get_hit')
+			else:
+				playNoise('raise_health')
+		
+		if self.lifemeter > 10:
+			self.lifemeter = 10
+			
