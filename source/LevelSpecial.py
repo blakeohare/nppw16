@@ -1,6 +1,6 @@
 def getSpecialLevelStuff(id, scene):
 	if id == 'ship_1':
-		return [] #return [ShipTransmission(scene)]
+		return [ShipTransmission(scene)]
 	if id == 'grav_core':
 		return [GravityCorePlacement(scene)]
 	if id == 'grav_ascent':

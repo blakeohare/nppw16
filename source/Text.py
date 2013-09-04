@@ -103,3 +103,7 @@ def renderText(color, text):
 
 # Because I keep accidentally using this one
 getText = renderText
+
+
+def clearTextCache(r, g, b):
+	_textEngine.colors[str((r, g, b))] = {}
