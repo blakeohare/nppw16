@@ -2,6 +2,8 @@ FPS = 30
 WIDTH = int(256 * 3.4)
 HEIGHT = 224 * 3
 
+DEBUG = {'counter':0}
+
 def main():
 	pygame.init()
 
@@ -96,6 +98,6 @@ def main():
 			time.sleep(delay)
 		else:
 			print ("FRAME DROPPING:", 1.0 / diff, "FPS")
-
+		DEBUG['counter'] += 1
 
 main()
