@@ -302,6 +302,8 @@ class PlayScene:
 			screen.fill((0, 0, 0))
 		elif self.bg == 'cave':
 			pass
+		elif self.bg == 'volcano':
+			pass
 		else:
 			screen.fill((0, 0, 40)) # sky
 		
@@ -329,6 +331,7 @@ class PlayScene:
 			offsetY = (224 - self.rows * 16) // 2
 		
 		cave = getImage('tiles/background/cave.png')
+		volcano_bg = getImage('tiles/background/volcano.png')
 		starlen = len(self.stars)
 		stars = self.stars
 		counter = 0
@@ -359,6 +362,8 @@ class PlayScene:
 				pt = (x, y)
 				if self.bg == 'cave':
 					screen.blit(cave, pt)
+				elif self.bg == 'volcano':
+					screen.blit(volcano_bg, pt)
 				elif self.bg == 'stars':
 					bgimg = stars[(col + self.rows * row + row * row) % starlen]
 					if bgimg != None:
