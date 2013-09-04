@@ -4,6 +4,8 @@ class DialogScene:
 		self.next = self
 		self.flags = ''
 		self.bg = bg
+		bg.player.moving = False
+		bg.player.lastDirection = 'left'
 		self.delayCounter = 45 if slightDelay else 0
 		self.stanzas = DIALOGS[dialogId]
 		self.stanzaIndex = 0
@@ -27,7 +29,7 @@ class DialogScene:
 		if self.stanzaIndex >= len(self.stanzas):
 			self.next = self.bg
 			self.bg.next = self.bg
-			clearTextCache(255, 255, 255) # so much clutter
+			#clearTextCache(255, 255, 255) # so much clutter
 		else:
 			self.activeStanza = self.stanzas[self.stanzaIndex]
 			rawLines = '\n'.join(self.activeStanza)

@@ -6,6 +6,6 @@ class GravityAscentExit(SpecialLevelStuff):
 	
 	def doorTrigger(self, doorId):
 		if doorId == 'XXXXX':
-			self.scene.next = PlayScene('ship_1', 8, 8, self.scene.context)
+			self.scene.next = PlayScene('ship_1', 8, 9, self.scene.context)
 			return None
 		return doorId
