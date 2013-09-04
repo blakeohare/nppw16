@@ -1,14 +1,17 @@
 class DeathOverrideScene:
-	# type = "lava", "collapse"
+	# type = "lava", "collapse", "fall"
 	def __init__(self, bg, type):
 		self.bg = bg
 		self.context = bg.context
+		self.context.lifemeter = 0
 		self.flags = ''
 		self.next = self
 		self.type = type
 		self.counter = 0
 		self.bg.player.deathState = type
 		self.vy = -10
+		if type == 'fall':
+			self.vy = bg.player.vy
 		
 		
 	def processInput(self, events, pressed):
@@ -17,7 +20,7 @@ class DeathOverrideScene:
 	def update(self):
 		self.counter += 1
 		self.vy += 1
-		if self.type == 'lava':
+		if self.type in ('lava', 'fall'):
 			self.bg.player.modelY += self.vy
 			self.bg.player.y = int(self.bg.player.modelY)
 			
