@@ -1,3 +1,6 @@
+GOOD_HEALTH_COLOR = (255, 255, 255)
+POOR_HEALTH_COLOR = (255, 128, 128)
+
 class PlayScene:
 	def __init__(self, map, startCol, startRow, context):
 		self.context = context
@@ -265,9 +268,31 @@ class PlayScene:
 	
 	def renderOverlay(self, screen):
 		pygame.draw.rect(screen, (0, 0, 0), pygame.Rect(0, 0, 256, 8))
+		
 		screen.blit(getImage('misc/lives.png'), (0, 0))
 		txt = getText((255, 255, 255), 'x' + str(self.context.lives))
 		screen.blit(txt, (8, 0))
+		
+		x = 112
+		txt = getText((255, 255, 255), 'HEALTH')
+		screen.blit(txt, (x, 0))
+		
+		x += txt.get_width() + 8
+		
+		health = self.context.lifemeter
+		color = GOOD_HEALTH_COLOR
+		if health < 4:
+			color = POOR_HEALTH_COLOR
+		i = 0
+		while i < 5:
+			pygame.draw.rect(screen, (128, 128, 128), pygame.Rect(x, 0, 16, 8), 1)
+			if health >= ((i + 1) * 2):
+				pygame.draw.rect(screen, color, pygame.Rect(x + 1, 1, 14, 6))
+			elif health == 2 * i + 1:
+				pygame.draw.rect(screen, color, pygame.Rect(x + 1, 1, 7, 6))
+			
+			x += 16
+			i += 1
 	
 	def render(self, screen, rc):
 		if self.bg == 'stars':
