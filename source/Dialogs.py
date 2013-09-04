@@ -14,7 +14,7 @@ DIALOGS = {
 	
 		["Remember we're relying",
 		"on you; don't forget the",
-		'"gravity" of our',
+		'`gravity" of our',
 		"situation!"]
 	],
 	

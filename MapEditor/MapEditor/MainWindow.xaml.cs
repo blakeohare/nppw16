@@ -562,8 +562,8 @@ namespace MapEditor
 			try
 			{
 				string keys =
-					" !     '    ,-./" +
-					"0123456789: <=>?" + 
+					"^!     '\"`  ,-./" +
+					"0123456789:;<=>?" + 
 					"*ABCDEFGHIJKLMNO" +
 					"PQRSTUVWXYZ(&)  ";
 				int keyIndex = 0;
