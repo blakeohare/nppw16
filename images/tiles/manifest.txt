@@ -188,3 +188,9 @@ staticbottom1		screen-static/screenbottom1a.png,screen-static/screenbottom1b.png
 staticbottom2		screen-static/screenbottom2a.png,screen-static/screenbottom2b.png
 staticbottom3		screen-static/screenbottom3a.png,screen-static/screenbottom3b.png
 staticbottom4		screen-static/screenbottom4a.png,screen-static/screenbottom4b.png
+ship1	BCD	ship-exterior/ship1.png
+ship2	x	ship-exterior/ship2.png
+ship3	ACD	ship-exterior/ship3.png
+ship4	x	ship-exterior/ship4.png
+ship5	r	ship-exterior/ship5.png
+ship6	x	ship-exterior/ship6.png
