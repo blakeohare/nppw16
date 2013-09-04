@@ -282,6 +282,7 @@ class Sprite:
 			else:
 				self.dy += self.vy
 			
+			oldLadderDY = self.ladderDY
 			self.ladderDY = 0
 			
 			if self.dy > 10:
@@ -294,6 +295,7 @@ class Sprite:
 			
 			newBottom = areaBottom + self.dy
 			newTop = areaTop + self.dy
+									
 			no = False
 			if self.dy < 0:
 				# Going Up
@@ -335,6 +337,7 @@ class Sprite:
 							topStop = True
 					if t.solid or topStop:
 						no = True
+						self.cling = False
 						self.onGround = True
 						self.modelY = newTileBottom * 16 - 8
 						self.vy = 0
