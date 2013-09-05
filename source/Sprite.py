@@ -84,7 +84,7 @@ class Sprite:
 		self.cling = False
 		self.ladderDY = 0
 		self.blinkCounter = -1
-		
+		self.cameFromIce = False
 		
 	def checkNeighborCollision(self, scene, col, row, targetX, targetY):
 		area_left = targetX - 5
@@ -168,7 +168,8 @@ class Sprite:
 			
 			ICE_DIMINISH = .1
 			ICE_MAX_SPEED = 5
-			if onIce:
+			
+			if onIce or (self.cameFromIce and not self.onGround and not self.cling):
 				if self.dx == 0:
 					if self.iceVX > 0:
 						self.iceVX -= ICE_DIMINISH
@@ -188,9 +189,11 @@ class Sprite:
 					self.dx = ICE_MAX_SPEED
 				elif self.dx < -ICE_MAX_SPEED:
 					self.dx = -ICE_MAX_SPEED
-					
+				self.cameFromIce = True
 			else:
 				self.iceVX = 0
+				if self.onGround:
+					self.cameFromIce = False
 			
 			self.moving = self.dx != 0 or self.dy != 0
 			
