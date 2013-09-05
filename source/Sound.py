@@ -1,8 +1,7 @@
 SOUND_LOOKUP = {
 	'raise_health': None,
-	'head_bonk': None,
+	'head_bonk': None, # re-used when trying to move a menu cursor someplace where it cannot go.
 	'password_enter_digit': None,
-	'menu_beep': None,
 	'bad_password': None,
 	'sprinkle_lava_packet': None,
 	'screen_shaking': ('everythingfalls', 1.0),
@@ -15,8 +14,8 @@ SOUND_LOOKUP = {
 	'get_hit': None,
 	'raise_health': None,
 	'jump': ('jump', 0.4),
-	'swim': None,
-	'pause_sound': None
+	'swim': ('jump', 0.4), # maybe use a different sound?
+	'pause_sound': None # *TEE KOO TEE KOO*
 }
 
 _sound_cache = {}
