@@ -36,6 +36,10 @@ class DialogScene:
 		
 	
 	def update(self):
+	
+		if 'M' in self.bg.flags:
+			self.bg.playMusic()
+		
 		self.delayCounter -= 1
 		if self.stanzaIndex >= len(self.stanzas):
 			self.next = self.bg

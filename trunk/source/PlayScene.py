@@ -7,8 +7,9 @@ class PlayScene:
 		self.startArgs = (map, startCol, startRow)
 		self.context = context
 		self.next = self
-		self.flags = ''
+		self.flags = 'M'
 		levelname = map.split('.')[0]
+		self.id = levelname
 		if not map.endswith('.map'):
 			map += '.map'
 		mapParser = MapParser(map)
@@ -226,7 +227,12 @@ class PlayScene:
 				self.player.dx = dx
 				self.player.dy = dy
 	
+	def playMusic(self):
+		JUKEBOX.playSongForLevelMaybe(self.id)
+	
 	def update(self):
+		self.playMusic()
+		
 		playerX = self.player.modelX
 		playerY = self.player.modelY
 		sprites = self.sprites
