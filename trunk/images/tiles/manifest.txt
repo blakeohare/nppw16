@@ -153,6 +153,12 @@ wbottomleftconcave	x	surfacefluids/wbottomleftconcave.png
 wbottomrightconcave	x	surfacefluids/wbottomrightconcave.png
 wbottomleftconvex	x	surfacefluids/wbottomleftconvex.png
 wbottomrightconvex	x	surfacefluids/wbottomrightconvex.png
+strm_h		surfacefluids/stream_horizontal.png
+strm_v		surfacefluids/stream_vertical.png
+strm_tr		surfacefluids/stream_topright.png
+strm_tl		surfacefluids/stream_topleft.png
+strm_br		surfacefluids/stream_bottomright.png
+strm_bl		surfacefluids/stream_bottomleft.png
 lmiddle	x	surfacefluids/lmiddle.png
 ltop	x	surfacefluids/ltop.png
 lleft	x	surfacefluids/lleft.png

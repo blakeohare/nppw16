@@ -11,6 +11,8 @@ def getSpecialLevelStuff(id, scene):
 		return [VolcanoCoreActivation(scene, 2)]
 	if id == 'volcano_3_core':
 		return [VolcanoCoreActivation(scene, 3)]
+	if id == 'balloon_2_overland':
+		return [BalloonPopping(scene, 'water2')]
 	return []
 
 class SpecialLevelStuff:

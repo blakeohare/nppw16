@@ -1,0 +1,6 @@
+#width:16
+#height:14
+#upper:,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+#lower:,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,wtopleftconcave,wtoprightconcave,,wtopleftconcave,wtop,,,,,,,,,,strm_br,strm_h,wmiddle,wtoprightconvex,wtop,wtopleftconvex,wmiddle,,,,,,,,,,strm_v,,wbottomleftconcave,wbottom,wbottomleftconvex,wmiddle,wmiddle,,,,,,,,,,strm_v,,,,wbottomleftconcave,wbottomleftconvex,wmiddle,,,,,,,,strm_br,strm_h,strm_tl,,,,,wbottomleftconcave,wbottom,,,,,,,,strm_v,,,,,,,,,,,,,,,ground,strm_v,ground,,,,,,,,,,,,,,ground,ground,ground,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+#view:over
+#overlay:water2|balloon_2_overland_overlay

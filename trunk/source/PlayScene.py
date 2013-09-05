@@ -45,7 +45,7 @@ class PlayScene:
 			x = 0
 			while x < self.cols:
 				
-				t = Tile(self.lower[x][y], self.upper[x][y], x, y)
+				t = makeTile(self.lower[x][y], self.upper[x][y], x, y)
 				self.tiles[x][y] = t
 				if t.isDoor:
 					doorTiles.append((str(x) + '|' + str(y), t))
@@ -94,6 +94,8 @@ class PlayScene:
 			sprite = Sprite(enemy.id, enemy.col * 16 + 8, enemy.row * 16 + 8)
 			sprite.isEnemy = True
 			self.sprites.append(sprite)
+		
+		self.overlayTriggers = map.overlayTriggers
 		
 		self.special = getSpecialLevelStuff(levelname, self)
 		for special in self.special:
@@ -503,12 +505,12 @@ class PlayScene:
 					bgimg = stars[(col + self.rows * row + row * row) % starlen]
 					if bgimg != None:
 						screen.blit(bgimg, pt)
-				tile = self.lower[col][row]
-				if tile != None:
-					screen.blit(tile.getImage(rc), pt)
-				tile = self.upper[col][row]
-				if tile != None:
-					screen.blit(tile.getImage(rc), pt)
+				templates = self.tiles[col][row].templates
+				i = 0
+				while i < len(templates):
+					img = templates[i].getImage(rc)
+					screen.blit(img, pt)
+					i += 1
 				
 				col += 1
 			row += 1

@@ -36,6 +36,9 @@ class TileTemplate:
 		self.isSpike = False
 		self.isLava = False
 		self.isIce = False
+		self.isBalloon = False
+		self.primaryBalloonOffset = None # Location of top-middle balloon tile relative to this
+
 		for flag in flags:
 			if flag == 'x':
 				self.solid = True
@@ -59,6 +62,21 @@ class TileTemplate:
 				self.isLava = True
 			elif flag == 'I':
 				self.isIce = True
+			elif flag == 'o':
+				self.isBalloon = True
+				bid = int(id[-1])
+				pOffset = (0, 0)
+				if bid == 1:
+					pOffset = (1, 0)
+				elif bid == 3:
+					pOffset = (-1, 0)
+				elif bid == 4:
+					pOffset= (1, -1)
+				elif bid == 5:
+					pOffset = (0, -1)
+				elif bid == 6:
+					pOffset = (-1, -1)
+				self.primaryBalloonOffset = pOffset
 		self.images = []
 		for path in imagePaths:
 			self.images.append(getImage('tiles/' + path))
@@ -73,10 +91,20 @@ class TileTemplate:
 			return self.images[(rc // 4) % self.imageCount]
 		return img
 
+def makeTile(lower, upper, col, row):
+	if lower == None and upper == None:
+		return Tile([], col, row)
+	if lower == None:
+		return Tile([upper], col, row)
+	if upper == None:
+		return Tile([lower], col, row)
+	return Tile([lower, upper], col, row)
+
 class Tile:
-	def __init__(self, lower, upper, col, row):
+	def __init__(self, templates, col, row):
 		self.col = col
 		self.row = row
+		self.originalTemplates = templates
 		self.templates = []
 		self.isDoor = False
 		self.isLadder = False
@@ -86,8 +114,10 @@ class Tile:
 		self.isIce = False
 		self.door = None
 		self.isSpike = False
+		self.isBalloon = False
+		self.primaryBalloonOffset = None
 		
-		for tile in (lower, upper):
+		for tile in templates:
 			if tile != None:
 				self.templates.append(tile)
 				if tile.isDoor:
@@ -104,6 +134,9 @@ class Tile:
 					self.isLava = True
 				if tile.isIce:
 					self.isIce = True
+				if tile.isBalloon:
+					self.isBalloon = True
+					self.primaryBalloonOffset = tile.primaryBalloonOffset
 		
 		self.collisions = []
 		self.solid = False
