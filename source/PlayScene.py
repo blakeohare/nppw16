@@ -30,6 +30,8 @@ class PlayScene:
 		self.lower = map.lower
 		self.side = map.side
 		
+		self.lazor_cooldown = 0
+		
 		self.tiles = makeGrid(self.cols, self.rows)
 		
 		self.doorSwaps = map.doorswaps
@@ -184,24 +186,25 @@ class PlayScene:
 					
 					# SHOOT UR LAZOR PEW PEW!!!!1
 					elif event.action == 'B' and event.down:
-						
-						p = self.player
-						lazorVX = 8
-						if self.player.lastDirection == 'left':
-							lazorVX = -8
-						
-						x = p.x + lazorVX
-						y = p.y - 8
-						
-						if p.spawns == None:
-							p.spawns = []
-						
-						bullet = Sprite('lazor', x, y)
-						bullet.bvx = lazorVX
-						bullet.isBullet = True
-						bullet.ghost = True
-						bullet.floats = True
-						p.spawns.append(bullet)
+						if self.lazor_cooldown <= 0:
+							p = self.player
+							lazorVX = 8
+							if self.player.lastDirection == 'left':
+								lazorVX = -8
+							
+							x = p.x + lazorVX
+							y = p.y - 8
+							
+							if p.spawns == None:
+								p.spawns = []
+							
+							bullet = Sprite('lazor', x, y)
+							bullet.bvx = lazorVX
+							bullet.isBullet = True
+							bullet.ghost = True
+							bullet.floats = True
+							p.spawns.append(bullet)
+							self.lazor_cooldown = 6
 			else:
 				v = 3
 				dx = 0
@@ -224,6 +227,7 @@ class PlayScene:
 		playerX = self.player.modelX
 		playerY = self.player.modelY
 		sprites = self.sprites
+		self.lazor_cooldown -= 1
 		newsprites = [] # TODO: filter out the dead
 		
 		allBullets = []
