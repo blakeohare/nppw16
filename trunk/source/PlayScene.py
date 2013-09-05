@@ -4,6 +4,7 @@ WHITE = (255, 255, 255)
 
 class PlayScene:
 	def __init__(self, map, startCol, startRow, context):
+		print(startRow)
 		self.startArgs = (map, startCol, startRow)
 		self.context = context
 		self.next = self
@@ -87,7 +88,7 @@ class PlayScene:
 		self.cameraX = 0
 		self.cameraY = 0
 		
-		self.player = Sprite('player_' + ('side' if self.side else 'over'), startCol * 16 + 8, startRow * 16 + 8)
+		self.player = Sprite('player_' + ('side' if self.side else 'over'), startCol * 16 + 8, startRow * 16 + 7)
 		self.sprites = [self.player]
 		
 		for enemy in map.enemies:
