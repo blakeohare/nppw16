@@ -107,92 +107,98 @@ class PlayScene:
 		return None
 	
 	def processInput(self, events, pressed):
-		if self.side:
-			dx = 0
-			dy = 0
-			running = False
-			if self.context.gravity:
-				if pressed['B']:
-					running = True
-					v = 5
-				else:
-					v = 3
-			else:
-				v = 2.5
-				
-			if pressed['left']:
-				dx = -v
-				if running and self.runCounterValidFor == 'left':
-					self.runCounter += 1
-				else:
-					self.runCounter = 0
-					self.runCounterValidFor = 'left'
-			elif pressed['right']:
-				dx = v
-				if running and self.runCounterValidFor == 'right':
-					self.runCounter += 1
-				else:
-					self.runCounter = 0
-					self.runCounterValidFor = 'right'
-			elif pressed['up']:
-				pt = self.playersTile()
-				if pt != None and pt.isLadder:
-					self.player.cling = True
-					#self.player.onGround = False
-					self.player.ladderDY = -2
-			elif pressed['down']:
-				pt = self.playersTile()
-				if pt != None and pt.isLadder:
-					self.player.ladderDY = 2
-				else:
-					pt = self.playersTile(0, 1)
-					if pt != None and pt.isLadder:
-						self.player.modelY += 8
-						self.player.ladderDY = 2
-						self.player.cling = True
-			else:
-				self.runCounter = 0
-				self.runCounterValidFor = 'nothing'
-				
-			if self.player != None:
-				self.player.dx = dx
-			
-			for event in events:
-				if event.action == 'A':
-					if event.down:
-						pt = self.playersTile()
-						if self.player.onGround or self.player.cling or (pt != None and pt.isWater):
-							self.player.onGround = False
-							self.player.cling = False
-							self.player.ladderDY = 0
-							if pt.isWater:
-								self.player.vy += WATER_JUMPING_VY
-							else:
-								self.player.vy = JUMPING_VY
-								if self.runCounter > 5 and self.context.gravity:
-									self.player.vy = RUN_JUMPING_VY
-								
+		frozen = False
+		for s in self.special:
+			if s.freeze:
+				frozen = True
+		
+		if not frozen:
+			if self.side:
+				dx = 0
+				dy = 0
+				running = False
+				if self.context.gravity:
+					if pressed['B']:
+						running = True
+						v = 5
 					else:
-						if self.player.vy < 0:
-							self.player.vy = self.player.vy / 4.0 # maybe set to 0 instead?
-							
-		else:
-			v = 3
-			dx = 0
-			dy = 0
-			
-			if pressed['left']:
-				dx = -v
-			elif pressed['right']:
-				dx = v
+						v = 3
+				else:
+					v = 2.5
+					
+				if pressed['left']:
+					dx = -v
+					if running and self.runCounterValidFor == 'left':
+						self.runCounter += 1
+					else:
+						self.runCounter = 0
+						self.runCounterValidFor = 'left'
+				elif pressed['right']:
+					dx = v
+					if running and self.runCounterValidFor == 'right':
+						self.runCounter += 1
+					else:
+						self.runCounter = 0
+						self.runCounterValidFor = 'right'
+				elif pressed['up']:
+					pt = self.playersTile()
+					if pt != None and pt.isLadder:
+						self.player.cling = True
+						#self.player.onGround = False
+						self.player.ladderDY = -2
+				elif pressed['down']:
+					pt = self.playersTile()
+					if pt != None and pt.isLadder:
+						self.player.ladderDY = 2
+					else:
+						pt = self.playersTile(0, 1)
+						if pt != None and pt.isLadder:
+							self.player.modelY += 8
+							self.player.ladderDY = 2
+							self.player.cling = True
+				else:
+					self.runCounter = 0
+					self.runCounterValidFor = 'nothing'
+					
+				if self.player != None:
+					self.player.dx = dx
 				
-			if pressed['up']:
-				dy = -v
-			elif pressed['down']:
-				dy = v
+				for event in events:
+					if event.action == 'A':
+						if event.down:
+							pt = self.playersTile()
+							if self.player.onGround or self.player.cling or (pt != None and pt.isWater):
+								self.player.onGround = False
+								self.player.cling = False
+								self.player.ladderDY = 0
+								if pt.isWater:
+									self.player.vy += WATER_JUMPING_VY
+								else:
+									self.player.vy = JUMPING_VY
+									if self.runCounter > 5 and self.context.gravity:
+										self.player.vy = RUN_JUMPING_VY
+									
+						else:
+							if self.player.vy < 0:
+								self.player.vy = self.player.vy / 4.0 # maybe set to 0 instead?
+								
+			else:
+				v = 3
+				dx = 0
+				dy = 0
 				
-			self.player.dx = dx
-			self.player.dy = dy
+				if pressed['left']:
+					dx = -v
+				elif pressed['right']:
+					dx = v
+					
+				if pressed['up']:
+					dy = -v
+				elif pressed['down']:
+					dy = v
+					
+				self.player.dx = dx
+				self.player.dy = dy
 	
 	def update(self):
 		playerX = self.player.modelX
@@ -352,8 +358,32 @@ class PlayScene:
 		if idealRowEnd < rowEnd:
 			rowEnd = idealRowEnd
 		
+		lavaLevel = 0
+		shake = 0
+		for s in self.special:
+			lavaLevel = max(lavaLevel, s.lavaLevel)
+			shake = max(shake, 3 if s.shakeScreen else 0)
+		
+		offsetX += shake
+		offsetY += shake // 3
+		
+		lavaRowType = None
+		
 		row = rowStart
 		while row <= rowEnd:
+			
+			fromBottom = rowEnd - row + 1
+			if lavaLevel > 0:
+				if fromBottom == lavaLevel:
+					lavaRowType = 'upper'
+					lc = str(int((rc // 4) % 4) + 1)
+					lu = getImage('tiles/fluids/lava' + lc + '.png')
+				elif fromBottom < lavaLevel:
+					lavaRowType = 'inner' 
+					lu = getImage('tiles/fluids/lava.png')
+			
+			
+			
 			col = colStart
 			while col <= colEnd:
 				counter += 1
@@ -364,6 +394,9 @@ class PlayScene:
 					screen.blit(cave, pt)
 				elif self.bg == 'volcano':
 					screen.blit(volcano_bg, pt)
+					if lavaRowType != None:
+						screen.blit(lu, pt)
+					
 				elif self.bg == 'stars':
 					bgimg = stars[(col + self.rows * row + row * row) % starlen]
 					if bgimg != None:
