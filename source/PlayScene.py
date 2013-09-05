@@ -117,6 +117,8 @@ class PlayScene:
 		
 		self.shooting = self.lazor_cooldown > 0
 		
+		pause = False
+		
 		if not frozen:
 			if self.side:
 				dx = 0
@@ -209,6 +211,8 @@ class PlayScene:
 							bullet.floats = True
 							p.spawns.append(bullet)
 							self.lazor_cooldown = 6
+					elif event.action == 'start' and event.down:
+						self.next = PauseScene(self)
 			else:
 				v = 3
 				dx = 0
