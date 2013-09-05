@@ -1,10 +1,12 @@
 DIALOGS = {
 	'Open1': [
-		["Lorem ipsum dolar sit",
-		 "consecutor."],
+		["An intrepid explorer",
+		 "left home in search of",
+		 "a better life for all",
+		 "squirrelkind."],
 		
 		["Jackdaws love my",
-		 "sphinx of qwartz"
+		 "sphinx of qwartz",
 		 "Commit comments!"]
 	],
 	
