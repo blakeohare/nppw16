@@ -336,6 +336,9 @@ class PlayScene:
 		if (pUp != None and pUp.isSpike) or (pDown != None and pDown.isSpike):
 			self.playerHit(3)
 		
+		if (pUp != None and pUp.isLava) or (pDown != None and pDown.isLava):
+			self.next = DeathOverrideScene(self, 'lava')
+		
 		for special in self.special:
 			if special.hasUpdate:
 				special.update()
