@@ -79,7 +79,7 @@ class PasswordScene:
 				if not bonk:
 					self.col = newCol
 					self.row = newRow
-					playNoise('menu_beep')
+					playNoise('menu_move')
 				else:
 					playNoise('head_bonk')
 	
