@@ -16,7 +16,13 @@ VOLCANO_BG = [
 	'lava_gate_2',
 	'lava_gate_2_active',
 	'lava_gate_3',
-	'lava_gate_3_active'
+	'lava_gate_3_active',
+	'volcano_2_core',
+	'volcano_2_lower_ascent',
+	'volcano_2_lower_descent',
+	'volcano_2_upper_ascent',
+	'volcano_2_upper_descent',
+	'volcano_2_upper_secret'
 ]
 
 STARS_BG = [
