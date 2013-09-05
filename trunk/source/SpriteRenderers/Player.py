@@ -39,8 +39,11 @@ def SPRITE_renderPlayerOver(sprite, scene, screen, offsetX, offsetY, arc):
 				top += 16
 				left -= 8
 			elif sprite.deathState == 'lava':
-				img = pygame.Surface((16, 32))
-				img.fill((0, 0, 0))
+				if reverse:
+					img = getBackwardsImage('sprites/roasted.png')
+				else:
+					img = getImage('sprites/roasted.png')
+					left = left + 16 - img.get_width()
 		else:
 			if sprite.sprinkle:
 				img = getImage('sprites/space_sprinkle.png')
