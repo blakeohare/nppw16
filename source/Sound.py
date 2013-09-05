@@ -5,7 +5,7 @@ SOUND_LOOKUP = {
 	'menu_beep': None,
 	'bad_password': None,
 	'sprinkle_lava_packet': None,
-	'screen_shaking': None,
+	'screen_shaking': ('everythingfalls', 1.0),
 	'fall_to_death': None,
 	'lava_rise': None,
 	'land_on_ground': None,
