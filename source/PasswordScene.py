@@ -89,12 +89,10 @@ class PasswordScene:
 			return
 		for i in (0, 1, 3):
 			if not (self.current[i] in ALPHABET):
-				print(i)
 				playNoise('bad_password')
 				return
 		
 		if not (self.current[2] in '0123456789'):
-			print('1')
 			playNoise('bad_password')
 			return
 		
