@@ -14,6 +14,7 @@
 #	r - 1-tile door (overworld)
 #	L - Ladder
 #	J - Jump-through
+#	S - spikes
 
 
 test1	x	test/test1.png
@@ -53,12 +54,12 @@ bigcrater1	x	rocky/bigcrater1.png
 bigcrater2	x	rocky/bigcrater2.png
 bigcrater3	x	rocky/bigcrater3.png
 bigcrater4	x	rocky/bigcrater4.png
-spikes		spikes/spikes.png
-spiketip		spikes/spiketip.png
-spikebase		spikes/spikebase.png
-stalactites		spikes/stalactites.png
-stalactitebase		spikes/stalactitebase.png
-stalactitetip		spikes/stalactitetip.png
+spikes	S	spikes/spikes.png
+spiketip	S	spikes/spiketip.png
+spikebase	S	spikes/spikebase.png
+stalactites	S	spikes/stalactites.png
+stalactitebase	S	spikes/stalactitebase.png
+stalactitetip	S	spikes/stalactitetip.png
 water		fluids/water.png
 watertop		fluids/water1.png,fluids/water2.png
 waterfall		fluids/waterfall1.png,fluids/waterfall2.png
