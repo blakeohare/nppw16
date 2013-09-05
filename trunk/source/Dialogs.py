@@ -1,4 +1,14 @@
 DIALOGS = {
+	'Volcano': [
+		["That's the last of the",
+		 "volcanos."],
+		 
+		["Now that the magnetic",
+		 "field is back, the",
+		 "atmosphere will",
+		 "re-accumulate."]
+	],
+	
 	'T1': [
 		["Hello explorer! We trust",
 		"your journey was a",
