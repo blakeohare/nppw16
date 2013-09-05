@@ -40,6 +40,9 @@ class TitleScene:
 				pass # Assert! or something.
 	
 	def render(self, screen, renderCounter):
+		
+		JUKEBOX.ensureSong('title')
+		
 		screen.fill((0, 0, 0))
 		pygame.draw.rect(screen, (0, 128, 255), pygame.Rect(10, 10, 50, 50))
 		
