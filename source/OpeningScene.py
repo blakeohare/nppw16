@@ -1,7 +1,7 @@
-GO_TO_TITLE = True
 
 class OpeningScene:
 	def __init__(self):
+		self.static_width = 150
 		if GO_TO_TITLE:
 			self.next = TitleScene()
 			self.mode = None
@@ -30,7 +30,7 @@ class OpeningScene:
 			]
 			self.next = self
 			self.flags = 'W'
-			static = pygame.Surface((120, 120))
+			static = pygame.Surface((self.static_width, self.static_width))
 			self.scrolly = pygame.Surface((WIDTH, 5))
 			black = (0, 0, 0)
 			white = (255, 255, 255)
@@ -42,12 +42,12 @@ class OpeningScene:
 			e = 0
 			y = 0
 			self.fade = 0
-			colors = [black, white] * (120 * 60)
+			colors = [black, white] * (self.static_width * self.static_width // 2)
 			random.shuffle(colors)
 			i = 0
-			while y < 120:
+			while y < self.static_width:
 				x = 0
-				while x < 120:
+				while x < self.static_width:
 					dr(static, colors[i], pr(x, y, 2, 2))
 					i += 1
 					x += 1
@@ -80,15 +80,15 @@ class OpeningScene:
 			else:
 				screen.fill((200, 200, 200))
 		elif self.mode == 'open':
-			left = -random.random() * 120
-			top = -random.random() * 120
+			left = -random.random() * self.static_width
+			top = -random.random() * self.static_width
 			y = top
 			while y < HEIGHT:
 				x = left
 				while x < WIDTH:
 					screen.blit(self.static, (x, y))
-					x += 120
-				y += 120
+					x += self.static_width
+				y += self.static_width
 			
 			self.scrolly.blit(screen, (0, 0))
 			

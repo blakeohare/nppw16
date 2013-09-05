@@ -97,7 +97,8 @@ def main():
 		if delay > 0:
 			time.sleep(delay)
 		else:
-			print ("FRAME DROPPING:", 1.0 / diff, "FPS")
+			if SHOW_FRAME_DROP:
+				print ("FRAME DROPPING:", 1.0 / diff, "FPS")
 		DEBUG['counter'] += 1
 
 main()
