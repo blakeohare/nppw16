@@ -8,7 +8,8 @@ SPRITE_HEIGHT = {
 	'player_side': 32,
 	'acorn': 16,
 	'acorntop': 16,
-	'gravity_device': 16
+	'gravity_device': 16,
+	'lazor': 16
 }
 
 G = 0.7
@@ -27,6 +28,11 @@ XY_PAIRINGS = [
 	(4, 1),
 	(4, 2),
 	(4, 3)
+]
+
+ENEMY_TYPES = [
+	'acorn',
+	'acorntop'
 ]
 
 class Sprite:
@@ -54,6 +60,8 @@ class Sprite:
 		self.floats = False
 		self.deathState = None
 		self.sprinkle = False
+		self.isEnemy = type in ENEMY_TYPES
+		self.isBullet = type == 'lazor'
 		if type == 'acorn':
 			self.renderImpl = SPRITE_renderAcorn
 			self.automation = AcornAutomation(self)
@@ -64,6 +72,9 @@ class Sprite:
 		elif type == 'gravity_device':
 			self.renderImpl = SPRITE_renderGravityDevice
 			self.automation = None
+		elif type == 'lazor':
+			self.renderImpl = SPRITE_renderLazor
+			self.automation = LazorAutomation(self)
 			
 		self.dx = 0
 		self.dy = 0
@@ -155,7 +166,7 @@ class Sprite:
 				# isCollision ignores collisions near the sprite's feet
 				# if you are near ground, you will be automatically placed standing
 				# upon it at the end of the vertical adjustment phase.
-				if not scene.isCollision(newX, areaTop, newX, areaBottom):
+				if self.ghost or not scene.isCollision(newX, areaTop, newX, areaBottom):
 					self.modelX = newX
 					if self.dx > 0:
 						self.lastDirection = 'right'
@@ -166,6 +177,9 @@ class Sprite:
 			tileX = int(self.modelX / 16)
 			tileY = int(self.modelY / 16)
 			
+			offScreen = tileX < 0 or tileX >= scene.cols or tileY < 0 or tileY >= scene.rows
+			onScreen = not offScreen
+			
 			# vertical adjustment phase
 			# assume sprite is flying through the air unless you see ground
 			wasOnGround = self.onGround # save the previous ground state. If you weren't on ground before but suddenly are, then you "landed" and a sound should be played. 
@@ -173,7 +187,7 @@ class Sprite:
 			if wasOnGround or self.floats:
 				self.vy = 0
 			else:
-				if scene.tiles[tileX][tileY].isWater:
+				if onScreen and scene.tiles[tileX][tileY].isWater:
 					self.vy += WATER_G
 				elif scene.context.gravity:
 					self.vy += STRONG_G
@@ -201,54 +215,66 @@ class Sprite:
 			
 			newBottom = areaBottom + self.dy
 			newTop = areaTop + self.dy
-									
+			
 			no = False
-			if self.dy < 0:
-				# Going Up
-				if newTop < 0:
-					# TODO: do top transitions here.
-					no = True
-				else:
-					newTileTop = int(newTop / 16)
-					if scene.tiles[tileX][newTileTop].solid:
-						no = False
-						self.vy = 0
-						self.dy = 0
-						playNoise('hit_head')
-					else:
-						movedUp = True
+			
+			if self.ghost:
+				pass # just go with it
 			else:
-				# Going Down (or staying the same)
-				# The philosophy here is different. When you encounter a collision,
-				# rather than stop the movement, you find where the top of the collided
-				# tile is and place the sprite there.
-				
-				newTileBottom = int(newBottom / 16)
-				
-				# If the player fell off the bottom
-				if newTileBottom >= height:
-					# TODO: check if there is a transition registered with the map.
-					# If so begin that transition instead of killing the player.
-					playNoise('fall_to_death')
-					scene.next = DeathOverrideScene(scene, 'fall')
-					no = True
-				else:
-					t = scene.tiles[tileX][newTileBottom]
-					topStop = False
-					if t.isTop:
-						oldTileBottom = int(areaBottom / 16)
-						if newTileBottom > oldTileBottom:
-							topStop = True
-						elif newTileBottom == oldTileBottom and areaBottom == newBottom:
-							topStop = True
-					if t.solid or topStop:
+				if self.dy < 0:
+					# Going Up
+					if newTop < 0:
+						# TODO: do top transitions here.
 						no = True
-						self.cling = False
-						self.onGround = True
-						self.modelY = newTileBottom * 16 - 8
-						self.vy = 0
-						if not wasOnGround:
-							playNoise('land_on_ground')
+					else:
+						newTileTop = int(newTop / 16)
+						
+						offScreen = tileX < 0 or tileX >= scene.cols or newTileTop < 0 or newTileTop >= scene.rows
+						onScreen = not offScreen
+						
+						if onScreen and scene.tiles[tileX][newTileTop].solid:
+							no = False
+							self.vy = 0
+							self.dy = 0
+							playNoise('hit_head')
+						else:
+							movedUp = True
+				else:
+					# Going Down (or staying the same)
+					# The philosophy here is different. When you encounter a collision,
+					# rather than stop the movement, you find where the top of the collided
+					# tile is and place the sprite there.
+					
+					newTileBottom = int(newBottom / 16)
+					
+					# If the player fell off the bottom
+					if newTileBottom >= height:
+						# TODO: check if there is a transition registered with the map.
+						# If so begin that transition instead of killing the player.
+						playNoise('fall_to_death')
+						scene.next = DeathOverrideScene(scene, 'fall')
+						no = True
+					else:
+					
+						offScreen = tileX < 0 or tileX >= scene.cols or newTileBottom < 0 or newTileBottom >= scene.rows
+						onScreen = not offScreen
+						
+						t = scene.tiles[tileX][newTileBottom]
+						topStop = False
+						if t.isTop:
+							oldTileBottom = int(areaBottom / 16)
+							if newTileBottom > oldTileBottom:
+								topStop = True
+							elif newTileBottom == oldTileBottom and areaBottom == newBottom:
+								topStop = True
+						if t.solid or topStop:
+							no = True
+							self.cling = False
+							self.onGround = True
+							self.modelY = newTileBottom * 16 - 8
+							self.vy = 0
+							if not wasOnGround:
+								playNoise('land_on_ground')
 					
 			if not no:
 				self.modelY = newBottom - 8
@@ -259,7 +285,9 @@ class Sprite:
 			
 			tileY = int(self.modelY / 16)
 			
-			if scene.tiles[tileX][tileY].isLadder:
+			offScreen = tileX < 0 or tileX >= scene.cols or tileY < 0 or tileY >= scene.rows
+			onScreen = not offScreen
+			if onScreen and scene.tiles[tileX][tileY].isLadder:
 				pass
 			else:
 				self.cling = False
