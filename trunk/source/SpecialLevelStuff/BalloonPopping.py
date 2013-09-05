@@ -68,5 +68,12 @@ class BalloonPopping(SpecialLevelStuff):
 			y += 1
 		
 		
+		if self.id == 'water1':
+			self.context.balloonA = True
+		elif self.id == 'water2':
+			self.context.balloonB = True
+		elif self.id == 'water3':
+			self.context.balloonC = True
+		
 		self.done = True
 		
