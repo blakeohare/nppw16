@@ -66,6 +66,11 @@ def main():
 				elif event.key == pygame.K_b:
 					events.append(MyEvent('B', down))
 					pressedActions['B'] = down
+				elif event.key == pygame.K_F12 and down:
+					filename = 1
+					while os.path.exists('screencap_' + str(filename) + '.jpg'):
+						filename += 1
+					pygame.image.save(real_screen, 'screencap_' + str(filename) + '.jpg')
 					
 		if quitAttempt:
 			activeScene = None
