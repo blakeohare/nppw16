@@ -53,6 +53,7 @@ class Sprite:
 		self.automation = None
 		self.floats = False
 		self.deathState = None
+		self.sprinkle = False
 		if type == 'acorn':
 			self.renderImpl = SPRITE_renderAcorn
 			self.automation = AcornAutomation(self)
