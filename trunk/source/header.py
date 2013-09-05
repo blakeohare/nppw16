@@ -4,11 +4,11 @@ import random
 import pygame
 import time
 
-DEBUG = True
+DEBUG_MODE = False
 SOUND_ENABLED = False
 
-if not DEBUG:
+if not DEBUG_MODE:
 	SOUND_ENABLED = True
 
-GO_TO_TITLE = DEBUG
-SHOW_FRAME_DROP = DEBUG
+GO_TO_TITLE = DEBUG_MODE
+SHOW_FRAME_DROP = DEBUG_MODE

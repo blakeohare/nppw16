@@ -3,7 +3,7 @@ WIDTH = int(256 * 3.4)
 HEIGHT = 224 * 3
 
 DEBUG = {'counter':0}
-
+BLACK = (0, 0, 0)
 def main():
 	pygame.init()
 

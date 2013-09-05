@@ -1,4 +1,32 @@
 DIALOGS = {
+	'Open1': [
+		["Lorem ipsum dolar sit",
+		 "consecutor."],
+		
+		["Jackdaws love my",
+		 "sphinx of qwartz"]
+	],
+	
+	'Open2': [
+		["The quick brown fox",
+		 "Jumped over the lazy",
+		 "dogs."],
+		
+		["And the cow jumped",
+		 "over the moon."],
+		
+		["...because the theme",
+		 "is `Moon\"."]
+	],
+	
+	'Open3': [
+		["And he says to",
+		 "himself..."],
+		
+		["`I've made a huge",
+		 "mistake.\""]
+	],
+
 	'Volcano': [
 		["That's the last of the",
 		 "volcanos."],
