@@ -5,6 +5,12 @@ def getSpecialLevelStuff(id, scene):
 		return [GravityCorePlacement(scene)]
 	if id == 'grav_ascent':
 		return [GravityAscentExit(scene)]
+	if id == 'volcano_1_core':
+		return [VolcanoCoreActivation(scene, 1)]
+	if id == 'volcano_2_core':
+		return [VolcanoCoreActivation(scene, 2)]
+	if id == 'volcano_3_core':
+		return [VolcanoCoreActivation(scene, 3)]
 	return []
 
 class SpecialLevelStuff:
@@ -15,6 +21,11 @@ class SpecialLevelStuff:
 		self.hasUpdate = False
 		self.hasPostInit = False
 		self.hasDoorTrigger = False
+		
+		# meh, hacks
+		self.lavaLevel = 0
+		self.shakeScreen = False
+		self.freeze = False
 	
 	# override and return None if you want that door to do something special. 
 	# The doorId will be post-swapped.
