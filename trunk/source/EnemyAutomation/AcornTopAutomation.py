@@ -2,6 +2,7 @@
 class AcornTopAutomation:
 	def __init__(self, sprite):
 		self.sprite = sprite
+		self.goLeft = True
 		self.countdown = 40
 	
 	def doStuff(self, scene):

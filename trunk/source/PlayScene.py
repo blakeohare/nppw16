@@ -181,7 +181,27 @@ class PlayScene:
 						else:
 							if self.player.vy < 0:
 								self.player.vy = self.player.vy / 4.0 # maybe set to 0 instead?
-								
+					
+					# SHOOT UR LAZOR PEW PEW!!!!1
+					elif event.action == 'B' and event.down:
+						
+						p = self.player
+						lazorVX = 8
+						if self.player.lastDirection == 'left':
+							lazorVX = -8
+						
+						x = p.x + lazorVX
+						y = p.y - 8
+						
+						if p.spawns == None:
+							p.spawns = []
+						
+						bullet = Sprite('lazor', x, y)
+						bullet.bvx = lazorVX
+						bullet.isBullet = True
+						bullet.ghost = True
+						bullet.floats = True
+						p.spawns.append(bullet)
 			else:
 				v = 3
 				dx = 0
@@ -203,13 +223,69 @@ class PlayScene:
 	def update(self):
 		playerX = self.player.modelX
 		playerY = self.player.modelY
-		for sprite in self.sprites:
-			if sprite != None:
-				sprite.update(self)
+		sprites = self.sprites
+		newsprites = [] # TODO: filter out the dead
+		
+		allBullets = []
+		i = 0
+		while i < len(sprites):
+			sprite = sprites[i]
+			if sprite != None and not sprite.dead:
+				sprite.update(self)	
 				if sprite.isEnemy and self.player != None:
 					if sprite.isCollision(self.player):
 						self.playerHit()
+				
+				if sprite.spawns != None:
+					for spawn in sprite.spawns:
+						sprites.append(spawn)
+				sprite.spawns = None
+				
+				if sprite.isBullet:
+					allBullets.append(sprite)
+			i += 1
+		
+		new_sprites = []
+		
+		i = 0
+		while i < len(sprites):
+			sprite = sprites[i]
+			if len(allBullets) > 0:
+				if sprite.isEnemy:
+					left = sprite.x - 8
+					right = sprite.x + 8
+					bottom = sprite.y + 8
+					top = bottom - sprite.height
+					
+					j = 0
+					while j < len(allBullets):
+						bullet = allBullets[j]
+						bleft = bullet.x - 8
+						bright = bleft + 16
+						bbottom = bullet.y + 4
+						btop = bbottom - 8
+						
+						if bleft > right:
+							pass
+						elif bright < left:
+							pass
+						elif btop > bottom:
+							pass
+						elif bbottom < top:
+							pass
+						else:
+							sprite.dead = True
+							bullet.dead = True
+							#new_sprites.append(poof)
+						
+						j += 1
 			
+			if not sprite.dead:
+				new_sprites.append(sprite)
+			i += 1
+		
+		self.sprites = new_sprites
+		
 		player_tx = int(self.player.modelX / 16)
 		player_ty = int(self.player.modelY / 16)
 		activeTile = self.tiles[player_tx][player_ty]
@@ -413,7 +489,7 @@ class PlayScene:
 		
 		arc = rc // 4
 		for sprite in self.sprites:
-			if sprite != None:
+			if sprite != None and not sprite.dead:
 				sprite.render(self, screen, offsetX, offsetY, arc)
 			
 				
