@@ -15,6 +15,7 @@
 #	L - Ladder
 #	J - Jump-through
 #	S - spikes
+#	V - Lava
 
 
 test1	x	test/test1.png
@@ -63,8 +64,8 @@ stalactitetip	S	spikes/stalactitetip.png
 water		fluids/water.png
 watertop		fluids/water1.png,fluids/water2.png
 waterfall		fluids/waterfall1.png,fluids/waterfall2.png
-lava		fluids/lava.png
-lavatop		fluids/lava1.png,fluids/lava2.png,fluids/lava3.png,fluids/lava4.png
+lava	V	fluids/lava.png
+lavatop	V	fluids/lava1.png,fluids/lava2.png,fluids/lava3.png,fluids/lava4.png
 lavafall		fluids/lavafall1.png,fluids/lavafall2.png
 ladder	L	basics/ladder.png
 rope	L	basics/rope.png
