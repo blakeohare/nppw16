@@ -177,11 +177,12 @@ class PlayScene:
 								self.player.ladderDY = 0
 								if pt.isWater:
 									self.player.vy += WATER_JUMPING_VY
+									playNoise('swim')
 								else:
 									self.player.vy = JUMPING_VY
 									if self.runCounter > 5 and self.context.gravity:
 										self.player.vy = RUN_JUMPING_VY
-									
+									playNoise('jump')
 						else:
 							if self.player.vy < 0:
 								self.player.vy = self.player.vy / 4.0 # maybe set to 0 instead?
