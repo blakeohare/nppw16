@@ -13,6 +13,7 @@ class VolcanoCoreActivation(SpecialLevelStuff):
 		self.lavaLevel = 0
 		self.shakeScreen = False
 		self.freeze = False
+		self.warpBack = False
 		
 	def update(self):
 		
@@ -21,7 +22,6 @@ class VolcanoCoreActivation(SpecialLevelStuff):
 		ty = player.y // 16
 		
 		if tx == self.spotX and abs(ty - self.spotY) < 2 and not self.done:
-			print("This line was hit B")
 			self.doLavaSequence(False)
 		
 		self.freeze = False
@@ -67,6 +67,8 @@ class VolcanoCoreActivation(SpecialLevelStuff):
 									playNoise('lava_rise')
 							else:
 								self.freeze = False
+								if self.warpBack:
+									self.scene.next = VolcanoCompleteScene(self.scene, self.context)
 			self.sequenceCounter += 1
 
 	def postInit(self):
@@ -88,4 +90,19 @@ class VolcanoCoreActivation(SpecialLevelStuff):
 			self.sequenceCounter = 9999999
 		else:
 			self.sequenceCounter = 0
+			
 		
+		complete = self.context.volcanoA and self.context.volcanoB and self.context.volcanoC
+		
+		if not complete:
+			if self.id == 1:
+				self.context.volcanoA = True
+			elif self.id == 2:
+				self.context.volcanoB = True
+			elif self.id == 3:
+				self.context.volcanoC = True
+			
+			complete = self.context.volcanoA and self.context.volcanoB and self.context.volcanoC
+			if complete:
+				self.warpBack = True
+			

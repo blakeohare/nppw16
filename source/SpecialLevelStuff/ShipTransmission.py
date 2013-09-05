@@ -14,7 +14,7 @@ class ShipTransmission(SpecialLevelStuff):
 			if not ctx.transmission2:
 				self.scene.triggerDialog('T2', True)
 				ctx.transmission2 = True
-		elif not (ctx.waterA and ctx.waterB and ctx.waterC):
+		elif not (ctx.balloonA and ctx.balloonB and ctx.balloonC):
 			if not ctx.transmission3:
 				self.scene.triggerDialog('T3', True)
 				ctx.transmission3 = True
