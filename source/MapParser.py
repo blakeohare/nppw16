@@ -25,7 +25,23 @@ class MapParser:
 		m.doors = self.getDoors(self.values.get('doors', ''))
 		m.enemies = self.getEnemies(self.values.get('enemies', ''))
 		m.doorswaps = self.getDoorswaps(self.values.get('doorswaps', ''))
+		m.overlayTriggers = self.getOverlayTriggers(self.values.get('overlay', ''))
 		return m
+	
+	def getOverlayTriggers(self, strValue):
+		strValue = trim(strValue)
+		if len(strValue) == 0:
+			return {}
+		
+		output = {}
+		items = strValue.split(',')
+		for item in items:
+			parts = item.split('|')
+		
+		if len(parts) == 2:
+			output[trim(parts[0])] = trim(parts[1])
+		
+		return output
 	
 	# door swap output format:
 	# { original ID => List[ Pair<trigger, swapped ID> ] }
