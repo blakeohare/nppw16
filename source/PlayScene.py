@@ -114,6 +114,8 @@ class PlayScene:
 			if s.freeze:
 				frozen = True
 		
+		self.shooting = self.lazor_cooldown > 0
+		
 		if not frozen:
 			if self.side:
 				dx = 0
@@ -127,7 +129,7 @@ class PlayScene:
 						v = 3
 				else:
 					v = 2.5
-					
+				
 				if pressed['left']:
 					dx = -v
 					if running and self.runCounterValidFor == 'left':
@@ -161,7 +163,7 @@ class PlayScene:
 				else:
 					self.runCounter = 0
 					self.runCounterValidFor = 'nothing'
-					
+				
 				if self.player != None:
 					self.player.dx = dx
 				
@@ -186,7 +188,7 @@ class PlayScene:
 					
 					# SHOOT UR LAZOR PEW PEW!!!!1
 					elif event.action == 'B' and event.down:
-						if self.lazor_cooldown <= 0:
+						if self.lazor_cooldown <= 0 and not self.player.cling:
 							p = self.player
 							lazorVX = 8
 							if self.player.lastDirection == 'left':
