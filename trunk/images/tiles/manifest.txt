@@ -17,6 +17,8 @@
 #	S - spikes
 #	V - Lava
 #	I - Ice surface
+#	o - poppable balloon
+#	O - primary balloon point (top middle)
 
 
 test1	x	test/test1.png
@@ -100,30 +102,30 @@ rockypassBottomR		rocky-passthrough/bottomright.png
 rockypassSingleL	J	rocky-passthrough/singleleft.png
 rockypassSingle	J	rocky-passthrough/singlemiddle.png
 rockypassSingleR	J	rocky-passthrough/singleright.png
-aqua1	BCD	balloons/aqua1.png
-aqua2	x	balloons/aqua2.png
-aqua3	AC	balloons/aqua3.png
-aqua4	ABD	balloons/aqua4.png
-aqua5	x	balloons/aqua5.png
-aqua6	ABC	balloons/aqua6.png
-red1	BCD	balloons/red1.png
-red2	x	balloons/red2.png
-red3	AC	balloons/red3.png
-red4	ABD	balloons/red4.png
-red5	x	balloons/red5.png
-red6	ABC	balloons/red6.png
-blue1	BCD	balloons/blue1.png
-blue2	x	balloons/blue2.png
-blue3	AC	balloons/blue3.png
-blue4	ABD	balloons/blue4.png
-blue5	x	balloons/blue5.png
-blue6	ABC	balloons/blue6.png
-purple1	BCD	balloons/purple1.png
-purple2	x	balloons/purple2.png
-purple3	AC	balloons/purple3.png
-purple4	ABD	balloons/purple4.png
-purple5	x	balloons/purple5.png
-purple6	ABC	balloons/purple6.png
+aqua1	o	balloons/aqua1.png
+aqua2	oO	balloons/aqua2.png
+aqua3	o	balloons/aqua3.png
+aqua4	o	balloons/aqua4.png
+aqua5	o	balloons/aqua5.png
+aqua6	o	balloons/aqua6.png
+red1	o	balloons/red1.png
+red2	oO	balloons/red2.png
+red3	o	balloons/red3.png
+red4	o	balloons/red4.png
+red5	o	balloons/red5.png
+red6	o	balloons/red6.png
+blue1	o	balloons/blue1.png
+blue2	oO	balloons/blue2.png
+blue3	o	balloons/blue3.png
+blue4	o	balloons/blue4.png
+blue5	o	balloons/blue5.png
+blue6	o	balloons/blue6.png
+purple1	o	balloons/purple1.png
+purple2	oO	balloons/purple2.png
+purple3	o	balloons/purple3.png
+purple4	o	balloons/purple4.png
+purple5	o	balloons/purple5.png
+purple6	o	balloons/purple6.png
 vtop1		volcano/top1.png
 vtop2	BCD	volcano/top2.png
 vtop3	ACD	volcano/top3.png
