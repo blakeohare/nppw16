@@ -23,6 +23,8 @@ class IntroScene:
 			self.next = self.getStartScene()
 			return
 		
+		JUKEBOX.ensureSong('intro')
+		
 		self.counter += 1
 		
 		if self.counter == 10:

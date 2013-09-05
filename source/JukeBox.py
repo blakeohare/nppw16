@@ -1,6 +1,12 @@
 SONG_LOOKUP = {
 	# name : (file, should loop?)
-	'title': ('tensebranches', True)
+	'title': ('tensebranches', True),
+	'intro': ('open_skies', True),
+	'overworld': ('spacemachine', True),
+}
+
+SONG_BY_MAP = {
+	'ship_1': 'overworld'
 }
 
 class JukeBox:
@@ -27,5 +33,10 @@ class JukeBox:
 				self.actuallyPlaying = False
 			
 			self.currentSong = id
-
+	
+	def playSongForLevelMaybe(self, id):
+		song = SONG_BY_MAP.get(id)
+		if song != None:
+			self.ensureSong(song)
+	
 JUKEBOX = JukeBox()
