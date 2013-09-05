@@ -24,7 +24,8 @@ VOLCANO_BG = [
 	'volcano_2_lower_descent',
 	'volcano_2_upper_ascent',
 	'volcano_2_upper_descent',
-	'volcano_2_upper_secret'
+	'volcano_2_upper_secret',
+	'volcano_3_core'
 ]
 
 STARS_BG = [
