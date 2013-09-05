@@ -5,29 +5,33 @@ DIALOGS = {
 		 "a better life for all",
 		 "squirrelkind."],
 		
-		["Jackdaws love my",
-		 "sphinx of qwartz",
-		 "Commit comments!"]
+		["Bearing the hopes and",
+		 "dreams of her people,",
+		 "the squirrel set course",
+		 "for a nearby moon."],
 	],
 	
 	'Open2': [
-		["The quick brown fox",
-		 "Jumped over the lazy",
-		 "dogs."],
+		["Her vessel reaches the",
+		 "moon laden with large",
+		 "supply stores as well as",
+		 "terraforming equipment"],
 		
-		["And the cow jumped",
-		 "over the moon."],
+		["...including the very",
+		 "latest in hydration",
+		 "technology:"],
 		
-		["...because the theme",
-		 "is `Moon\"."]
+		["Giant water balloons."],
 	],
 	
 	'Open3': [
-		["And he says to",
-		 "himself..."],
+		["As she gazes upon the",
+		 "barren waste of the",
+		 "desolate moon, she",
+		 "says to herself:"],
 		
-		["`I've made a huge",
-		 "mistake.\""]
+		["`I've got a lot of",
+		 "work to do.\""]
 	],
 
 	'Volcano': [
