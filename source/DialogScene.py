@@ -1,11 +1,15 @@
 
 class DialogScene:
-	def __init__(self, bg, dialogId, slightDelay):
+	def __init__(self, bg, dialogId, slightDelay, storyMode=False, forceArrow=False):
 		self.next = self
 		self.flags = ''
 		self.bg = bg
-		bg.player.moving = False
-		bg.player.lastDirection = 'left'
+		self.storyMode = storyMode
+		self.forceArrow = forceArrow
+		player = bg.player
+		if player != None:
+			player.moving = False
+			player.lastDirection = 'left'
 		self.delayCounter = 45 if slightDelay else 0
 		self.stanzas = DIALOGS[dialogId]
 		self.stanzaIndex = 0
@@ -65,15 +69,22 @@ class DialogScene:
 			path = 'tiles/screen-static/screen' + ('', '1', '2', '3')[(rc // 4) & 3] + '.png'
 			screen.blit(getImage(path), self.generalLoc)
 		
-		drawBox(screen, 16, 16, 28, 9)
+		if not self.storyMode:
+			drawBox(screen, 16, 16, 28, 9)
 		x = 32
 		y = 32
+		space = 8
+		if self.storyMode:
+			y += 16 * 7
+			space = 16
+		
+		startY = y
 		for line in self.showLines:
 			screen.blit(line, (x, y))
-			y += 8
+			y += space
 		if self.blink and ((rc // 7) & 1) == 0:
-			pos = (256 - 40, 72)
-			if self.stanzaIndex == len(self.stanzas) - 1:
+			pos = (256 - 40, startY + space * 4)
+			if not self.forceArrow and self.stanzaIndex == len(self.stanzas) - 1:
 				pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(pos[0], pos[1], 8, 8))
 			else:
 				screen.blit(getText((255, 255, 255), '^'), pos)

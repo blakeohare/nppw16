@@ -4,15 +4,43 @@ class IntroScene:
 	def __init__(self):
 		self.flags = ''
 		self.next = self
+		self.player = None # lol, pyweek hack
+		
+		self.page = 0
+		self.pages = [
+			getImage('slides/open1.png'),
+			getImage('slides/open2.png'),
+			getImage('slides/open3.png')
+			]
+		
+		self.counter = 0
 	
 	def processInput(self, events, pressedKeys):
 		pass 
 	
 	def update(self):
-		self.next = self.getStartScene()
-	
+		if DEBUG_MODE:
+			self.next = self.getStartScene()
+			return
+		
+		self.counter += 1
+		
+		if self.counter == 10:
+			self.next = DialogScene(self, 'Open1', False, True, True)
+		elif self.counter == 15:
+			self.page = 1
+		elif self.counter == 20:
+			self.next = DialogScene(self, 'Open2', False, True, True)
+		elif self.counter == 25:
+			self.page = 2
+		elif self.counter == 30:
+			self.next = DialogScene(self, 'Open3', False, True, False)
+		elif self.counter == 35:
+			self.next = self.getStartScene()
+		
 	def render(self, screen, rc):
-		pass
+		screen.fill(BLACK)
+		screen.blit(self.pages[self.page], (0, 16))
 	
 	def getStartScene(self):
 		if os.path.exists('fast_start.txt'):
