@@ -33,6 +33,7 @@ class TileTemplate:
 		self.isLadder = False
 		self.isTop = False
 		self.isWater = id in ('water', 'watertop')
+		self.isSpike = False
 		for flag in flags:
 			if flag == 'x':
 				self.solid = True
@@ -50,6 +51,8 @@ class TileTemplate:
 				self.isLadder = True
 			elif flag == 'J':
 				self.isTop = True
+			elif flag == 'S':
+				self.isSpike = True
 		self.images = []
 		for path in imagePaths:
 			self.images.append(getImage('tiles/' + path))
@@ -74,6 +77,7 @@ class Tile:
 		self.isTop = False
 		self.isWater = False
 		self.door = None
+		self.isSpike = False
 		
 		for tile in (lower, upper):
 			if tile != None:
@@ -86,6 +90,9 @@ class Tile:
 					self.isTop = True
 				if tile.isWater:
 					self.isWater = True
+				if tile.isSpike:
+					self.isSpike = True
+		
 		self.collisions = []
 		self.solid = False
 		

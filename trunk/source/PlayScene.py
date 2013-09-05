@@ -323,13 +323,19 @@ class PlayScene:
 			if target != None:
 				self.next = PlayScene(target, door.tx, door.ty, self.context)
 		
+		pUp = self.playersTile(0, -1)
+		pDown = self.playersTile(0, 0)
+		
+		if (pUp != None and pUp.isSpike) or (pDown != None and pDown.isSpike):
+			self.playerHit(3)
+		
 		for special in self.special:
 			if special.hasUpdate:
 				special.update()
 	
-	def playerHit(self):
+	def playerHit(self, amount=1):
 		if self.player.blinkCounter < 0:
-			self.player.hit(self)
+			self.player.hit(self, amount)
 	
 	def isCollision(self, pLeft, pTop, pRight, pBottom):
 		if pLeft < 0: return True
