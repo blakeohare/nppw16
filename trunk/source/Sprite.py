@@ -210,6 +210,8 @@ class Sprite:
 						self.lastDirection = 'right'
 					else:
 						self.lastDirection = 'left'
+				else:
+					self.iceVX = 0
 				self.dx = 0
 			
 			tileX = int(self.modelX / 16)
