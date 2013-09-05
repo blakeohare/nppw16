@@ -72,7 +72,7 @@ DIALOGS = {
 		"everyone knows, lava",
 		"creates magnetic fields."],
 
-		["SCIENCE"]
+		["SCIENCE!"]
 	],
 
 	'T3': [
