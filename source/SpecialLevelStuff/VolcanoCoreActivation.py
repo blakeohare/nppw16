@@ -1,6 +1,6 @@
 class VolcanoCoreActivation(SpecialLevelStuff):
 	def __init__(self, scene, id):
-		SpecialLevelStuff
+		SpecialLevelStuff.__init__(self, scene)
 		self.id = id
 		self.scene = scene
 		self.context = scene.context
