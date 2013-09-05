@@ -15,7 +15,8 @@ SOUND_LOOKUP = {
 	'get_hit': None,
 	'raise_health': None,
 	'jump': ('jump', 0.4),
-	'swim': None
+	'swim': None,
+	'pause_sound': None
 }
 
 _sound_cache = {}
