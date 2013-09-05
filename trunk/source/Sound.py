@@ -9,10 +9,10 @@ SOUND_LOOKUP = {
 	'sprinkle_lava_packet': None, # "chkhchkhchkchkh" no longer than 1 second
 	'screen_shaking': ('everythingfalls', 1.0), # done. perfect.
 	'fall_to_death': None, # fairly obvious
-	'lava_rise': None, # firey "FWOOM" sound
+	'lava_rise': ('crash', 1.0),
 	'land_on_ground': None, # subtle sound as it will happen a lot
-	'menu_select': None, # positive sound
-	'menu_move': None, # subtle
+	'menu_select': ('menuhigh', 6.0), # positive sound
+	'menu_move': ('menulow', 4.0), # subtle
 	'low_health': None, # annoying as hell, 5 high pitched beeps in quick succession
 	'get_hit': None, # use megaman taking-damage sound as inspiration, if that's doable.
 	'raise_health': None, # dwoooOOO (but short)
