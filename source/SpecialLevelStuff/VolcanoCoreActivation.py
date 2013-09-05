@@ -38,7 +38,7 @@ class VolcanoCoreActivation(SpecialLevelStuff):
 			if sc < SPRINKLE:
 				self.scene.player.sprinkle = True
 				if sc == 0:
-					playNoise('sprinkle_laval_packet')
+					playNoise('sprinkle_lava_packet')
 				progress = 1.0 * sc / SPRINKLE
 			else:
 				sc -= SPRINKLE

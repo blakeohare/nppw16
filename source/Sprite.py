@@ -236,7 +236,7 @@ class Sprite:
 							no = False
 							self.vy = 0
 							self.dy = 0
-							playNoise('hit_head')
+							playNoise('head_bonk')
 						else:
 							movedUp = True
 				else:
@@ -371,5 +371,4 @@ class Sprite:
 			self.ddx = -3
 		self.onGround = False
 		self.vy = -6
-		playNoise('hit')
 		scene.context.adjustHealth(scene, -amount)
