@@ -78,6 +78,7 @@ class Sprite:
 			
 		self.dx = 0
 		self.dy = 0
+		self.iceVX = 0
 		self.ddx = 0 # "damage dx", will stay set until you land on the ground or blink counter goes < 0
 		self.damageDir = None
 		self.cling = False
@@ -156,6 +157,40 @@ class Sprite:
 			
 			width = scene.cols
 			height = scene.rows
+			
+			tileBottomIceCheck = int(areaBottom // 16)
+			tileX = int(areaX // 16)
+			onIce = False
+			if tileX >= 0 and tileBottomIceCheck >= 0 and tileX < scene.cols and tileBottomIceCheck < scene.rows:
+				tileBelow = scene.tiles[tileX][tileBottomIceCheck]
+				if tileBelow != None:
+					onIce = tileBelow.isIce
+			
+			ICE_DIMINISH = .1
+			ICE_MAX_SPEED = 5
+			if onIce:
+				if self.dx == 0:
+					if self.iceVX > 0:
+						self.iceVX -= ICE_DIMINISH
+						if self.iceVX < 0:
+							self.iceVX = 0
+					elif self.iceVX < 0:
+						self.iceVX += ICE_DIMINISH
+						if self.iceVX > 0:
+							self.iceVX = 0
+				elif self.dx > 0:
+					self.iceVX += ICE_DIMINISH
+				elif self.dx < 0:
+					self.iceVX -= ICE_DIMINISH
+				
+				self.dx = self.iceVX
+				if self.dx > ICE_MAX_SPEED:
+					self.dx = ICE_MAX_SPEED
+				elif self.dx < -ICE_MAX_SPEED:
+					self.dx = -ICE_MAX_SPEED
+					
+			else:
+				self.iceVX = 0
 			
 			self.moving = self.dx != 0 or self.dy != 0
 			
