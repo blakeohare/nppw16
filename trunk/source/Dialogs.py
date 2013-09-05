@@ -4,7 +4,8 @@ DIALOGS = {
 		 "consecutor."],
 		
 		["Jackdaws love my",
-		 "sphinx of qwartz"]
+		 "sphinx of qwartz"
+		 "Commit comments!"]
 	],
 	
 	'Open2': [
