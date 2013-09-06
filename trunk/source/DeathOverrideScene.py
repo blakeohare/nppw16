@@ -12,6 +12,8 @@ class DeathOverrideScene:
 		self.vy = -10
 		if type == 'fall':
 			self.vy = bg.player.vy
+		elif type == 'lava':
+			playNoise('lava_roast')
 		
 		
 	def processInput(self, events, pressed):
