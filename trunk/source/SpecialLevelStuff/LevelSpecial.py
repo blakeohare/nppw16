@@ -1,4 +1,7 @@
 def getSpecialLevelStuff(id, scene):
+	if id == 'main':
+		return [BalloonPopping(scene, 'water1'),
+			BalloonPopping(scene, 'lava1')]
 	if id == 'ship_1':
 		return [ShipTransmission(scene)]
 	if id == 'grav_core':
@@ -15,9 +18,8 @@ def getSpecialLevelStuff(id, scene):
 		return [BalloonPopping(scene, 'water2')]
 	if id == 'balloon_3_overland':
 		return [BalloonPopping(scene, 'water3')]
-	if id == 'main':
-		return [BalloonPopping(scene, 'water1'),
-			BalloonPopping(scene, 'lava1')]
+	if id == 'bike_level':
+		return [BikeLevelStuff(scene)]
 	return []
 
 class SpecialLevelStuff:

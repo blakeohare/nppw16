@@ -10,7 +10,7 @@ SPRITE_HEIGHT = {
 	'acorntop': 16,
 	'gravity_device': 16,
 	'lazor': 16,
-	'lavamonster': 32,
+	'lavamonster': 32
 }
 
 G = 0.7
@@ -65,6 +65,7 @@ class Sprite:
 		self.isEnemy = type in ENEMY_TYPES
 		self.isBullet = type == 'lazor'
 		self.inBackground = False
+		self.bikemode = False
 		if type == 'acorn':
 			self.renderImpl = SPRITE_renderAcorn
 			self.automation = AcornAutomation(self)

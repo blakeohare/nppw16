@@ -8,8 +8,12 @@ def SPRITE_renderPlayerOver(sprite, scene, screen, offsetX, offsetY, arc):
 	if scene.side:
 		top -= 16
 		height = 32
-	
-	if scene.side:
+	if sprite.bikemode:
+		if (arc & 1) == 0:
+			img = getImage('sprites/rocket_bike_1.png')
+		else:
+			img = getImage('sprites/rocket_bike_2.png')
+	elif scene.side:
 		base = 'basic' if scene.hasAtmosphere else 'space'
 		moving = sprite.moving
 		if sprite.cling:

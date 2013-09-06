@@ -1,10 +1,13 @@
-GOOD_HEALTH_COLOR = (255, 255, 255)
-POOR_HEALTH_COLOR = (255, 128, 128)
 WHITE = (255, 255, 255)
+GOOD_HEALTH_COLOR = WHITE
+POOR_HEALTH_COLOR = (255, 128, 128)
+
+BIKE_SPEED = 6
 
 class PlayScene:
 	def __init__(self, map, startCol, startRow, context):
 		self.startArgs = (map, startCol, startRow)
+		self.updateCounter = 0
 		self.context = context
 		self.next = self
 		self.flags = 'M'
@@ -90,6 +93,10 @@ class PlayScene:
 		self.player = Sprite('player_' + ('side' if self.side else 'over'), startCol * 16 + 8, startRow * 16 + 7)
 		self.sprites = [self.player]
 		
+		if levelname == 'bike_level':
+			self.player.bikemode = True
+			self.player.floats = True
+		
 		for enemy in map.enemies:
 			sprite = Sprite(enemy.id, enemy.col * 16 + 8, enemy.row * 16 + 8)
 			sprite.isEnemy = True
@@ -135,6 +142,10 @@ class PlayScene:
 				else:
 					v = 2.5
 				
+				if self.player.bikemode:
+					v = 2.0
+				
+				
 				if pressed['left']:
 					dx = -v
 					if running and self.runCounterValidFor == 'left':
@@ -149,13 +160,21 @@ class PlayScene:
 					else:
 						self.runCounter = 0
 						self.runCounterValidFor = 'right'
-				elif pressed['up']:
+				if pressed['up']:
+					
+					if self.player.bikemode:
+						dy = -v
+					
 					pt = self.playersTile()
 					if pt != None and pt.isLadder:
 						self.player.cling = True
 						#self.player.onGround = False
 						self.player.ladderDY = -2
 				elif pressed['down']:
+					
+					if self.player.bikemode:
+						dy = v
+					
 					pt = self.playersTile()
 					if pt != None and pt.isLadder:
 						self.player.ladderDY = 2
@@ -170,7 +189,10 @@ class PlayScene:
 					self.runCounterValidFor = 'nothing'
 				
 				if self.player != None:
+					if self.player.bikemode:
+						dx += 6
 					self.player.dx = dx
+					self.player.dy = dy
 				
 				for event in events:
 					if event.action == 'A':
@@ -237,6 +259,7 @@ class PlayScene:
 		JUKEBOX.playSongForLevelMaybe(self.id)
 	
 	def update(self):
+		self.updateCounter += 1
 		self.playMusic()
 		
 		playerX = self.player.modelX
@@ -425,6 +448,9 @@ class PlayScene:
 		
 		offsetX = -(self.player.x - 128)
 		offsetY = -(self.player.y - 112)
+		
+		if self.player.bikemode:
+			offsetX = -(self.updateCounter * BIKE_SPEED)
 		
 		if offsetX > 0: offsetX = 0
 		if offsetY > 0: offsetY = 0
