@@ -160,6 +160,11 @@ class PlayScene:
 					else:
 						self.runCounter = 0
 						self.runCounterValidFor = 'right'
+				else:
+					self.runCounter = 0
+					self.runCounterValidFor = 'nothing'
+					
+				
 				if pressed['up']:
 					
 					if self.player.bikemode:
@@ -184,9 +189,6 @@ class PlayScene:
 							self.player.modelY += 8
 							self.player.ladderDY = 2
 							self.player.cling = True
-				else:
-					self.runCounter = 0
-					self.runCounterValidFor = 'nothing'
 				
 				if self.player != None:
 					if self.player.bikemode:
@@ -251,7 +253,11 @@ class PlayScene:
 					dy = -v
 				elif pressed['down']:
 					dy = v
-					
+				
+				for event in events:
+					if event.action == 'start' and event.down:
+						self.next = PauseScene(self)
+				
 				self.player.dx = dx
 				self.player.dy = dy
 	
