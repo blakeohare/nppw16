@@ -20,6 +20,10 @@ class DeathOverrideScene:
 		pass # There is nothing you can do
 	
 	def update(self):
+		
+		if self.counter == 0:
+			JUKEBOX.ensureSong('death')
+			
 		self.counter += 1
 		self.vy += 1
 		if self.type in ('lava', 'fall'):

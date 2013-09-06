@@ -10,6 +10,8 @@ SONG_LOOKUP = {
 	'bike': ('nopressure', True),
 	'water': ('squirrels_can_swim', True),
 	'gravity': ('deadlyacorns', True),
+	'death': ('oopsdead', False),
+	'gameover': ('fluffytales', True),
 }
 
 SONG_BY_MAP = {
