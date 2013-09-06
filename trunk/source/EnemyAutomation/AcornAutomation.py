@@ -4,6 +4,8 @@ class AcornAutomation:
 		self.countdown = int(random.random() * 5 * 30)
 		self.mode = 'patrolling' # patrolling | throwing | baldpatrolling
 		self.top = None
+		self.paceSpeed = 1
+		self.walkingLeft = True
 	
 	def doStuff(self, scene):
 		self.countdown -= 1
@@ -27,5 +29,32 @@ class AcornAutomation:
 			walk = True
 		
 		if walk:
-			pass
+			if self.sprite.collidedWall:
+				self.walkingLeft = not self.walkingLeft
+			
+			tiles = scene.tiles
+			cols = scene.cols
+			rows = scene.rows
+			dx = self.paceSpeed if self.walkingLeft else -self.paceSpeed
+			oldTileX = int(self.sprite.modelX / 16)
+			newX = self.sprite.modelX + dx
+			oldTileY = int(self.sprite.modelY / 16)
+			newTileX = int(newX / 16)
+			if newTileX < 0 or newTileX >= cols:
+				self.walkingLeft = not self.walkingLeft
+				return
+			
+			belowTileY = oldTileY + 1
+			
+			if newTileX == oldTileX:
+				self.sprite.dx = dx
+			else:
+				if belowTileY < 0 or belowTileY >= rows:
+					pass
+				if not tiles[newTileX][belowTileY].solid:
+					self.walkingLeft = not self.walkingLeft
+					pass
+				else:
+					self.sprite.dx = dx
+			
 			# TODO: walk back and forth, but don't fall off.
