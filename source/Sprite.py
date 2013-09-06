@@ -84,6 +84,11 @@ class Sprite:
 			self.inBackground = True
 			self.floats = True
 			self.ghost = True
+		elif type == 'fireball':
+			self.renderImpl = SPRITE_renderFireball
+			self.automation = FireBallAutomation(self)
+			self.floats = True
+			# not a ghost, though. Collides with walls and that triggers it to fizzle.
 		
 		self.dx = 0
 		self.dy = 0

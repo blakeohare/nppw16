@@ -40,5 +40,6 @@ class LavaMonsterAutomation:
 		
 		
 	def createFireBall(self):
-		pass
+		fireball = Sprite('fireball', self.sprite.x, self.sprite.y)
+		self.sprite.spawns = [fireball]
 		
