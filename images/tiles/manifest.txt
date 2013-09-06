@@ -68,11 +68,13 @@ bigcrater2	x	rocky/bigcrater2.png
 bigcrater3	x	rocky/bigcrater3.png
 bigcrater4	x	rocky/bigcrater4.png
 spikes	S	spikes/spikes.png
-spiketip	S	spikes/spiketip.png
-spikebase	S	spikes/spikebase.png
-stalactites	S	spikes/stalactites.png
-stalactitebase	S	spikes/stalactitebase.png
-stalactitetip	S	spikes/stalactitetip.png
+spiketip		spikes/spiketip.png
+spikebase	x	spikes/spikebase.png
+stalactites		spikes/stalactites.png
+stalactitebase	x	spikes/stalactitebase.png
+stalactitetip		spikes/stalactitetip.png
+hf	S	spikes/hurt_floor.png
+hc	S	spikes/hurt_ceiling.png
 water		fluids/water.png
 watertop		fluids/water1.png,fluids/water2.png
 waterfall		fluids/waterfall1.png,fluids/waterfall2.png
