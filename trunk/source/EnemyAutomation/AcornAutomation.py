@@ -1,10 +1,11 @@
+ACORN_SPEED = 1.5
+
 class AcornAutomation:
 	def __init__(self, sprite):
 		self.sprite = sprite
 		self.countdown = int(random.random() * 5 * 30)
 		self.mode = 'patrolling' # patrolling | throwing | baldpatrolling
 		self.top = None
-		self.paceSpeed = 1
 		self.walkingLeft = True
 	
 	def doStuff(self, scene):
@@ -35,7 +36,7 @@ class AcornAutomation:
 			tiles = scene.tiles
 			cols = scene.cols
 			rows = scene.rows
-			dx = self.paceSpeed if self.walkingLeft else -self.paceSpeed
+			dx = ACORN_SPEED if self.walkingLeft else -ACORN_SPEED
 			oldTileX = int(self.sprite.modelX / 16)
 			newX = self.sprite.modelX + dx
 			oldTileY = int(self.sprite.modelY / 16)
