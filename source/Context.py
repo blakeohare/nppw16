@@ -20,6 +20,7 @@ class Context:
 		self.transmission2 = False
 		self.transmission3 = False
 		self.transmission4 = False
+		self.powerupsTaken = {}
 	
 	def convertToPassword(self):
 		
