@@ -10,6 +10,8 @@ CAVE_BG = [
 	'section_3_gate_active',
   'exit_water_phase_locked',
   'exit_water_phase_unlocked'
+  'water_gate_1_locked',
+  'water_gate_1_unlocked'
 ]
 
 VOLCANO_BG = [
