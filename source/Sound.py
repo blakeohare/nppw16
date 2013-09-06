@@ -11,23 +11,24 @@ SOUND_LOOKUP = {
 	'fall_to_death': None, # fairly obvious
 	'lava_rise': ('crash', 1.0),
 	'land_on_ground': None, # subtle sound as it will happen a lot
+	
+	# TODO(Blake): make sure these are hooked up in all menus
 	'menu_select': ('menuhigh', 6.0), # positive sound
 	'menu_move': ('menulow', 4.0), # subtle
+	
 	'low_health': None, # annoying as hell, 5 high pitched beeps in quick succession
 	'get_hit': None, # use megaman taking-damage sound as inspiration, if that's doable.
 	'raise_health': None, # dwoooOOO (but short)
 	'jump': ('jump', 0.4), 
 	'swim': ('jump', 0.4), # maybe use a different sound?
-	'pause_sound': None # "TEE KOO TEE KOO!"
+	'pause_sound': None, # "TEE KOO TEE KOO!"
+	
+	# TODO(Blake): The following are not hooked in by the code yet
+	'lava_roast': None, # player dies by lava
+	'enemy_dies': None, # after shooting it
+	'text_char': None, # subtle text character bloop
+	'lazor': None, # player shoots lazor
 }
-
-# TODO:
-# ID's to place in code:
-# - lava roast
-# - enemy explodes
-# - subtle text character bloop
-# - make sure all menus have menu_move sound wired
-
 
 _sound_cache = {}
 def playNoise(key):
