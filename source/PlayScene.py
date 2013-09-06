@@ -325,7 +325,9 @@ class PlayScene:
 						else:
 							sprite.dead = True
 							bullet.dead = True
+							# TODO: this
 							#new_sprites.append(poof)
+							playNoise('enemy_dies')
 						
 						j += 1
 			
