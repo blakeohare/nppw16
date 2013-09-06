@@ -137,6 +137,12 @@ purple3	o	balloons/purple3.png
 purple4	o	balloons/purple4.png
 purple5	o	balloons/purple5.png
 purple6	o	balloons/purple6.png
+pop1		balloons/pop1.png
+pop2		balloons/pop2.png
+pop3		balloons/pop3.png
+pop4		balloons/pop4.png
+pop5		balloons/pop5.png
+pop6		balloons/pop6.png
 vtop1		volcano/top1.png
 vtop2	BCD	volcano/top2.png
 vtop3	ACD	volcano/top3.png
