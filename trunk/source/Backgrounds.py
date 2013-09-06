@@ -7,7 +7,9 @@ CAVE_BG = [
 	'grav_descent_secret',
 	'grav_gate',
 	'section_3_gate',
-	'section_3_gate_active'
+	'section_3_gate_active',
+  'exit_water_phase_locked',
+  'exit_water_phase_unlocked'
 ]
 
 VOLCANO_BG = [
