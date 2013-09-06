@@ -105,6 +105,7 @@ class PasswordScene:
 	
 	def update(self):
 		self.blinkCounter += 1
+		JUKEBOX.ensureSong('password')
 
 	def getCoord(self, col, row):
 		return (8 + col * 24 + 24, 64 + row * 16)
