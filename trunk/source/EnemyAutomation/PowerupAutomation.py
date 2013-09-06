@@ -18,7 +18,8 @@ class PowerupAutomation:
 		info = self.sprite.powerupInfo
 		id = info.id
 		type = info.type
-		context.powerupsTaken[id] = True
+		if id != None:
+			context.powerupsTaken[id] = True
 		if type == 'life_small':
 			playNoise('raise_health')
 			context.lifemeter += 2
