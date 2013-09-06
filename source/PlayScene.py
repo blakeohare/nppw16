@@ -18,7 +18,7 @@ class PlayScene:
 		mapParser = MapParser(map)
 		map = mapParser.parse()
 		
-		self.hasAtmosphere = False
+		self.hasAtmosphere = context.volcanoA and context.volcanoB and context.volcanoC
 
 		self.bg = getBackground(levelname)
 		stars = legacyMap(lambda x:getImage('tiles/background/stars' + str(x) + '.png'), [1, 2, 3, 4, 5]) + ([None] * 10)
