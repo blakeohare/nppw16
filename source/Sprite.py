@@ -10,7 +10,8 @@ SPRITE_HEIGHT = {
 	'acorntop': 16,
 	'gravity_device': 16,
 	'lazor': 16,
-	'lavamonster': 32
+	'lavamonster': 32,
+	'waterpop': 32,
 }
 
 G = 0.7
@@ -90,6 +91,10 @@ class Sprite:
 			self.automation = FireBallAutomation(self)
 			self.floats = True
 			# not a ghost, though. Collides with walls and that triggers it to fizzle.
+		elif type == 'waterpop':
+			self.renderImpl = SPRITE_renderWaterPop
+			self.automation = WaterPopAutomation(self)
+			self.floats = True
 		
 		self.dx = 0
 		self.dy = 0

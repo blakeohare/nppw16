@@ -32,7 +32,7 @@ class BalloonPopping(SpecialLevelStuff):
 			
 			tile = self.balloonCoords.get((tx, ty), None)
 			if tile != None:
-				self.applyOverlayAndSaveContext()
+				self.applyOverlayAndSaveContext(True, (tx + tile.primaryBalloonOffset[0], ty + tile.primaryBalloonOffset[1]))
 
 	def postInit(self):
 		if self.id == 'water1':
@@ -54,7 +54,7 @@ class BalloonPopping(SpecialLevelStuff):
 			if self.context.volcanoC:
 				self.applyOverlayAndSaveContext()
 	
-	def applyOverlayAndSaveContext(self):
+	def applyOverlayAndSaveContext(self, showPop=False, balloonLoc=None):
 		if self.done:
 			return
 		overlayMapName = self.scene.overlayTriggers[self.id] # Go ahead and crash if not present. Game is busted at this point anyway.
@@ -76,7 +76,6 @@ class BalloonPopping(SpecialLevelStuff):
 				x += 1
 			y += 1
 		
-		
 		if self.id == 'water1':
 			self.context.balloonA = True
 		elif self.id == 'water2':
@@ -86,3 +85,6 @@ class BalloonPopping(SpecialLevelStuff):
 		
 		self.done = True
 		
+		if showPop:
+			playNoise('water_pop')
+			original.sprites.append(Sprite('waterpop', balloonLoc[0] * 16 + 8, balloonLoc[1] * 16 + 8))

@@ -11,6 +11,7 @@ SOUND_LOOKUP = {
 	'fall_to_death': ('fall_to_death',1.0), # fairly obvious
 	'lava_rise': ('crash', 1.0),
 	'land_on_ground': ('land_on_ground',0.5), # subtle sound as it will happen a lot
+	'water_pop': ('crash', 1.0),
 	
 	# TODO(Blake): make sure these are hooked up in all menus
 	'menu_select': ('menuhigh', 6.0), # positive sound
