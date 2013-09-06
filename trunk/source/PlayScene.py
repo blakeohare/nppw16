@@ -104,6 +104,15 @@ class PlayScene:
 		
 		self.overlayTriggers = map.overlayTriggers
 		
+		for powerup in map.powerups:
+			puid = powerup.id
+			if context.powerupsTaken.get(puid, False):
+				pass
+			else:
+				powerupSprite = Sprite('powerup', powerup.col * 16 + 8, powerup.row * 16 + 7)
+				powerupSprite.powerupInfo = powerup
+				self.sprites.append(powerupSprite)
+		
 		self.special = getSpecialLevelStuff(levelname, self)
 		for special in self.special:
 			if special.hasPostInit:

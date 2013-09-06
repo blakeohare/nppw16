@@ -12,6 +12,7 @@ SPRITE_HEIGHT = {
 	'lazor': 16,
 	'lavamonster': 32,
 	'waterpop': 32,
+	'powerup': 16,
 }
 
 G = 0.7
@@ -67,6 +68,7 @@ class Sprite:
 		self.isBullet = type == 'lazor'
 		self.inBackground = False
 		self.bikemode = False
+		self.powerupInfo = None
 		if type == 'acorn':
 			self.renderImpl = SPRITE_renderAcorn
 			self.automation = AcornAutomation(self)
@@ -95,6 +97,9 @@ class Sprite:
 			self.renderImpl = SPRITE_renderWaterPop
 			self.automation = WaterPopAutomation(self)
 			self.floats = True
+		elif type == 'powerup':
+			self.renderImpl = SPRITE_renderPowerup
+			self.automation = PowerupAutomation(self)
 		
 		self.dx = 0
 		self.dy = 0

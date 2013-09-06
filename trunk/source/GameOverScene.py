@@ -7,6 +7,7 @@ class GameOverScene:
 		self.index = 0
 		self.mode = 'prompt'
 		self.password = context.convertToPassword()
+		context.powerupsTaken = {}
 		
 	def processInput(self, events, pressed):
 		if self.mode == 'prompt':

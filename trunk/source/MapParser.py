@@ -26,8 +26,25 @@ class MapParser:
 		m.enemies = self.getEnemies(self.values.get('enemies', ''))
 		m.doorswaps = self.getDoorswaps(self.values.get('doorswaps', ''))
 		m.overlayTriggers = self.getOverlayTriggers(self.values.get('overlay', ''))
+		m.powerups = self.getPowerups(self.values.get('powerups', ''))
 		return m
 	
+	def getPowerups(self, sv):
+		sv = trim(sv)
+		if len(sv) == 0:
+			return []
+
+		output = []
+		for item in sv.split(','):
+			parts = item.split('|')
+			pu = StemCell()
+			pu.type = parts[0]
+			pu.id = parts[1]
+			pu.col = int(parts[2])
+			pu.row = int(parts[3])
+			output.append(pu)
+		return output
+		
 	def getOverlayTriggers(self, strValue):
 		strValue = trim(strValue)
 		if len(strValue) == 0:
