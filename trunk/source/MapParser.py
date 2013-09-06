@@ -38,8 +38,8 @@ class MapParser:
 		for item in items:
 			parts = item.split('|')
 		
-		if len(parts) == 2:
-			output[trim(parts[0])] = trim(parts[1])
+			if len(parts) == 2:
+				output[trim(parts[0])] = trim(parts[1])
 		
 		return output
 	
