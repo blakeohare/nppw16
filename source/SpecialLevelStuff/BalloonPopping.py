@@ -12,16 +12,17 @@ class BalloonPopping(SpecialLevelStuff):
 		
 		self.balloonCoords = {}
 		
-		rows = scene.rows
-		cols = scene.cols
-		y = 0
-		while y < rows:
-			x = 0
-			while x < cols:
-				if scene.tiles[x][y].isBalloon:
-					self.balloonCoords[(x, y)] = scene.tiles[x][y]
-				x += 1
-			y += 1
+		if id != 'lava1':
+			rows = scene.rows
+			cols = scene.cols
+			y = 0
+			while y < rows:
+				x = 0
+				while x < cols:
+					if scene.tiles[x][y].isBalloon:
+						self.balloonCoords[(x, y)] = scene.tiles[x][y]
+					x += 1
+				y += 1
 		
 	def update(self):		
 		if not self.done:
@@ -43,11 +44,15 @@ class BalloonPopping(SpecialLevelStuff):
 		elif self.id == 'water3':
 			if self.context.balloonC:
 				self.applyOverlayAndSaveContext()
+		elif self.id == 'lava1':
+			if self.context.volcanoA:
+				self.applyOverlayAndSaveContext()
 	
 	def applyOverlayAndSaveContext(self):
 		if self.done:
 			return
-		
+		print(self.id)
+		print(self.scene.overlayTriggers)
 		overlayMapName = self.scene.overlayTriggers[self.id] # Go ahead and crash if not present. Game is busted at this point anyway.
 		
 		overlay = PlayScene(overlayMapName, 0, 0, Context())

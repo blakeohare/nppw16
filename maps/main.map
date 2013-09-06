@@ -5,3 +5,4 @@
 #view:over
 #doors:ship_1|8|25|10|9,grav_gate|7|19|3|11,grav_descent|3|22|28|4,grav_gate|7|13|76|8,volcano_1_descent|3|15|28|3,lava_gate_2|4|8|3|5,lava_gate_3|3|3|4|2,section_3_gate|9|4|4|5,section_3_gate_active|24|24|42|5,link_4|29|23|2|2,link_5|27|17|2|2,w_link_1|20|18|2|2,link_6|14|16|2|2,link_6|20|7|2|2,link_7|26|4|2|2
 #doorswaps:lavaA|lava_gate_2|lava_gate_2_active,lavaB|lava_gate_3|lava_gate_3_active,lavaA|volcano_1_descent|volcano_1_ascent,lavaB|volcano_2_descent|volcano_2_ascent,lavaC|section_3_gate|section_3_gate_active
+#overlay:lava1|main_overlay_volcano,water1|main_overlay_water
