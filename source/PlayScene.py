@@ -334,6 +334,24 @@ class PlayScene:
 						else:
 							sprite.dead = True
 							bullet.dead = True
+							if sprite.type in ('acorn', 'acorntop', 'byat', 'moonsquid', 'lavamonster'):
+								dropN = int(random.random() * 100)
+								drop = None
+								if dropN == 0:
+									drop = '1up'
+								elif dropN < 8:
+									drop = 'life_big'
+								elif dropN < 30:
+									drop = 'life_small'
+								
+								if drop != None:
+									# Can't do spawns since it'll get filtered out before then.
+									powerup = Sprite('powerup', sprite.x, sprite.y)
+									info = StemCell()
+									info.id = None
+									info.type = drop
+									powerup.powerupInfo = info
+									self.sprites.append(powerup)
 							# TODO: this
 							#new_sprites.append(poof)
 							playNoise('enemy_dies')
