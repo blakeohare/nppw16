@@ -515,11 +515,33 @@ class PlayScene:
 				col += 1
 			row += 1
 		
+		re_render = []
 		arc = rc // 4
 		for sprite in self.sprites:
 			if sprite != None and not sprite.dead:
 				sprite.render(self, screen, offsetX, offsetY, arc)
-			
+				if sprite.inBackground:
+					tx = sprite.x // 16
+					ty = (sprite.y + 8) // 16
+					re_render.append((tx, ty))
+					re_render.append((tx, ty - 1))
+					re_render.append((tx, ty - 2))
+		
+		for rr in re_render:
+			col = rr[0]
+			row = rr[1]
+			if row >= 0:
+				x = col * 16 + offsetX
+				y = row * 16 + offsetY
+				pt = (x, y)
+				templates = self.tiles[col][row].templates
+				i = 0
+				while i < len(templates):
+					img = templates[i].getImage(rc)
+					screen.blit(img, pt)
+					i += 1
+				
+				
 				
 		self.renderOverlay(screen)
 	

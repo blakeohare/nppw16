@@ -9,7 +9,8 @@ SPRITE_HEIGHT = {
 	'acorn': 16,
 	'acorntop': 16,
 	'gravity_device': 16,
-	'lazor': 16
+	'lazor': 16,
+	'lavamonster': 32,
 }
 
 G = 0.7
@@ -63,6 +64,7 @@ class Sprite:
 		self.sprinkle = False
 		self.isEnemy = type in ENEMY_TYPES
 		self.isBullet = type == 'lazor'
+		self.inBackground = False
 		if type == 'acorn':
 			self.renderImpl = SPRITE_renderAcorn
 			self.automation = AcornAutomation(self)
@@ -76,7 +78,13 @@ class Sprite:
 		elif type == 'lazor':
 			self.renderImpl = SPRITE_renderLazor
 			self.automation = LazorAutomation(self)
-			
+		elif type == 'lavamonster':
+			self.renderImpl = SPRITE_renderLavaMonster
+			self.automation = LavaMonsterAutomation(self)
+			self.inBackground = True
+			self.floats = True
+			self.ghost = True
+		
 		self.dx = 0
 		self.dy = 0
 		self.iceVX = 0
