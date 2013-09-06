@@ -7,5 +7,5 @@ class BikeLevelStuff(SpecialLevelStuff):
 		scene = self.scene
 		player = scene.player
 		if player.x > (scene.cols - 1) * 16: # one less because you can't technically go off screen
-			scene.next = VictorySequenceScene()
+			scene.next = VictorySequenceScene(scene)
 			
