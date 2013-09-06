@@ -1,9 +1,9 @@
 ACORN_SPEED = 1.5
-
+ACORN_DELAY_FOR_TOP_THROWING = 5 * 30
 class AcornAutomation:
 	def __init__(self, sprite):
 		self.sprite = sprite
-		self.countdown = int(random.random() * 5 * 30)
+		self.countdown = int(random.random() * ACORN_DELAY_FOR_TOP_THROWING)
 		self.mode = 'patrolling' # patrolling | throwing | baldpatrolling
 		self.top = None
 		self.walkingLeft = True
@@ -17,6 +17,8 @@ class AcornAutomation:
 				self.top = Sprite('acorntop', self.sprite.x, self.sprite.y)
 				self.top.acorntopdir = self.sprite.lastDirection
 				self.top.goLeft = self.top.acorntopdir == 'left'
+				self.top.automation.setGoLeft(self.sprite.lastDirection == 'left')
+				self.top.automation.setGoUp(self.sprite.y > scene.player.y)
 				self.top.automation.body = self.sprite
 				self.top.deleteWhenOffScreen = True
 				self.top.ghost = True
@@ -27,6 +29,10 @@ class AcornAutomation:
 		elif self.mode == 'throwing':
 			if self.top.dead:
 				self.mode = 'baldpatrolling'
+			elif self.top.automation.completed:
+				self.mode = 'patrolling'
+				self.top.dead = True
+				self.countdown = ACORN_DELAY_FOR_TOP_THROWING
 		elif self.mode == 'baldpatrolling':
 			walk = True
 		
