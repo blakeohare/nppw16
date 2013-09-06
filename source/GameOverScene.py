@@ -23,6 +23,7 @@ class GameOverScene:
 						self.counter = 0
 	
 	def update(self):
+		JUKEBOX.ensureSong('gameover')
 		self.counter += 1
 		if self.mode == 'commit':
 			if self.counter > 30:

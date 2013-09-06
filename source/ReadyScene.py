@@ -11,6 +11,7 @@ class ReadyScene:
 		pass
 	
 	def update(self):
+		self.playscene.playMusic()
 		self.counter += 1
 		if self.counter > 90:
 			self.next = self.playscene
