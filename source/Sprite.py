@@ -53,6 +53,7 @@ class Sprite:
 		self.neighbors = [None] * 36
 		self.spawns = None
 		self.dead = False
+		self.collidedWall = False
 		self.deleteWhenOffScreen = False
 		self.ghost = False
 		self.renderImpl = SPRITE_renderPlayerOver
@@ -196,7 +197,7 @@ class Sprite:
 					self.cameFromIce = False
 			
 			self.moving = self.dx != 0 or self.dy != 0
-			
+			self.collidedWall = False
 			# side-to-side calcuation is done first, independent of whether you are on the ground.
 			if self.dx != 0:
 				newX = self.modelX + self.dx
@@ -212,6 +213,7 @@ class Sprite:
 						self.lastDirection = 'left'
 				else:
 					self.iceVX = 0
+					self.collidedWall = not self.ghost
 				self.dx = 0
 			
 			tileX = int(self.modelX / 16)
