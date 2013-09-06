@@ -28,6 +28,15 @@ cave2	r	doors/cave2.png
 ld1	R	doors/lightdoor1.png
 ld2		doors/lightdoor2.png
 vdoor	r	doors/volcano_door.png
+b1	r	birdstuff/top.png
+b2	r	birdstuff/middle.png
+b3	r	birdstuff/bottom.png
+bs1	x	birdstuff/birdship1.png
+bs2	x	birdstuff/birdship2.png
+bs3	x	birdstuff/birdship3.png
+bs4	x	birdstuff/birdship4.png
+bs5	x	birdstuff/birdship5.png
+bs6	x	birdstuff/birdship6.png
 ground		surface/ground.png
 ter1	CD	surface/terrace-top.png
 ter2	x	surface/terrace-bottom.png
