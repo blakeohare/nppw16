@@ -20,6 +20,7 @@ class AcornAutomation:
 				self.top.automation.body = self.sprite
 				self.top.deleteWhenOffScreen = True
 				self.top.ghost = True
+				self.top.floats = True
 				self.sprite.spawns = [self.top]
 			else:
 				walk = True
