@@ -220,6 +220,10 @@ class Sprite:
 				# if you are near ground, you will be automatically placed standing
 				# upon it at the end of the vertical adjustment phase.
 				if self.ghost or not scene.isCollision(newX, areaTop, newX, areaBottom):
+				
+					if self.cling:
+						if int(newX // 16) != int(self.modelX // 16):
+							newX = self.modelX
 					self.modelX = newX
 					if self.dx > 0:
 						self.lastDirection = 'right'
