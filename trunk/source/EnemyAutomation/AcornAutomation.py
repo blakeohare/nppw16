@@ -59,7 +59,8 @@ class AcornAutomation:
 			else:
 				if belowTileY < 0 or belowTileY >= rows:
 					pass
-				if not tiles[newTileX][belowTileY].solid:
+				t = tiles[newTileX][belowTileY]
+				if not t.solid and not t.isTop:
 					self.walkingLeft = not self.walkingLeft
 					pass
 				else:
