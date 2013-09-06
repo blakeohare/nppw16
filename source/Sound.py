@@ -20,7 +20,7 @@ SOUND_LOOKUP = {
 	'low_health': ('low_health',1.0), # annoying as hell, 5 high pitched beeps in quick succession
 	'get_hit': ('get_hit',1.0), # use megaman taking-damage sound as inspiration, if that's doable.
 	'raise_health': ('raise_health', 1.0), # dwoooOOO (but short)
-	'1up': None,
+	'1up': ('1up',1.0),
 	'jump': ('jump', 0.4), 
 	'swim': ('jump', 0.4), # maybe use a different sound?
 	'pause_sound': ('pause_sound',1.0), # "TEE KOO TEE KOO!"
