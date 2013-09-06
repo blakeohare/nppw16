@@ -14,7 +14,7 @@ def SPRITE_renderPlayerOver(sprite, scene, screen, offsetX, offsetY, arc):
 		else:
 			img = getImage('sprites/rocket_bike_2.png')
 	elif scene.side:
-		base = 'basic' if scene.hasAtmosphere else 'space'
+		base = 'cave' if scene.hasAtmosphere else 'space'
 		moving = sprite.moving
 		if sprite.cling:
 			path = base + '_climb_'
