@@ -333,7 +333,7 @@ class Sprite:
 							self.onGround = True
 							self.modelY = newTileBottom * 16 - 8
 							self.vy = 0
-							if not wasOnGround:
+							if not wasOnGround and self == scene.player:
 								playNoise('land_on_ground')
 					
 			if not no:
