@@ -134,7 +134,7 @@ class PlayScene:
 				dy = 0
 				running = False
 				if self.context.gravity:
-					if pressed['B']:
+					if pressed['B'] and not self.player.cling:
 						running = True
 						v = 5
 					else:
@@ -218,7 +218,7 @@ class PlayScene:
 					
 					# SHOOT UR LAZOR PEW PEW!!!!1
 					elif event.action == 'B' and event.down:
-						if self.lazor_cooldown <= 0 and not self.player.cling:
+						if self.lazor_cooldown <= 0:#and not self.player.cling:
 							p = self.player
 							lazorVX = 8
 							if self.player.lastDirection == 'left':
