@@ -3,6 +3,7 @@ SONG_LOOKUP = {
 	'title': ('tensebranches', True),
 	'intro': ('open_skies', True),
 	'overworld': ('spacemachine', True),
+	'credits': ('credits', True)
 }
 
 SONG_BY_MAP = {

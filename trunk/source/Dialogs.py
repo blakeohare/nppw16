@@ -113,6 +113,12 @@ DIALOGS = {
 		"two birds with one",
 		"stone! Or anything else",
 		"you might prefer."]
+	],
+	
+	'CloseDialog': [
+		["Lorem ipsum dolar",
+		 "sit amet."],
+		["Hot pockets!"]
 	]
 }
 
