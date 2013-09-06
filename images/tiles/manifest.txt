@@ -263,3 +263,24 @@ bbottomleftconcave	x	basin/bottomleftconcave.png
 bbottomrightconcave	x	basin/bottomrightconcave.png
 bbottomleftconvex	x	basin/bottomleftconvex.png
 bbottomrightconvex	x	basin/bottomrightconvex.png
+birdfeeder1		birdfeeder/1.png
+birdfeeder2		birdfeeder/2.png
+birdfeeder3		birdfeeder/3.png
+birdfeeder4		birdfeeder/4.png
+birdfeeder5		birdfeeder/5.png
+birdfeeder6		birdfeeder/6.png
+birdfeedercap1		birdfeeder/cap1.png
+birdfeedercap2		birdfeeder/cap2.png
+birdfeedercap3		birdfeeder/cap3.png
+birdfeedercap4		birdfeeder/cap4.png
+birdfeedercap5		birdfeeder/cap5.png
+birdfeedercap6		birdfeeder/cap6.png
+hole		birdfeeder/hole.png
+hole_side		birdfeeder/sidehole.png
+perch_left	J	birdfeeder/perchleft.png
+perch_middle	J	birdfeeder/perchmiddle.png
+perch_right	J	birdfeeder/perchright.png
+perch_single	J	birdfeeder/perchsingle.png
+overworld_top	r	birdfeeder/top.png
+overworld_middle	r	birdfeeder/middle.png
+overworld_bottom	r	birdfeeder/bottom.png	
