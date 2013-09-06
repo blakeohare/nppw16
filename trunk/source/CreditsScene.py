@@ -15,7 +15,7 @@ CREDITS = [
 	('LEVEL DESIGN', [cred_TB, cred_SC, cred_RB, cred_LF]),
 	('CHARACTER ART', [cred_CS]),
 	('LEVEL ART', [cred_AM]),
-	('MUSIC', [cred_AC]),
+	('MUSIC AND SFX', [cred_AC]),
 	('DIALOG', [cred_LF]),
 	('AND YOU!', ['FOR PLAYING', 'OR SOMETHING LIKE THAT']),
 	('', ['THE END'])
