@@ -22,11 +22,12 @@ SOUND_LOOKUP = {
 	'jump': ('jump', 0.4), 
 	'swim': ('jump', 0.4), # maybe use a different sound?
 	'pause_sound': ('pause_sound',1.0), # "TEE KOO TEE KOO!"
-	# TODO(Blake): The following are not hooked in by the code yet
 	'lava_roast': ('lava_roast',1.0), # player dies by lava
-	'enemy_dies': ('enemy_dies',1.0), # after shooting it
-	'text_char': ('text_char', 1.0), # subtle text character bloop
+	'text_char': ('text_char', 0.3), # subtle text character bloop
 	'lazor': ('lazor',1.0), # player shoots lazor
+	
+	# TODO(Blake): The following are not hooked in by the code yet
+	'enemy_dies': ('enemy_dies',1.0), # after shooting it
 }
 
 _sound_cache = {}

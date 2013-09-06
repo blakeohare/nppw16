@@ -92,3 +92,6 @@ class DialogScene:
 				pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(pos[0], pos[1], 8, 8))
 			else:
 				screen.blit(getText((255, 255, 255), '^'), pos)
+		
+		if not self.blink and (rc % 5 == 0):
+			playNoise('text_char')

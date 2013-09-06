@@ -230,6 +230,7 @@ class PlayScene:
 							if p.spawns == None:
 								p.spawns = []
 							
+							playNoise('lazor')
 							bullet = Sprite('lazor', x, y)
 							bullet.bvx = lazorVX
 							bullet.isBullet = True
