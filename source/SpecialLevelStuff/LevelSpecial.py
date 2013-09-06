@@ -20,6 +20,10 @@ def getSpecialLevelStuff(id, scene):
 		return [BalloonPopping(scene, 'water3')]
 	if id == 'bike_level':
 		return [BikeLevelStuff(scene)]
+	if id == 'volcano_2_overland':
+		return [BalloonPopping(scene, 'lava2')]
+	if id == 'volcano_3_overland':
+		return [BalloonPopping(scene, 'lava3')]
 	return []
 
 class SpecialLevelStuff:
