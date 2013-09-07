@@ -67,7 +67,7 @@ bigcrater1	x	rocky/bigcrater1.png
 bigcrater2	x	rocky/bigcrater2.png
 bigcrater3	x	rocky/bigcrater3.png
 bigcrater4	x	rocky/bigcrater4.png
-spikes	S	spikes/spikes.png
+spikes		spikes/spikes.png
 spiketip		spikes/spiketip.png
 spikebase	x	spikes/spikebase.png
 stalactites		spikes/stalactites.png
