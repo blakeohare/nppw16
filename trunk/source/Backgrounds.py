@@ -11,7 +11,24 @@ CAVE_BG = [
   'exit_water_phase_locked',
   'exit_water_phase_unlocked',
   'water_gate_1_locked',
-  'water_gate_1_unlocked'
+  'water_gate_1_unlocked',
+  'wlink_A1',
+  'wlink_A2',
+  'wlink_A3',
+  'wlink_A4',
+  'wlik_B1_nowater',
+  'wlik_B1_somewater',
+  'wlik_B1_allwater',
+  'wlik_D1_water',
+  'wlik_D1_nowater',
+  'wlik_D2_water',
+  'wlik_D2_nowater',
+  'wlik_D3_water',
+  'wlik_D3_nowater',
+  'wlik_E1_water',
+  'wlik_E1_nowater',
+  'wlik_E2',
+  'wlik_E3',
 ]
 
 VOLCANO_BG = [
