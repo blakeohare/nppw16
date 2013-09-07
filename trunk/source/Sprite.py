@@ -339,22 +339,25 @@ class Sprite:
 						offScreen = tileX < 0 or tileX >= scene.cols or newTileBottom < 0 or newTileBottom >= scene.rows
 						onScreen = not offScreen
 						
-						t = scene.tiles[tileX][newTileBottom]
-						topStop = False
-						if t.isTop:
-							oldTileBottom = int(areaBottom / 16)
-							if newTileBottom > oldTileBottom:
-								topStop = True
-							elif newTileBottom == oldTileBottom and areaBottom == newBottom:
-								topStop = True
-						if t.solid or topStop:
+						if onScreen:
+							t = scene.tiles[tileX][newTileBottom]
+							topStop = False
+							if t.isTop:
+								oldTileBottom = int(areaBottom / 16)
+								if newTileBottom > oldTileBottom:
+									topStop = True
+								elif newTileBottom == oldTileBottom and areaBottom == newBottom:
+									topStop = True
+							if t.solid or topStop:
+								no = True
+								self.cling = False
+								self.onGround = True
+								self.modelY = newTileBottom * 16 - 8
+								self.vy = 0
+								if not wasOnGround and self == scene.player:
+									playNoise('land_on_ground')
+						else:
 							no = True
-							self.cling = False
-							self.onGround = True
-							self.modelY = newTileBottom * 16 - 8
-							self.vy = 0
-							if not wasOnGround and self == scene.player:
-								playNoise('land_on_ground')
 					
 			if not no:
 				self.modelY = newBottom - 8
