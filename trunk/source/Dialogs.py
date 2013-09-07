@@ -13,9 +13,29 @@ DIALOGS = {
 
 	'WaterDone': [
 		["That's the last of the",
-		 "reservoirs. Return to",
-		 "the ship for further",
-		 "instructions..."]
+		 "reservoirs. Receiving",
+		 "Transmission from the",
+		 "General..."],
+		
+		["We have a small hiccup;",
+		"the seeds intended to",
+		"provide vegetation were",
+		"accidentally left here."],
+
+		["Fortunately, a vanguard",
+		"of our sworn enemies is",
+		"north of your location",
+		"bearing their own seeds."],
+
+		["You can simultaneously",
+		"stop their invasion and",
+		"steal their seeds for",
+		"our own purposes."],
+
+		["It's a case of killing",
+		"two birds with one",
+		"stone! Or anything else",
+		"you might prefer."]
 	],
 	
 	'GravityDone': [

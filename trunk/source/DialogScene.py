@@ -47,8 +47,8 @@ class DialogScene:
 			self.bg.next = self.bg
 			
 			# Total hack...
-			if self.id == 'WaterDone':
-				self.next = PlayScene('ship_1', 8, 9, self.bg.context)
+			#if self.id == 'WaterDone':
+			#	self.next = PlayScene('ship_1', 8, 9, self.bg.context)
 			
 		else:
 			self.activeStanza = self.stanzas[self.stanzaIndex]
