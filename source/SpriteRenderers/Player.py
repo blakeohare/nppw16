@@ -5,6 +5,7 @@ def SPRITE_renderPlayerOver(sprite, scene, screen, offsetX, offsetY, arc):
 	top = sprite.y + offsetY - 8
 	width = 16
 	height = 16
+	gun = scene.lazor_cooldown > 0
 	if scene.side:
 		top -= 16
 		height = 32
@@ -14,26 +15,40 @@ def SPRITE_renderPlayerOver(sprite, scene, screen, offsetX, offsetY, arc):
 		else:
 			img = getImage('sprites/rocket_bike_2.png')
 	elif scene.side:
-		base = 'cave' if scene.hasAtmosphere else 'space'
-		moving = sprite.moving
-		if sprite.cling:
-			path = base + '_climb_'
-			if moving:
-				path += '1232'[arc % 4]
-			else:
-				path += '2'
-		else:
-			path = base + '_'
-			if moving:
-				# TODO: running, cut RC in half
-				path += '1213'[arc % 4]
-			else:
-				path += '1'
+	
 		if sprite.damageDir != None:
 			dir = sprite.damageDir
 		else:
 			dir = sprite.lastDirection
 		reverse = dir == 'left'
+		
+		base = 'cave' if scene.hasAtmosphere else 'space'
+		moving = sprite.moving
+		if sprite.cling:
+			path = base + '_climb_'
+			if gun:
+				path += 'shoot'
+				if reverse:
+					left -= 8
+				else:
+					left += 8
+			elif moving:
+				path += '1232'[arc % 4]
+			else:
+				path += '2'
+		else:
+			path = base + '_'
+			if gun:
+				if moving:
+					path += 'shooting_' + '1213'[arc % 4]
+				else:
+					path += 'shooting'
+			else:
+				if moving:
+					# TODO: running, cut RC in half
+					path += '1213'[arc % 4]
+				else:
+					path += '1'
 		
 		x = left
 		y = top
