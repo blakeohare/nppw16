@@ -229,8 +229,11 @@ class PlayScene:
 					elif event.action == 'B' and event.down:
 						if self.lazor_cooldown <= 0:#and not self.player.cling:
 							p = self.player
+							lazorLeft = self.player.lastDirection == 'left'
+							if self.player.damageDir != None:
+								lazorLeft = self.player.damageDir == 'left'
 							lazorVX = 8
-							if self.player.lastDirection == 'left':
+							if lazorLeft:
 								lazorVX = -8
 							
 							x = p.x + lazorVX
