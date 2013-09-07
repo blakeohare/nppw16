@@ -63,6 +63,26 @@ SONG_BY_MAP = {
 	
 	'section_3_gate': 'gravity',
 	'section_3_gate_active': 'gravity',
+	'wlink_A1': 'gravity',
+	'wlink_A2': 'gravity',
+	'wlink_A3': 'gravity',
+	'wlink_A4': 'gravity',
+	
+	'wlink_B_nowater': 'water',
+	'wlink_B_somewater': 'water',
+	'wlink_B_allwater': 'water',
+	
+	'wlink_D1_nowater': 'water',
+	'wlink_D1_water': 'water',
+	'wlink_D2_nowater': 'water',
+	'wlink_D2_water': 'water',
+	'wlink_D3_nowater': 'water',
+	'wlink_D3_water': 'water',
+	
+	'wlink_E1_nowater': 'water',
+	'wlink_E1_water': 'water',
+	'wlink_E2': 'water',
+	'wlink_E3': 'water',
 }
 
 for file in os.listdir('maps'):
