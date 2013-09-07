@@ -128,11 +128,17 @@ class Sprite:
 			self.automation = SeedAutomation(self)
 		elif type == 'bird1':
 			self.renderImpl = SPRITE_renderBird
-			self.automation = Bird1Automation(self)
+			self.automation = BirdAutomation(self, False)
 			self.floats = True
+		elif type == 'bird2':
+			self.renderImpl = SPRITE_renderBird
+			self.automation = BirdAutomation(self, True)
+			self.floats = True
+			self.ghost = True
 		elif type == 'rocketbike':
 			self.renderImpl = SPRITE_renderRocketBike
 			self.automation = RocketBikeAutomation(self)
+			self.ghost = True
 			
 		
 		self.dx = 0
