@@ -6,6 +6,21 @@ DIALOGS = {
 		 "the ship for further",
 		 "instructions..."]
 	],
+	
+	'GravityDone': [
+		["The gravity emitter is",
+		 "now taking effect."],
+		
+		["You can now hold B to",
+		 "run and jump."],
+		
+		["Running jumps reach",
+		 "higher spots."],
+		
+		["Head back to the ship",
+		 "for further instructions",
+		 "from the General."]
+	],
 
 	'Open1': [
 		["An intrepid explorer",
