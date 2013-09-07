@@ -540,12 +540,14 @@ class Sprite:
 	
 	def hit(self, scene, amount):
 		self.blinkCounter = 40
-		self.blinkDirection = self.lastDirection
-		self.damageDir = self.lastDirection
-		if self.lastDirection == 'left':
-			self.ddx = 3
-		else:
-			self.ddx = -3
-		self.onGround = False
-		self.vy = -6
 		scene.context.adjustHealth(scene, -amount)
+		self.blinkDirection = self.lastDirection
+		
+		if scene.id != 'bike_level':
+			self.damageDir = self.lastDirection
+			if self.lastDirection == 'left':
+				self.ddx = 3
+			else:
+				self.ddx = -3
+			self.onGround = False
+			self.vy = -6
