@@ -287,3 +287,7 @@ overworld_bottom	r	birdfeeder/bottom.png
 botsing	x	rocky/bottomsingle.png
 midsing	x	rocky/middlesingle.png
 topsing	x	rocky/topsingle.png
+leftsing	x	rocky/leftsingle.png
+midsingh	x	rocky/middlesingleH.png
+rightsing	x	rocky/rightsingle.png
+
