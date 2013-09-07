@@ -1,10 +1,18 @@
 class PowerupAutomation:
 	def __init__(self, sprite):
 		self.sprite = sprite
+		self.counter = 0
+		self.visible = True
 		
 	def doStuff(self, scene):
 		player = scene.player
-		
+		if self.sprite.powerupInfo.id == None:
+			self.counter += 1
+			if self.counter > 8 * 30:
+				self.sprite.dead = True
+			elif self.counter > 6 * 30:
+				self.visible = (self.counter & 1) == 0
+			
 		for playerY in (player.y, player.y - 16):
 			x = player.x
 			y = playerY
