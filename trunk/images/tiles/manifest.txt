@@ -62,18 +62,14 @@ rockyBottomR	x	rocky/bottomright.png
 rocks1	x	rocky/rocks1.png
 rocks2	x	rocky/rocks2.png
 rocks3	x	rocky/rocks3.png
-gems1	x	rocky/gemrocks1.png
-gems2	x	rocky/gemrocks2.png
-gems3	x	rocky/gemrocks3.png
-gems4	x	rocky/gemrocks4.png
 crater		rocky/crater.png
 bigcrater1	x	rocky/bigcrater1.png
 bigcrater2	x	rocky/bigcrater2.png
 bigcrater3	x	rocky/bigcrater3.png
 bigcrater4	x	rocky/bigcrater4.png
-lavarock1 x rocky/lavarock1
-lavarock2 x rocky/lavarock2
-lavarock3 x rocky/lavarock3
+lavarock1	x	rocky/lavarock1.png
+lavarock2	x	rocky/lavarock2.png
+lavarock3	x	rocky/lavarock3.png
 spikes		spikes/spikes.png
 spiketip		spikes/spiketip.png
 spikebase	x	spikes/spikebase.png
@@ -120,10 +116,10 @@ rockypassBottomR		rocky-passthrough/bottomright.png
 rockypassSingleL	J	rocky-passthrough/singleleft.png
 rockypassSingle	J	rocky-passthrough/singlemiddle.png
 rockypassSingleR	J	rocky-passthrough/singleright.png
-amethystorebottom rocky-passthrough/amethystorebottom.png
-amethystoretop rocky-passthrough/amethystoretop.png
-carnelianore rocky-passthrough/carnelianore.png
-sapphireore rocky-passthrough/saphireore.png
+amethystorebottom		rocky-passthrough/amethystorebottom.png
+amethystoretop		rocky-passthrough/amethystoretop.png
+carnelianore		rocky-passthrough/carnelianore.png
+sapphireore		rocky-passthrough/saphireore.png
 aqua1	o	balloons/aqua1.png
 aqua2	oO	balloons/aqua2.png
 aqua3	o	balloons/aqua3.png
@@ -302,15 +298,3 @@ leftsing	x	rocky/leftsingle.png
 midsingh	x	rocky/middlesingleH.png
 rightsing	x	rocky/rightsingle.png
 
-swgM1		seaweed/mediumgreen1.png,seaweed/mediumgreen1.png,seaweed/mediumgreen1b.png,seaweed/mediumgreen1b.png
-swgM2		seaweed/mediumgreen2.png,seaweed/mediumgreen2.png,seaweed/mediumgreen2b.png,seaweed/mediumgreen2b.png
-swpM1		seaweed/mediumpurple1.png,seaweed/mediumpurple1.png,seaweed/mediumpurple1b.png,seaweed/mediumpurple1b.png
-swpM2		seaweed/mediumpurple2.png,seaweed/mediumpurple2.png,seaweed/mediumpurple2b.png,seaweed/mediumpurple2b.png
-swgS		seaweed/shortgreen.png,seaweed/shortgreen.png,seaweed/shortgreenb.png,seaweed/shortgreenb.png
-swpS		seaweed/shortpurple.png,seaweed/shortpurple.png,seaweed/shortpurpleb.png,seaweed/shortpurpleb.png
-swgT1		seaweed/tallgreen1.png,seaweed/tallgreen1.png,seaweed/tallgreen1b.png,seaweed/tallgreen1b.png
-swgT2		seaweed/tallgreen2.png,seaweed/tallgreen2.png,seaweed/tallgreen2b.png,seaweed/tallgreen2b.png
-swgT3		seaweed/tallgreen3.png,seaweed/tallgreen3.png,seaweed/tallgreen3b.png,seaweed/tallgreen3b.png
-swpT1		seaweed/tallpurple1.png,seaweed/tallpurple1.png,seaweed/tallpurple1b.png,seaweed/tallpurple1b.png
-swpT2		seaweed/tallpurple2.png,seaweed/tallpurple2.png,seaweed/tallpurple2b.png,seaweed/tallpurple2b.png
-swpT3		seaweed/tallpurple3.png,seaweed/tallpurple3.png,seaweed/tallpurple3b.png,seaweed/tallpurple3b.png
