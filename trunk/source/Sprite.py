@@ -395,7 +395,7 @@ class Sprite:
 					newTileBottom = int(newBottom / 16)
 					
 					# If the player fell off the bottom
-					if newTileBottom >= height:
+					if self == scene.player and newTileBottom >= height:
 						# TODO: check if there is a transition registered with the map.
 						# If so begin that transition instead of killing the player.
 						playNoise('fall_to_death')
