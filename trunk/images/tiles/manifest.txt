@@ -313,3 +313,4 @@ swgT3		seaweed/tallgreen3.png,seaweed/tallgreen3.png,seaweed/tallgreen3b.png,sea
 swpT1		seaweed/tallpurple1.png,seaweed/tallpurple1.png,seaweed/tallpurple1b.png,seaweed/tallpurple1b.png
 swpT2		seaweed/tallpurple2.png,seaweed/tallpurple2.png,seaweed/tallpurple2b.png,seaweed/tallpurple2b.png
 swpT3		seaweed/tallpurple3.png,seaweed/tallpurple3.png,seaweed/tallpurple3b.png,seaweed/tallpurple3b.png
+vco		rocky/volcano_core_opening.png
