@@ -75,6 +75,7 @@ class MapParser:
 			
 			swaps[original] = swaps.get(original, [])
 			swaps[original].append((trigger, swapped))
+		print(swaps)
 		return swaps
 		
 	

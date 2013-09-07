@@ -88,6 +88,8 @@ class IntroScene:
 						c.balloonB = True
 					elif flag == 'water3':
 						c.balloonC = True
+					elif flag == 'water4':
+						c.balloonD = True
 				
 				return PlayScene(level, x, y, c)
 				
