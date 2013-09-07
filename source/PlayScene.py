@@ -613,7 +613,11 @@ class PlayScene:
 					screen.blit(img, pt)
 					i += 1
 				
-				
+		
+		for s in self.special:
+			if s.hasRender:
+				s.render(screen, rc, offsetX, offsetY)
+		
 				
 		self.renderOverlay(screen)
 	

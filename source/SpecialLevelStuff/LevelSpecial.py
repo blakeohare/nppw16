@@ -37,6 +37,7 @@ class SpecialLevelStuff:
 		self.hasUpdate = False
 		self.hasPostInit = False
 		self.hasDoorTrigger = False
+		self.hasRender = False
 		
 		# meh, hacks
 		self.lavaLevel = 0
