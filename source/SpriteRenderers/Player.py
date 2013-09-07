@@ -80,6 +80,10 @@ def SPRITE_renderPlayerOver(sprite, scene, screen, offsetX, offsetY, arc):
 		if dir == 'left':
 			reverse = True
 			dir = 'right'
-		path = 'sprites/space_overworld_' + dir + '_' + counter + '.png'
+		base = 'space'
+		ctx = scene.context
+		if ctx.volcanoA and ctx.volcanoB and ctx.volcanoC:
+			base = 'cave'
+		path = 'sprites/' + base + '_overworld_' + dir + '_' + counter + '.png'
 		img = getBackwardsImage(path) if reverse else getImage(path) 
 	screen.blit(img, (left, top))
