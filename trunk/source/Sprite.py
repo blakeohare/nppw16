@@ -16,6 +16,7 @@ SPRITE_HEIGHT = {
 	'poof_big': 32,
 	'poof_small': 16,
 	'byat': 16,
+	'moonsquid': 16,
 }
 
 G = 0.7
@@ -114,6 +115,10 @@ class Sprite:
 		elif type == 'byat':
 			self.renderImpl = SPRITE_renderByat
 			self.automation = ByatAutomation(self)
+			self.floats = True
+		elif type == 'moonsquid':
+			self.renderImpl = SPRITE_renderMoonSquid
+			self.automation = MoonSquidAutomation(self)
 			self.floats = True
 		
 		
