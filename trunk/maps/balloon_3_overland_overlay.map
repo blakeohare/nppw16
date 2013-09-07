@@ -1,5 +1,5 @@
 #width:16
 #height:14
-#upper:,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-#lower:,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,wmiddle,wmiddle,,,,,,,,,,,,,,,wmiddle,wmiddle,,,,,ground,ground,ground,,,,,wmiddle,wmiddle,wmiddle,wmiddle,wmiddle,,,,,ground,ground,strm_h,strm_h,strm_h,strm_h,strm_h,wmiddle,wmiddle,wmiddle,wmiddle,wmiddle,,,,,,,,,,,,wmiddle,wmiddle,wmiddle,wmiddle,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+#upper:,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,wtop,wtop,wtoprightconcave,,,,,,,,,,,,,,wmiddle,wmiddle,wright,,,,,,,,,,,,,,wmiddle,wmiddle,wright,,,,,,,,,,,,,,wmiddle,wmiddle,wright,,,,,,,,,,,,,,wmiddle,wmiddle,wtoprightconvex,wtop,wtop,wtop,wtop,wtop,wtop,wtop,wtop,wtop,wtoprightconcave,,,,wmiddle,wmiddle,wmiddle,wmiddle,wmiddle,wmiddle,wmiddle,wmiddle,wmiddle,wmiddle,wmiddle,wmiddle,wtoprightconvex,wtoprightconcave,,,wmiddle,wmiddle,wmiddle,wmiddle,wmiddle,wmiddle,wmiddle,wmiddle,wmiddle,wmiddle,wmiddle,wmiddle,wmiddle,wright,,
+#lower:,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,ground,ground,ground,,,,,,,,,,,,,,ground,ground,ground,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 #view:over
