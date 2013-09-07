@@ -54,6 +54,7 @@ class Sprite:
 		self.xs = [None] * 5
 		self.ys = [None] * 5
 		self.vy = 0
+		
 		self.moving = False
 		self.lastDirection = 'left'
 		self.onGround = False
@@ -314,6 +315,7 @@ class Sprite:
 				self.vy = 0
 			else:
 				self.dy += self.vy
+				self.moving = True
 			
 			oldLadderDY = self.ladderDY
 			self.ladderDY = 0
