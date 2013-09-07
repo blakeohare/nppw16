@@ -70,6 +70,10 @@ bigcrater4	x	rocky/bigcrater4.png
 lavarock1	x	rocky/lavarock1.png
 lavarock2	x	rocky/lavarock2.png
 lavarock3	x	rocky/lavarock3.png
+gemrocks1	x	rocky/gemrocks1.png
+gemrocks2	x	rocky/gemrocks2.png
+gemrocks3	x	rocky/gemrocks3.png
+gemrocks4	x	rocky/gemrocks4.png
 spikes		spikes/spikes.png
 spiketip		spikes/spiketip.png
 spikebase	x	spikes/spikebase.png
