@@ -12,6 +12,8 @@ class PlayScene:
 		self.next = self
 		self.flags = 'M'
 		levelname = map.split('.')[0]
+		if DEBUG_MODE:
+			print("Active map:", levelname)
 		self.id = levelname
 		if not map.endswith('.map'):
 			map += '.map'
