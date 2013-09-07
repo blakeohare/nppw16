@@ -25,6 +25,8 @@ def getSpecialLevelStuff(id, scene):
 		return [BalloonPopping(scene, 'lava2')]
 	if id == 'volcano_3_overland':
 		return [BalloonPopping(scene, 'lava3')]
+	if id == 'birdfeeder':
+		return [BirdFeeder(scene)]
 	return []
 
 class SpecialLevelStuff:
