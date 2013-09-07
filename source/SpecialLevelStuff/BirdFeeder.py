@@ -3,6 +3,7 @@ class BirdFeeder(SpecialLevelStuff):
 		SpecialLevelStuff.__init__(self, scene)
 		self.hasPostInit = True
 		self.hasUpdate = True
+		self.counter = 0
 		seeds = [(4,36),
 			(11,30),
 			(4,24),
@@ -13,9 +14,21 @@ class BirdFeeder(SpecialLevelStuff):
 		for seed in seeds:
 			scene.sprites.append(Sprite('seeds', seed[0] * 16 + 8, seed[1] * 16 + 7))
 		
+		self.closingShown = False
+		
 	def update(self):
 		p = self.scene.player
-		print(self.seedsLeft)
+		self.counter += 1
+		
+		if self.counter == 3:
+			self.scene.next = DialogScene(self.scene, "Feeder1", False, False, False)
+		
+		if self.seedsLeft == 0 and not self.closingShown:
+			self.scene.next = DialogScene(self.scene, "Feeder2", False, False, False)
+			self.scene.sprites.append(Sprite('bird1', 8, 8))
+			self.closingShown = True
+		
+		
 		
 	def postInit(self):
 		pass
