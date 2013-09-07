@@ -1,0 +1,6 @@
+#width:16
+#height:14
+#upper:,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,vtop2active,vtop3active,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,ltopleftconcave,ltop,,,,,,,,,,,,,,,lleft,lmiddle,,,,,,,,,,,,,,,lleft,lmiddle,,,,,,,,,,,,,,ltopleftconcave,ltopleftconvex,lmiddle,,,,,,,,,,,,,,lleft,lmiddle,lmiddle,,,,,,,,,,,,,,lleft,lmiddle,lmiddle,,,,,,,,,,,,ltopleftconcave,ltop,ltopleftconvex,lmiddle,lmiddle,,,,,,,,,,,,lleft,lmiddle,lmiddle,lmiddle,lmiddle,,,,,,,,,,,,lleft,lmiddle,lmiddle,lmiddle,lmiddle
+#lower:,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+#view:over
+#overlay:lava3|volcano_3_overland_overlay
