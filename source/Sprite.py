@@ -218,6 +218,23 @@ class Sprite:
 			width = scene.cols
 			height = scene.rows
 			
+			
+			if self == scene.player and scene.id == 'bike_level':
+						
+				offsetX = -(scene.updateCounter * BIKE_SPEED)
+				if offsetX > 0: offsetX = 0
+				right = -(scene.cols * 16 - 256)
+				if offsetX < right: offsetX = right
+				
+				
+				newX = areaX + self.dx
+				pixelX = newX + offsetX
+				if pixelX < 8:
+					self.dx = BIKE_SPEED
+				elif pixelX > 248:
+					self.dx = BIKE_SPEED
+				
+			
 			tileBottomIceCheck = int(areaBottom // 16)
 			tileX = int(areaX // 16)
 			inWater = False

@@ -203,7 +203,7 @@ class PlayScene:
 				
 				if self.player != None:
 					if self.player.bikemode:
-						dx += 6
+						dx += BIKE_SPEED
 					self.player.dx = dx
 					self.player.dy = dy
 				
