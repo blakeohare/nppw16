@@ -1,4 +1,12 @@
 DIALOGS = {
+
+	'WaterDone': [
+		["That's the last of the",
+		 "reservoirs. Return to",
+		 "the ship for further",
+		 "instructions..."]
+	],
+
 	'Open1': [
 		["An intrepid explorer",
 		 "left home in search of",

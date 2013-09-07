@@ -96,3 +96,7 @@ class BalloonPopping(SpecialLevelStuff):
 		if showPop:
 			playNoise('water_pop')
 			original.sprites.append(Sprite('waterpop', balloonLoc[0] * 16 + 8, balloonLoc[1] * 16 + 8))
+		
+		
+			if self.context.balloonA and self.context.balloonB and self.context.balloonC and self.context.balloonD:
+				self.scene.next = DialogScene(self.scene, 'WaterDone', True, False, False)
