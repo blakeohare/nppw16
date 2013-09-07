@@ -116,9 +116,14 @@ DIALOGS = {
 	],
 	
 	'CloseDialog': [
-		["Lorem ipsum dolar",
-		 "sit amet."],
-		["Hot pockets!"]
+		["Congratulations!",
+		 "The Space Squirrel has",
+		 "managed to bring life",
+		 "to this once dead moon."],
+		 
+		["Now her people have a",
+		 "beautiful new home, and",
+		 "it's all thanks to you!"]
 	]
 }
 
