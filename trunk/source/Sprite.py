@@ -14,7 +14,8 @@ SPRITE_HEIGHT = {
 	'waterpop': 32,
 	'powerup': 16,
 	'poof_big': 32,
-	'poof_small': 16
+	'poof_small': 16,
+	'byat': 16,
 }
 
 G = 0.7
@@ -110,6 +111,11 @@ class Sprite:
 			self.renderImpl = SPRITE_renderPoof
 			self.automation = PoofAutomation(self, False)
 			self.floats = True
+		elif type == 'byat':
+			self.renderImpl = SPRITE_renderByat
+			self.automation = ByatAutomation(self)
+			self.floats = True
+		
 		
 		self.dx = 0
 		self.dy = 0
