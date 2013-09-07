@@ -36,7 +36,7 @@ DIALOGS = {
 
 	'Volcano': [
 		["That's the last of the",
-		 "volcanos."],
+		 "volcanoes."],
 		 
 		["Now that the magnetic",
 		 "field is back, the",
