@@ -14,6 +14,8 @@ class BirdFeeder(SpecialLevelStuff):
 		for seed in seeds:
 			scene.sprites.append(Sprite('seeds', seed[0] * 16 + 8, seed[1] * 16 + 7))
 		
+		scene.sprites.append(Sprite('rocketbike', 12 * 16 + 8, 39 * 16 + 8))
+		
 		self.closingShown = False
 		
 	def update(self):
