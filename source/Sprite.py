@@ -357,7 +357,12 @@ class Sprite:
 						if onScreen:
 							t = scene.tiles[tileX][newTileTop]
 							if t.solid or (waterOnly and not t.isWater):
+								if wasOnGround:
+									self.onGround = True
 								no = True
+								
+								if self.modelY % 16 == 8:
+									no = False
 								self.vy = 0
 								self.dy = 0
 								if self == scene.player:
