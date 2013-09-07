@@ -13,6 +13,8 @@ SPRITE_HEIGHT = {
 	'lavamonster': 32,
 	'waterpop': 32,
 	'powerup': 16,
+	'poof_big': 32,
+	'poof_small': 16
 }
 
 G = 0.7
@@ -100,6 +102,14 @@ class Sprite:
 		elif type == 'powerup':
 			self.renderImpl = SPRITE_renderPowerup
 			self.automation = PowerupAutomation(self)
+		elif type == 'poof_big':
+			self.renderImpl = SPRITE_renderPoof
+			self.automation = PoofAutomation(self, True)
+			self.floats = True
+		elif type == 'poof_small':
+			self.renderImpl = SPRITE_renderPoof
+			self.automation = PoofAutomation(self, False)
+			self.floats = True
 		
 		self.dx = 0
 		self.dy = 0
