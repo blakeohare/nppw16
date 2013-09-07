@@ -29,6 +29,7 @@ CAVE_BG = [
   'wlink_E1_nowater',
   'wlink_E2',
   'wlink_E3',
+  'bird_link',
 ]
 
 VOLCANO_BG = [
