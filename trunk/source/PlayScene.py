@@ -340,7 +340,7 @@ class PlayScene:
 							sprite.dead = True
 							bullet.dead = True
 							if sprite.type in ('acorn', 'acorntop', 'byat', 'moonsquid', 'lavamonster'):
-								dropN = int(random.random() * 100)
+								dropN = int(random.random() * 200)
 								drop = None
 								if dropN == 0:
 									drop = '1up'
