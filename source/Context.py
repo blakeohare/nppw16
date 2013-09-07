@@ -114,7 +114,7 @@ class Context:
 	def convertFromPassword(self, password):
 		p1 = self.enforceLetter(password[0])
 		p2 = self.enforceLetter(password[1])
-		p3 = self.enforceLetter(password[2])
+		p3 = self.enforceNumber(password[2])
 		p4 = self.enforceLetter(password[3])
 		
 		if p1 in 'ABC':
@@ -123,6 +123,7 @@ class Context:
 		
 		if p1 in 'BC':
 			value = ord(p3) - ord('1') + 1
+			print(value, ord(p3))
 			self.volcanoA = (value & 1) != 0
 			self.volcanoB = (value & 2) != 0
 			self.volcanoC = (value & 4) != 0
@@ -164,4 +165,4 @@ class Context:
 		
 		if self.lifemeter > 10:
 			self.lifemeter = 10
-			
+
