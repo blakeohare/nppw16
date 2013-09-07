@@ -71,6 +71,9 @@ bigcrater1	x	rocky/bigcrater1.png
 bigcrater2	x	rocky/bigcrater2.png
 bigcrater3	x	rocky/bigcrater3.png
 bigcrater4	x	rocky/bigcrater4.png
+lavarock1 x rocky/lavarock1
+lavarock2 x rocky/lavarock2
+lavarock3 x rocky/lavarock3
 spikes		spikes/spikes.png
 spiketip		spikes/spiketip.png
 spikebase	x	spikes/spikebase.png
@@ -117,6 +120,10 @@ rockypassBottomR		rocky-passthrough/bottomright.png
 rockypassSingleL	J	rocky-passthrough/singleleft.png
 rockypassSingle	J	rocky-passthrough/singlemiddle.png
 rockypassSingleR	J	rocky-passthrough/singleright.png
+amethystorebottom rocky-passthrough/amethystorebottom.png
+amethystoretop rocky-passthrough/amethystoretop.png
+carnelianore rocky-passthrough/carnelianore.png
+sapphireore rocky-passthrough/saphireore.png
 aqua1	o	balloons/aqua1.png
 aqua2	oO	balloons/aqua2.png
 aqua3	o	balloons/aqua3.png
