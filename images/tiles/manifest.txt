@@ -284,3 +284,6 @@ perch_single	J	birdfeeder/perchsingle.png
 overworld_top	r	birdfeeder/top.png
 overworld_middle	r	birdfeeder/middle.png
 overworld_bottom	r	birdfeeder/bottom.png	
+botsing	x	rocky/bottomsingle.png
+midsing	x	rocky/middlesingle.png
+topsing	x	rocky/topsingle.png
