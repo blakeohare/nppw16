@@ -346,7 +346,7 @@ class PlayScene:
 								
 								if drop != None:
 									# Can't do spawns since it'll get filtered out before then.
-									powerup = Sprite('powerup', sprite.x, sprite.y)
+									powerup = Sprite('powerup', sprite.x, sprite.y - 1)
 									info = StemCell()
 									info.id = None
 									info.type = drop
