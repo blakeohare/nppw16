@@ -351,9 +351,13 @@ class PlayScene:
 									info.id = None
 									info.type = drop
 									powerup.powerupInfo = info
-									self.sprites.append(powerup)
-							# TODO: this
-							#new_sprites.append(poof)
+									new_sprites.append(powerup)
+							
+							poofType = 'poof_small'
+							if sprite.type == 'lavamonster':
+								poofType = 'poof_big'
+							poof = Sprite(poofType, sprite.x, sprite.y)
+							new_sprites.append(poof)
 							playNoise('enemy_dies')
 						
 						j += 1
