@@ -215,7 +215,8 @@ class Sprite:
 			ICE_DIMINISH = .1
 			ICE_MAX_SPEED = 8
 			
-			if onIce or (self.cameFromIce and not self.onGround and not self.cling):
+			if self.type != 'lazor' and (onIce or (self.cameFromIce and not self.onGround and not self.cling)):
+				
 				if self.dx == 0:
 					if self.iceVX > 0:
 						self.iceVX -= ICE_DIMINISH
