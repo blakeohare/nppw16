@@ -44,7 +44,7 @@ def SPRITE_renderPlayerOver(sprite, scene, screen, offsetX, offsetY, arc):
 				else:
 					path += 'shooting'
 			else:
-				if moving:
+				if moving or (sprite.cling and sprite.vy != 0):
 					# TODO: running, cut RC in half
 					path += '1213'[arc % 4]
 				else:
