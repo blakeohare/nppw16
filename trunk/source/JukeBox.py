@@ -25,6 +25,7 @@ SONG_BY_MAP = {
 	'volcano_3_overland': 'overworld',
 	
 	'bike_level': 'bike',
+	'bird_link': 'gravity',
 	
 	'exit_water_phase_locked': 'water',
 	'exit_water_phase_unlocked': 'water',
