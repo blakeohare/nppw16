@@ -1,5 +1,16 @@
 DIALOGS = {
 
+	'Feeder1': [
+		["Quick, collect seeds",
+		 "before anyone notices!"]
+	],
+	
+	"Feeder2": [
+		["Uh-oh, your covert",
+		 "attempt has failed!",
+		 "Quick, make a getaway!"]
+	],
+
 	'WaterDone': [
 		["That's the last of the",
 		 "reservoirs. Return to",
