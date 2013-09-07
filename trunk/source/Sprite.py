@@ -313,9 +313,10 @@ class Sprite:
 			if self.cling:
 				self.dy = self.ladderDY
 				self.vy = 0
+				if self.dy != 0:
+					self.moving = True
 			else:
 				self.dy += self.vy
-				self.moving = True
 			
 			oldLadderDY = self.ladderDY
 			self.ladderDY = 0
