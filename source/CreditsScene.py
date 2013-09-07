@@ -1,18 +1,17 @@
 cred_BO = "BLAKE O'HARE"
 cred_TB = "TED BURTON"
 cred_SC = "STEVE CRAWFORD"
-cred_RB = "???"
-cred_LF = "???"
-cred_CS = "???"
-cred_AM = "???"
-cred_AC = "???"
+cred_LF = "LAURA FREER"
+cred_CS = "CHRISTINE SANDQUIST"
+cred_AM = "ANGEL MCLAUGHLIN"
+cred_AC = "ADRIAN CLINE"
 
 
 
 CREDITS = [
 	('TEAM NERD PARADISE', []),
 	('PROGRAMMING', [cred_BO]),
-	('LEVEL DESIGN', [cred_TB, cred_SC, cred_RB, cred_LF]),
+	('LEVEL DESIGN', [cred_TB, cred_SC, cred_LF]),
 	('CHARACTER ART', [cred_CS]),
 	('LEVEL ART', [cred_AM]),
 	('MUSIC AND SFX', [cred_AC]),
