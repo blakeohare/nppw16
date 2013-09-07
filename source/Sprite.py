@@ -18,6 +18,7 @@ SPRITE_HEIGHT = {
 	'byat': 16,
 	'moonsquid': 16,
 	'seed': 16,
+	'rocketbike': 32,
 }
 
 G = 0.7
@@ -125,8 +126,14 @@ class Sprite:
 		elif type == 'seeds':
 			self.renderImpl = SPRITE_renderSeed
 			self.automation = SeedAutomation(self)
+		elif type == 'bird1':
+			self.renderImpl = SPRITE_renderBird
+			self.automation = Bird1Automation(self)
+			self.floats = True
+		elif type == 'rocketbike':
+			self.renderImpl = SPRITE_renderRocketBike
+			self.automation = RocketBikeAutomation(self)
 			
-		
 		
 		self.dx = 0
 		self.dy = 0

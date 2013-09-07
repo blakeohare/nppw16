@@ -313,7 +313,7 @@ class PlayScene:
 		i = 0
 		while i < len(sprites):
 			sprite = sprites[i]
-			if len(allBullets) > 0:
+			if len(allBullets) > 0 and sprite.type != 'bird1':
 				if sprite.isEnemy:
 					left = sprite.x - 8
 					right = sprite.x + 8
