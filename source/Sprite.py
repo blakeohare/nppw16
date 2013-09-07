@@ -544,10 +544,23 @@ class Sprite:
 		self.blinkDirection = self.lastDirection
 		
 		if scene.id != 'bike_level':
+		
+			tiles = scene.tiles
+			tx = self.x // 16
+			ty = self.y // 16
+			
+			inWater = False
+			if tx >= 0 and ty >= 0 and tx < scene.cols and ty < scene.rows:
+				t = tiles[tx][ty]
+				inWater = t.isWater
+			
 			self.damageDir = self.lastDirection
 			if self.lastDirection == 'left':
 				self.ddx = 3
 			else:
 				self.ddx = -3
 			self.onGround = False
-			self.vy = -6
+			if inWater:
+				self.vy = -1
+			else:
+				self.vy = -6
