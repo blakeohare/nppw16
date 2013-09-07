@@ -218,9 +218,10 @@ class Sprite:
 			width = scene.cols
 			height = scene.rows
 			
+			isPlayer = self == scene.player 
+			bikePhysics = isPlayer and scene.id == 'bike_level'
 			
-			if self == scene.player and scene.id == 'bike_level':
-						
+			if bikePhysics:
 				offsetX = -(scene.updateCounter * BIKE_SPEED)
 				if offsetX > 0: offsetX = 0
 				right = -(scene.cols * 16 - 256)
@@ -280,7 +281,7 @@ class Sprite:
 			self.collidedWall = False
 			# side-to-side calcuation is done first, independent of whether you are on the ground.
 			if self.dx != 0:
-				if inWater and self == scene.player:
+				if inWater and isPlayer:
 					maxDX = 1.0 if self.onGround else 1.5
 					if self.dx < -maxDX:
 						self.dx = -maxDX
@@ -314,6 +315,9 @@ class Sprite:
 			offScreen = tileX < 0 or tileX >= scene.cols or tileY < 0 or tileY >= scene.rows
 			onScreen = not offScreen
 			
+			if bikePhysics and self.collidedWall:
+				scene.next = DeathOverrideScene(scene, 'lava')
+			
 			# vertical adjustment phase
 			# assume sprite is flying through the air unless you see ground
 			wasOnGround = self.onGround # save the previous ground state. If you weren't on ground before but suddenly are, then you "landed" and a sound should be played. 
@@ -330,7 +334,7 @@ class Sprite:
 					self.vy += G
 			
 			rocketJump = False
-			if inWater and self == scene.player and self.vy < 0:
+			if inWater and isPlayer and self.vy < 0:
 				tileY = int(self.modelY / 16) - 1
 				if tileY >= 0:
 					if not scene.tiles[tileX][tileY].isWater:
@@ -412,7 +416,7 @@ class Sprite:
 					newTileBottom = int(newBottom / 16)
 					
 					# If the player fell off the bottom
-					if self == scene.player and newTileBottom >= height:
+					if isPlayer and newTileBottom >= height:
 						# TODO: check if there is a transition registered with the map.
 						# If so begin that transition instead of killing the player.
 						playNoise('fall_to_death')
