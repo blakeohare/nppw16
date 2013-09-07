@@ -136,7 +136,18 @@ class Context:
 		
 		self.lifemeter = START_LIFE
 		self.lives = START_LIVES
-		
+	
+	def getCurrentCountAndType(self):
+		vcount = self.volcanoA + self.volcanoB + self.volcanoC
+		wcount = self.balloonA + self.balloonB + self.balloonC + self.balloonD
+		if self.gravity:
+			if vcount == 3:
+				if wcount == 4:
+					return None # bird seed
+				return ('W', wcount)
+			return ('V', vcount)
+		return None # gravity
+	
 	def adjustHealth(self, scene, amount):
 		self.lifemeter += amount
 		if self.lifemeter <= 0:
