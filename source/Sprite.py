@@ -200,6 +200,7 @@ class Sprite:
 			areaBottom = self.modelY + 8
 			heightFromHotSpot = getSpriteHeight(self.type) - 8 - 4
 			areaTop = self.modelY - heightFromHotSpot
+			waterOnly = self.type == 'moonsquid'
 			
 			width = scene.cols
 			height = scene.rows
@@ -353,11 +354,16 @@ class Sprite:
 						offScreen = tileX < 0 or tileX >= scene.cols or newTileTop < 0 or newTileTop >= scene.rows
 						onScreen = not offScreen
 						
-						if onScreen and scene.tiles[tileX][newTileTop].solid:
-							no = False
-							self.vy = 0
-							self.dy = 0
-							playNoise('head_bonk')
+						if onScreen:
+							t = scene.tiles[tileX][newTileTop]
+							if t.solid or (waterOnly and not t.isWater):
+								no = True
+								self.vy = 0
+								self.dy = 0
+								if self == scene.player:
+									playNoise('head_bonk')
+							else:
+								movedUp = True
 						else:
 							movedUp = True
 				else:
