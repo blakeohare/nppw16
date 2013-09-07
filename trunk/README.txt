@@ -75,7 +75,7 @@ CREDITS (alphabetical)
 	- Adrian Cline (adrian.cline@gmail.com) - Music and Sound
 	- Angel McLaughlin (spearsdracona@gmail.com) - Tile Art
 	- Blake O'Hare (mspaintmaestro@gmail.com) - Programming
-	- Christine Sandquist (???) - Sprite Art
+	- Christine Sandquist (chrissandq@gmail.com) - Sprite Art
 	- Laura Freer (freer.18@buckeyemail.osu.edu) - Dialog and Map Design
 	- Steve Crawford (???) - Map Design
 	- Ted Burton (phiofpi@gmail.com) - Map Design
