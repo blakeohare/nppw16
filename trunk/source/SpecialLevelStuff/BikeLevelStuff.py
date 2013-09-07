@@ -7,6 +7,8 @@ class BikeLevelStuff(SpecialLevelStuff):
 		self.counter = 0
 		
 	def update(self):
+		if self.counter == 0:
+			self.scene.sprites.append(Sprite('bird2', 16, 48))
 		self.counter += 1
 		scene = self.scene
 		player = scene.player
