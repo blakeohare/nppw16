@@ -1,6 +1,6 @@
 
 class BalloonPopping(SpecialLevelStuff):
-	# ID's: water1, water2, water3, lava1, lava2, lava3
+	# ID's: water1, water2, water3, water4, lava1, lava2, lava3
 	def __init__(self, scene, id):
 		SpecialLevelStuff.__init__(self, scene)
 		self.id = id
@@ -30,6 +30,9 @@ class BalloonPopping(SpecialLevelStuff):
 			tx = player.x // 16
 			ty = player.y // 16
 			
+			if self.id == 'water1' and ty > 18: return
+			if self.id == 'water4' and ty < 18: return
+			
 			tile = self.balloonCoords.get((tx, ty), None)
 			if tile != None:
 				self.applyOverlayAndSaveContext(True, (tx + tile.primaryBalloonOffset[0], ty + tile.primaryBalloonOffset[1]))
@@ -43,6 +46,9 @@ class BalloonPopping(SpecialLevelStuff):
 				self.applyOverlayAndSaveContext()
 		elif self.id == 'water3':
 			if self.context.balloonC:
+				self.applyOverlayAndSaveContext()
+		elif self.id == 'water4':
+			if self.context.balloonD:
 				self.applyOverlayAndSaveContext()
 		elif self.id == 'lava1':
 			if self.context.volcanoA:
@@ -82,6 +88,8 @@ class BalloonPopping(SpecialLevelStuff):
 			self.context.balloonB = True
 		elif self.id == 'water3':
 			self.context.balloonC = True
+		elif self.id == 'water4':
+			self.context.balloonD = True
 		
 		self.done = True
 		

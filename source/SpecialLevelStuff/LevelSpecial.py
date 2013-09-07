@@ -1,6 +1,7 @@
 def getSpecialLevelStuff(id, scene):
 	if id == 'main':
 		return [BalloonPopping(scene, 'water1'),
+			BalloonPopping(scene, 'water4'),
 			BalloonPopping(scene, 'lava1')]
 	if id == 'ship_1':
 		return [ShipTransmission(scene)]

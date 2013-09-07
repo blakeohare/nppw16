@@ -15,6 +15,7 @@ class Context:
 		self.balloonA = False
 		self.balloonB = False
 		self.balloonC = False
+		self.balloonD = False
 		self.gravity = False
 		self.transmission1 = False
 		self.transmission2 = False
@@ -24,7 +25,7 @@ class Context:
 	
 	def convertToPassword(self):
 		
-		if self.balloonA or self.balloonB or self.balloonC:
+		if self.balloonA or self.balloonB or self.balloonC or self.balloonD:
 			count = 3
 		elif self.volcanoA or self.volcanoB or self.volcanoC:
 			count = 2
@@ -60,7 +61,7 @@ class Context:
 			password += self.randomChar('0123456789')
 		
 		if count >= 3:
-			value = self.balloonA + (self.balloonB * 2) + (self.balloonC * 4)
+			value = self.balloonA + (self.balloonB * 2) + (self.balloonC * 4) + (self.balloonD * 8)
 			letter = chr(ord('A') + value - 1)
 			password += letter
 		else:
@@ -131,6 +132,7 @@ class Context:
 			self.balloonA = (value & 1) != 0
 			self.balloonB = (value & 2) != 0
 			self.balloonC = (value & 4) != 0
+			self.balloonD = (value & 8) != 0
 		
 		self.lifemeter = START_LIFE
 		self.lives = START_LIVES

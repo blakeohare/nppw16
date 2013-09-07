@@ -392,7 +392,8 @@ class PlayScene:
 						trigger == 'lavaC' and ctx.volcanoC) or (
 						trigger == 'waterA' and ctx.balloonA) or (
 						trigger == 'waterB' and ctx.balloonB) or (
-						trigger == 'waterC' and ctx.balloonC)):
+						trigger == 'waterC' and ctx.balloonC) or (
+						trigger == 'waterD' and ctx.balloonD)):
 						target = swap[1]
 						break
 			
