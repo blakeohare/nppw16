@@ -13,15 +13,17 @@ class GravityCorePlacement(SpecialLevelStuff):
 		ty = int(player.y / 16)
 	
 		if tx == self.col and abs(ty - self.row) < 2 and not self.done:
-			self.addGDevice()
+			self.addGDevice(True)
 	
 	def postInit(self):
 		if self.context.gravity:
 			self.addGDevice()
 	
-	def addGDevice(self):
+	def addGDevice(self, showDialog=False):
 		self.done = True
 		self.context.gravity = True
 		gd = Sprite('gravity_device', self.col * 16, self.row * 16)
 		gd.floats = True
 		self.scene.sprites.append(gd)
+		if showDialog:
+			self.scene.next = DialogScene(self.scene, 'GravityDone', True, False, False)
