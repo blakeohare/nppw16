@@ -16,12 +16,15 @@ class GameOverScene:
 					if event.action == 'up':
 						if self.index == 1:
 							self.index = 0
+							playNoise('menu_move')
 					elif event.action == 'down':
 						if self.index == 0:
 							self.index = 1
+							playNoise('menu_move')
 					elif event.action in ('A', 'B', 'start'):
 						self.mode = 'commit'
 						self.counter = 0
+						playNoise('menu_select')
 	
 	def update(self):
 		JUKEBOX.ensureSong('gameover')
