@@ -5,3 +5,4 @@
 #view:side
 #enemies:acorn|13|3,byat|12|6,acorn|3|14,acorn|32|14,byat|31|6,byat|33|1,lavamonster|13|16,lavamonster|19|16
 #powerups:1up|wlink_A3|37|14
+#doors:wlink_A2|2|3|12|40,wlink_A4|38|10|3|40
