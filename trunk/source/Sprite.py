@@ -21,7 +21,7 @@ SPRITE_HEIGHT = {
 
 G = 0.7
 STRONG_G = 1.55
-WATER_G = 0.3
+WATER_G = 0.1
 
 def getSpriteHeight(type):
 	return SPRITE_HEIGHT.get(type, 16)
@@ -206,11 +206,14 @@ class Sprite:
 			
 			tileBottomIceCheck = int(areaBottom // 16)
 			tileX = int(areaX // 16)
+			inWater = False
 			onIce = False
-			if tileX >= 0 and tileBottomIceCheck >= 0 and tileX < scene.cols and tileBottomIceCheck < scene.rows:
+			if tileX >= 0 and tileBottomIceCheck > 0 and tileX < scene.cols and tileBottomIceCheck < scene.rows:
 				tileBelow = scene.tiles[tileX][tileBottomIceCheck]
 				if tileBelow != None:
 					onIce = tileBelow.isIce
+				
+				inWater = scene.tiles[tileX][tileBottomIceCheck - 1].isWater
 			
 			ICE_DIMINISH = .1
 			ICE_MAX_SPEED = 8
@@ -246,6 +249,14 @@ class Sprite:
 			self.collidedWall = False
 			# side-to-side calcuation is done first, independent of whether you are on the ground.
 			if self.dx != 0:
+				if inWater and self == scene.player:
+					maxDX = 1.0 if self.onGround else 1.5
+					if self.dx < -maxDX:
+						self.dx = -maxDX
+					elif self.dx > maxDX:
+						self.dx = maxDX
+					
+					
 				newX = self.modelX + self.dx
 				
 				# isCollision ignores collisions near the sprite's feet
@@ -276,15 +287,24 @@ class Sprite:
 			# assume sprite is flying through the air unless you see ground
 			wasOnGround = self.onGround # save the previous ground state. If you weren't on ground before but suddenly are, then you "landed" and a sound should be played. 
 			self.onGround = False
+			
 			if wasOnGround or self.floats:
 				self.vy = 0
 			else:
-				if onScreen and scene.tiles[tileX][tileY].isWater:
+				if inWater:
 					self.vy += WATER_G
 				elif scene.context.gravity:
 					self.vy += STRONG_G
 				else:
 					self.vy += G
+			
+			rocketJump = False
+			if inWater and self == scene.player and self.vy < 0:
+				tileY = int(self.modelY / 16) - 1
+				if tileY >= 0:
+					if not scene.tiles[tileX][tileY].isWater:
+						# moving up, bottom half is in water, top half is not
+						rocketJump = True # jump out with high velocity
 			
 			# If you're clinging to a ladder, then throw out the vy entirely.
 			# Use self.ladderDY instead
@@ -297,10 +317,19 @@ class Sprite:
 			oldLadderDY = self.ladderDY
 			self.ladderDY = 0
 			
-			if self.dy > 10:
-				self.dy = 10
-			elif self.dy < -10:
-				self.dy = -10
+			maxDY = 10
+			if self.dy > 4 and inWater:
+				self.dy = 4
+			
+			if self.dy > maxDY:
+				self.dy = maxDY
+			elif self.dy < -maxDY:
+				self.dy = -maxDY
+			
+			
+			if rocketJump:
+				self.dy = -15
+			
 			
 			wasCling = self.cling
 			movedUp = False
