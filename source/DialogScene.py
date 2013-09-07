@@ -16,6 +16,7 @@ class DialogScene:
 		self.textCursor = 0
 		self.showLines = []
 		self.blink = False
+		self.id = dialogId
 		
 		
 		 # The epitome of a PyWeek hack
@@ -44,7 +45,11 @@ class DialogScene:
 		if self.stanzaIndex >= len(self.stanzas):
 			self.next = self.bg
 			self.bg.next = self.bg
-			#clearTextCache(255, 255, 255) # so much clutter
+			
+			# Total hack...
+			if self.id == 'WaterDone':
+				self.next = PlayScene('ship_1', 8, 9, self.bg.context)
+			
 		else:
 			self.activeStanza = self.stanzas[self.stanzaIndex]
 			rawLines = '\n'.join(self.activeStanza)
