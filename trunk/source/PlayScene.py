@@ -475,7 +475,20 @@ class PlayScene:
 			
 			x += 16
 			i += 1
-	
+		
+		cat = self.context.getCurrentCountAndType()
+		if cat != None:
+			cnt = cat[1]
+			
+			if cat[0] == 'W':
+				img = getImage('misc/water_icon.png')
+				total = 4
+			else:
+				img = getImage('misc/volcano_icon.png')
+				total = 3
+							
+			screen.blit(img, (48, 0))
+			screen.blit(getText(WHITE, str(cnt) + '/' + str(total)), (56, 0))
 	def render(self, screen, rc):
 		if self.bg == 'stars':
 			screen.fill((0, 0, 0))
