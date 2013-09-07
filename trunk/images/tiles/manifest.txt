@@ -62,6 +62,10 @@ rockyBottomR	x	rocky/bottomright.png
 rocks1	x	rocky/rocks1.png
 rocks2	x	rocky/rocks2.png
 rocks3	x	rocky/rocks3.png
+gems1	x	rocky/gemrocks1.png
+gems2	x	rocky/gemrocks2.png
+gems3	x	rocky/gemrocks3.png
+gems4	x	rocky/gemrocks4.png
 crater		rocky/crater.png
 bigcrater1	x	rocky/bigcrater1.png
 bigcrater2	x	rocky/bigcrater2.png
