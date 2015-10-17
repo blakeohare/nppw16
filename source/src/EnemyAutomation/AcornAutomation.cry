@@ -1,69 +1,81 @@
-ACORN_SPEED = 1.5
-ACORN_DELAY_FOR_TOP_THROWING = 5 * 30
-class AcornAutomation:
-	def __init__(self, sprite):
-		self.sprite = sprite
-		self.countdown = int(random.random() * ACORN_DELAY_FOR_TOP_THROWING)
-		self.mode = 'patrolling' # patrolling | throwing | baldpatrolling
-		self.top = None
-		self.walkingLeft = True
+ACORN_SPEED = 1.5;
+ACORN_DELAY_FOR_TOP_THROWING = 5 * 30;
+
+class AcornAutomation {
+	constructor(sprite) {
+		this.sprite = sprite;
+		this.countdown = $floor($random() * ACORN_DELAY_FOR_TOP_THROWING);
+		this.mode = 'patrolling'; // patrolling | throwing | baldpatrolling
+		this.top = null;
+		this.walkingLeft = true;
+	}
 	
-	def doStuff(self, scene):
-		self.countdown -= 1
-		walk = False
-		if self.mode == 'patrolling':
-			if self.countdown <= 0:
-				self.mode = 'throwing'
-				self.top = Sprite('acorntop', self.sprite.x, self.sprite.y)
-				self.top.acorntopdir = self.sprite.lastDirection
-				self.top.goLeft = self.top.acorntopdir == 'left'
-				self.top.automation.setGoLeft(self.sprite.lastDirection == 'left')
-				self.top.automation.setGoUp(self.sprite.y > scene.player.y)
-				self.top.automation.body = self.sprite
-				self.top.deleteWhenOffScreen = True
-				self.top.ghost = True
-				self.top.floats = True
-				self.sprite.spawns = [self.top]
-			else:
-				walk = True
-		elif self.mode == 'throwing':
-			if self.top.dead:
-				self.mode = 'baldpatrolling'
-			elif self.top.automation.completed:
-				self.mode = 'patrolling'
-				self.top.dead = True
-				self.countdown = ACORN_DELAY_FOR_TOP_THROWING
-		elif self.mode == 'baldpatrolling':
-			walk = True
+	function doStuff(scene) {
+		this.countdown--;
+		walk = false;
+		if (this.mode == 'patrolling') {
+			if (this.countdown <= 0) {
+				this.mode = 'throwing';
+				this.top = new Sprite('acorntop', this.sprite.x, this.sprite.y);
+				this.top.acorntopdir = this.sprite.lastDirection;
+				this.top.goLeft = this.top.acorntopdir == 'left';
+				this.top.automation.setGoLeft(this.sprite.lastDirection == 'left');
+				this.top.automation.setGoUp(this.sprite.y > scene.player.y);
+				this.top.automation.body = this.sprite;
+				this.top.deleteWhenOffScreen = true;
+				this.top.ghost = true;
+				this.top.floats = true;
+				this.sprite.spawns = [this.top];
+			} else {
+				walk = true;
+			}
+		} else if (this.mode == 'throwing') {
+			if (this.top.dead) {
+				this.mode = 'baldpatrolling';
+			} else if (this.top.automation.completed) {
+				this.mode = 'patrolling';
+				this.top.dead = true;
+				this.countdown = ACORN_DELAY_FOR_TOP_THROWING;
+			}
+		} else if (this.mode == 'baldpatrolling') {
+			walk = true;
+		}
 		
-		if walk:
-			if self.sprite.collidedWall:
-				self.walkingLeft = not self.walkingLeft
+		if (walk) {
+			if (this.sprite.collidedWall) {
+				this.walkingLeft = !this.walkingLeft;
+			}
 			
-			tiles = scene.tiles
-			cols = scene.cols
-			rows = scene.rows
-			dx = ACORN_SPEED if self.walkingLeft else -ACORN_SPEED
-			oldTileX = int(self.sprite.modelX / 16)
-			newX = self.sprite.modelX + dx
-			oldTileY = int(self.sprite.modelY / 16)
-			newTileX = int(newX / 16)
-			if newTileX < 0 or newTileX >= cols:
-				self.walkingLeft = not self.walkingLeft
-				return
+			tiles = scene.tiles;
+			cols = scene.cols;
+			rows = scene.rows;
+			dx = this.walkingLeft ? ACORN_SPEED : -ACORN_SPEED; // TODO: isn't this backwards?
+			oldTileX = $floor(this.sprite.modelX / 16);
+			newX = this.sprite.modelX + dx;
+			oldTileY = $floor(this.sprite.modelY / 16);
+			newTileX = $floor(newX / 16);
+			if (newTileX < 0 || newTileX >= cols) {
+				this.walkingLeft = !this.walkingLeft;
+				return;
+			}
 			
-			belowTileY = oldTileY + 1
+			belowTileY = oldTileY + 1;
 			
-			if newTileX == oldTileX:
-				self.sprite.dx = dx
-			else:
-				if belowTileY < 0 or belowTileY >= rows:
-					pass
-				t = tiles[newTileX][belowTileY]
-				if not t.solid and not t.isTop:
-					self.walkingLeft = not self.walkingLeft
-					pass
-				else:
-					self.sprite.dx = dx
+			if (newTileX == oldTileX) {
+				this.sprite.dx = dx;
+			} else {
+				if (belowTileY < 0 || belowTileY >= rows) {
+					// TODO: remove this? why was this if statement here?
+				}
+				t = tiles[newTileX][belowTileY];
+				if (!t.solid && !t.isTop) {
+					this.walkingLeft = !this.walkingLeft;
+				} else {
+					this.sprite.dx = dx;
+				}
+			}
 			
-			# TODO: walk back and forth, but don't fall off.
+			// TODO: walk back and forth, but don't fall off.
+		}
+	}
+}

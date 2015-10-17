@@ -1,84 +1,102 @@
-class TitleScene:
-	def __init__(self):
-		self.next = self
-		self.flags = ''
-		self.flash_counter = 0
-		self.options = [
-			('start', 'Start Game'),
-			('password', "Enter Password"),
-			('joystick', "Configure Game Pad")]
-		self.index = 0
-			
-	def processInput(self, events, pressedKeys):
-		for event in events:
-			if self.flash_counter < 0:
-				if event.down:
-					if event.action in ['start', 'A', 'B']:
-						self.flash_counter = 30
-						playNoise('menu_select')
-					elif event.action == 'up':
-						if self.index > 0:
-							self.index -= 1
-							playNoise('menu_move')
-					elif event.action == 'down':
-						if self.index < 2:
-							self.index += 1
-							playNoise('menu_move')
-					
+class TitleScene {
+	constructor() {
+		this.next = this;
+		this.flags = '';
+		this.flash_counter = 0;
+		this.options = [
+			['start', 'Start Game'],
+			['password', "Enter Password"],
+			['joystick', "Configure Game Pad"]];
+		this.index = 0;
+	}
 	
-	def update(self):
-		self.flash_counter -= 1
-		if self.flash_counter == 1:
-			action = self.options[self.index][0]
-			if action == 'start':
-				self.next = IntroScene()
-			elif action == 'password':
-				self.next = PasswordScene()
-			elif action == 'joystick':
-				self.next = JoystickMenuScene()
-			else:
-				pass # Assert! or something.
+	function processInput(events, pressedKeys) {
+		for (event : events) {
+			if (this.flash_counter < 0) {
+				if (event.down) {
+					switch (event.action) {
+						case 'start':
+						case 'A':
+						case 'B':
+							this.flash_counter = 30;
+							playNoise('menu_select');
+							break;
+						
+						case 'up':
+							if (this.index > 0) {
+								this.index--;
+								playNoise('menu_move');
+							}
+							break;
+						
+						case 'down':
+							if (this.index < 2) {
+								this.index++;
+								playNoise('menu_move');
+							}
+							break;
+						default:
+							break;
+					}
+				}
+			}
+		}
+	}
 	
-	def render(self, screen, renderCounter):
+	function update() {
+		this.flash_counter--;
+		if (this.flash_counter == 1) {
+			action = this.options[this.index][0];
+			if (action == 'start')
+				this.next = new IntroScene();
+			else if (action == 'password')
+				this.next = new PasswordScene();
+			else if (action == 'joystick')
+				this.next = new JoystickMenuScene();
+			else
+				$assert(false, "Unknown option");
+		}
+	}
+	
+	function render(renderCounter) {
+		JUKEBOX.ensureSong('title');
 		
-		JUKEBOX.ensureSong('title')
+		$gfx_fill_screen(0, 0, 0);
 		
-		screen.fill((0, 0, 0))
-		pygame.draw.rect(screen, (0, 128, 255), pygame.Rect(10, 10, 50, 50))
+		$gfx_blit_image(IMAGES.get('slides/title.png'), 0, 0);
 		
-		img = renderText((255, 255, 255), "Hello, World!")
-		screen.blit(img, (100, 100))
+		showText = true; // (renderCounter // 10) % 3 != 0;
+		if ( this.flash_counter > 0)
+			showText = renderCounter % 4 < 2;
 		
-		screen.fill((0, 0, 0))
-		screen.blit(getImage('slides/title.png'), (0, 0))
+		index = 0;
+		y = 136;
+		left = 64;
 		
-		showText = True #(renderCounter // 10) % 3 != 0
-		if self.flash_counter > 0:
-			showText = renderCounter % 4 < 2
+		drawBox(left - 32, y - 16, 24, 9);
 		
-		index = 0
-		y = 136
-		left = 64
-		
-		drawBox(screen, left - 32, y - 16, 24, 9)
-		
-		for option in self.options:
+		for (option : this.options) {
 			
-			if index == self.index:
-				screen.blit(getText((255, 255, 255), ">"), (left - 16, y))
+			if (index == this.index)
+				drawText(255, 255, 255, ">", left - 16, y);
 			
-			if index != self.index or showText:
-				screen.blit(getText((255, 255, 255), option[1]), (left, y))
+			if (index != this.index || showText)
+				drawText(255, 255, 255, option[1], left, y);
 			
-			index += 1
-			y += 16
+			index++;
+			y += 16;
+		}
 		
-		y += 32
-		active_js = getText((128, 128, 128), "Active joystick: ")
-		screen.blit(active_js, (8, y))
-		x = 8 + active_js.get_width()
-		if active_joystick == None:
-			js_name = getText((255, 0, 0), "None")
-		else:
-			js_name = getText((255, 255, 255), active_joystick)
-		screen.blit(js_name, (x, y))
+		if (JOYSTICKS_ENABLED) {
+			y += 32;
+			active_joystick_text = "Active joystick:";
+			drawText(128, 128, 128, active_joystick_text, 8, y);
+			x = (active_joystick_text.length + 1) * 8;
+			if (active_joystick == null) {
+				drawText(255, 0, 0, "None", x, y);
+			} else {
+				drawText(255, 255, 255, active_joystick, x, y);
+			}
+		}
+	}
+}

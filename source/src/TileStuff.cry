@@ -1,213 +1,244 @@
-_tileStore = {}
-def getTile(id):
-	if len(_tileStore) == 0:
-		initTileStore()
+_tileStore = {};
+function getTile(id) {
+	if (_tileStore.length == 0) {
+		initTileStore();
+	}
 	
-	return _tileStore.get(id)
+	return _tileStore.get(id, null);
+}
 
-def initTileStore():
-	c = open('images/tiles/manifest.txt'.replace('/', os.sep), 'rt')
-	t = c.read()
-	c.close()
+function initTileStore() {
+	t = $resource_read_text('images/tiles/manifest.txt');
 	
-	for line in t.split('\n'):
-		parts = trim(line.split('#')[0]).split('\t')
-		if len(parts) == 3:
-			id = trim(parts[0])
-			flags = trim(parts[1])
-			imagePaths = trim(parts[2]).split(',')
+	for (line : t.split('\n')) {
+		parts = line.split('#')[0].trim().split('\t');
+		if (parts.length == 3) {
+			id = parts[0].trim();
+			flags = parts[1].trim();
+			imagePaths = parts[2].trim().split(',');
 			
-			tile = TileTemplate(id, flags, imagePaths)
-			_tileStore[id] = tile
-			
-		
-class TileTemplate:
-	def __init__(self, id, flags, imagePaths):
-		self.id = id
-		self.solid = False
-		self.coveredA = False
-		self.coveredB = False
-		self.coveredC = False
-		self.coveredD = False
-		self.isDoor = False
-		self.isLadder = False
-		self.isTop = False
-		self.isWater = id in ('water', 'watertop')
-		self.isSpike = False
-		self.isLava = False
-		self.isIce = False
-		self.isBalloon = False
-		self.primaryBalloonOffset = None # Location of top-middle balloon tile relative to this
+			tile = new TileTemplate(id, flags, imagePaths);
+			_tileStore[id] = tile;
+		}
+	}
+}
 
-		for flag in flags:
-			if flag == 'x':
-				self.solid = True
-			elif flag == 'A':
-				self.coveredA = True
-			elif flag == 'B':
-				self.coveredB = True
-			elif flag == 'C':
-				self.coveredC = True
-			elif flag == 'D':
-				self.coveredD = True
-			elif flag == 'r' or flag == 'R':
-				self.isDoor = True
-			elif flag == 'L':
-				self.isLadder = True
-			elif flag == 'J':
-				self.isTop = True
-			elif flag == 'S':
-				self.isSpike = True
-			elif flag == 'V':
-				self.isLava = True
-			elif flag == 'I':
-				self.isIce = True
-			elif flag == 'o':
-				self.isBalloon = True
-				bid = int(id[-1])
-				pOffset = (0, 0)
-				if bid == 1:
-					pOffset = (1, 0)
-				elif bid == 3:
-					pOffset = (-1, 0)
-				elif bid == 4:
-					pOffset= (1, -1)
-				elif bid == 5:
-					pOffset = (0, -1)
-				elif bid == 6:
-					pOffset = (-1, -1)
-				self.primaryBalloonOffset = pOffset
-		self.images = []
-		for path in imagePaths:
-			self.images.append(getImage('tiles/' + path))
-		self.staticImage = None
-		if len(self.images) == 1:
-			self.staticImage = self.images[0]
-		self.imageCount = len(self.images)
+class TileTemplate {
+	constructor(id, flags, imagePaths) {
+		this.id = id;
+		this.solid = false;
+		this.coveredA = false;
+		this.coveredB = false;
+		this.coveredC = false;
+		this.coveredD = false;
+		this.isDoor = false;
+		this.isLadder = false;
+		this.isTop = false;
+		this.isWater = id == 'water' || id == 'watertop';
+		this.isSpike = false;
+		this.isLava = false;
+		this.isIce = false;
+		this.isBalloon = false;
+		this.primaryBalloonOffset = null; // Location of top-middle balloon tile relative to this
+
+		for (flag : flags) {
+			switch (flag) {
+				case 'x':
+					this.solid = true;
+					break;
+				case 'A':
+					this.coveredA = true;
+					break;
+				case 'B':
+					this.coveredB = true;
+					break;
+				case 'C':
+					this.coveredC = true;
+					break;
+				case 'D':
+					this.coveredD = true;
+					break;
+				case 'r':
+				case 'R':
+					this.isDoor = true;
+					break;
+				case 'L':
+					this.isLadder = true;
+					break;
+				case 'J':
+					this.isTop = true;
+					break;
+				case 'S':
+					this.isSpike = true;
+					break;
+				case 'V':
+					this.isLava = true;
+					break;
+				case 'I':
+					this.isIce = true;
+					break;
+				case 'o':
+					this.isBalloon = true;
+					bid = $parse_int(id[-1]);
+					pOffset = [0, 0];
+					if (bid == 1) {
+						pOffset = [1, 0];
+					} else if (bid == 3) {
+						pOffset = [-1, 0];
+					} else if (bid == 4) {
+						pOffset= [1, -1];
+					} else if (bid == 5) {
+						pOffset = [0, -1];
+					} else if (bid == 6) {
+						pOffset = [-1, -1];
+					}
+					this.primaryBalloonOffset = pOffset;
+					break;
+				default:
+					break;
+			}
+		}
+					
+		this.images = [];
+		for (path : imagePaths) {
+			this.images.add(IMAGES.get('tiles/' + path));
+		}
+		this.staticImage = null;
+		if (this.images.length == 1) {
+			this.staticImage = this.images[0];
+		}
+		this.imageCount = this.images.length;
+	}
 	
-	def getImage(self, rc):
-		img = self.staticImage
-		if img == None:
-			return self.images[(rc // 4) % self.imageCount]
-		return img
+	function getImage(rc) {
+		return this.staticImage ?? this.images[(rc / 4) % this.imageCount];
+	}
+}
 
-def makeTile(lower, upper, col, row):
-	if lower == None and upper == None:
-		return Tile([], col, row)
-	if lower == None:
-		return Tile([upper], col, row)
-	if upper == None:
-		return Tile([lower], col, row)
-	return Tile([lower, upper], col, row)
+function makeTile(lower, upper, col, row) {
+	if (lower == null && upper == null) {
+		return new Tile([], col, row);
+	}
+	
+	if (lower == null) {
+		return new Tile([upper], col, row);
+	}
+	
+	if (upper == null) {
+		return new Tile([lower], col, row);
+	}
+	
+	return new Tile([lower, upper], col, row);
+}
 
-class Tile:
-	def __init__(self, templates, col, row):
-		self.col = col
-		self.row = row
-		self.originalTemplates = templates
-		self.templates = []
-		self.isDoor = False
-		self.isLadder = False
-		self.isTop = False
-		self.isLava = False
-		self.isWater = False
-		self.isIce = False
-		self.door = None
-		self.isSpike = False
-		self.isBalloon = False
-		self.primaryBalloonOffset = None
+class Tile {
+	constructor(templates, col, row) {
+		this.col = col;
+		this.row = row;
+		this.originalTemplates = templates;
+		this.templates = [];
+		this.isDoor = false;
+		this.isLadder = false;
+		this.isTop = false;
+		this.isLava = false;
+		this.isWater = false;
+		this.isIce = false;
+		this.door = null;
+		this.isSpike = false;
+		this.isBalloon = false;
+		this.primaryBalloonOffset = null;
 		
-		for tile in templates:
-			if tile != None:
-				self.templates.append(tile)
-				if tile.isDoor:
-					self.isDoor = True
-				if tile.isLadder:
-					self.isLadder = True
-				if tile.isTop:
-					self.isTop = True
-				if tile.isWater:
-					self.isWater = True
-				if tile.isSpike:
-					self.isSpike = True
-				if tile.isLava:
-					self.isLava = True
-				if tile.isIce:
-					self.isIce = True
-				if tile.isBalloon:
-					self.isBalloon = True
-					self.primaryBalloonOffset = tile.primaryBalloonOffset
+		for (tile : templates) {
+			if (tile != null) {
+				this.templates.add(tile);
+				if (tile.isDoor) this.isDoor = true;
+				if (tile.isLadder) this.isLadder = true;
+				if (tile.isTop) this.isTop = true;
+				if (tile.isWater) this.isWater = true;
+				if (tile.isSpike) this.isSpike = true;
+				if (tile.isLava) this.isLava = true;
+				if (tile.isIce) this.isIce = true;
+				if (tile.isBalloon) {
+					this.isBalloon = true;
+					this.primaryBalloonOffset = tile.primaryBalloonOffset;
+				}
+			}
+		}
 		
-		self.collisions = []
-		self.solid = False
+		this.collisions = [];
+		this.solid = false;
 		
-		coveredA = False
-		coveredB = False
-		coveredC = False
-		coveredD = False
+		coveredA = false;
+		coveredB = false;
+		coveredC = false;
+		coveredD = false;
 		
-		for t in self.templates:
-			if t.solid:
-				coveredA = True
-				coveredB = True
-				coveredC = True
-				coveredD = True
-				self.solid = True
-			else:
-				coveredA = coveredA or t.coveredA
-				coveredB = coveredB or t.coveredB
-				coveredC = coveredC or t.coveredC
-				coveredD = coveredD or t.coveredD
+		for (t : this.templates) {
+			if (t.solid) {
+				coveredA = true;
+				coveredB = true;
+				coveredC = true;
+				coveredD = true;
+				this.solid = true;
+			} else {
+				coveredA = coveredA || t.coveredA;
+				coveredB = coveredB || t.coveredB;
+				coveredC = coveredC || t.coveredC;
+				coveredD = coveredD || t.coveredD;
+			}
+		}
 		
-		leftCovered = coveredA and coveredC
-		rightCovered = coveredB and coveredD
-		topCovered = coveredA and coveredB
-		bottomCovered = coveredC and coveredD
+		leftCovered = coveredA && coveredC;
+		rightCovered = coveredB && coveredD;
+		topCovered = coveredA && coveredB;
+		bottomCovered = coveredC && coveredD;
 		
-		if leftCovered and rightCovered:
-			self.collisions.append([0, 0, 2, 2])
-			coveredA = False
-			coveredB = False
-			coveredC = False
-			coveredD = False
-			self.solid = True
-		elif leftCovered:
-			self.collisions.append([0, 0, 1, 2])
-			coveredA = False
-			coveredC = False
-		elif rightCovered:
-			self.collisions.append([1, 0, 1, 2])
-			coveredB = False
-			coveredD = False
-		elif topCovered:
-			self.collisions.append([0, 0, 2, 1])
-			coveredA = False
-			coveredB = False
-		elif bottomCovered:
-			self.collisions.append([0, 1, 2, 1])
-			coveredC = False
-			coveredD = False
+		if (leftCovered && rightCovered) {
+			this.collisions.add([0, 0, 2, 2]);
+			coveredA = false;
+			coveredB = false;
+			coveredC = false;
+			coveredD = false;
+			this.solid = true;
+		} else if (leftCovered) {
+			this.collisions.add([0, 0, 1, 2]);
+			coveredA = false;
+			coveredC = false;
+		} else if (rightCovered) {
+			this.collisions.add([1, 0, 1, 2]);
+			coveredB = false;
+			coveredD = false;
+		} else if (topCovered) {
+			this.collisions.add([0, 0, 2, 1]);
+			coveredA = false;
+			coveredB = false;
+		} else if (bottomCovered) {
+			this.collisions.add([0, 1, 2, 1]);
+			coveredC = false;
+			coveredD = false;
+		}
 		
-		if coveredA:
-			self.collisions.append([0, 0, 1, 1])
-		if coveredB:
-			self.collisions.append([1, 0, 1, 1])
-		if coveredC:
-			self.collisions.append([0, 1, 1, 1])
-		if coveredD:
-			self.collisions.append([1, 1, 1, 1])
+		if (coveredA)
+			this.collisions.add([0, 0, 1, 1]);
+		if (coveredB)
+			this.collisions.add([1, 0, 1, 1]);
+		if (coveredC)
+			this.collisions.add([0, 1, 1, 1]);
+		if (coveredD)
+			this.collisions.add([1, 1, 1, 1]);
 		
-		i = 0
-		while i < len(self.collisions):
-			c = self.collisions[i]
-			c[0] = c[0] * 8 + col * 16
-			c[1] = c[1] * 8 + row * 16
-			c[2] = c[0] + c[2] * 8
-			c[3] = c[1] + c[3] * 8
-			self.collisions[i] = c
-			i += 1
+		for (i = 0; i < this.collisions.length; ++i) {
+			c = this.collisions[i];
+			c[0] = c[0] * 8 + col * 16;
+			c[1] = c[1] * 8 + row * 16;
+			c[2] = c[0] + c[2] * 8;
+			c[3] = c[1] + c[3] * 8;
+			this.collisions[i] = c;
+		}
 		
-		if self.solid:
-			self.isTop = False
-			self.isLadder = False
-		
+		if (this.solid) {
+			this.isTop = false;
+			this.isLadder = false;
+		}
+	}
+}

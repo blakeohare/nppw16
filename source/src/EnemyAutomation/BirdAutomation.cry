@@ -1,38 +1,47 @@
-class BirdAutomation:
-	def __init__(self, sprite, onBikeLevel):
-		sprite.isEnemy = True
-		self.counter = 0
-		self.mode = 'stalk' # 'right' | 'left'
-		self.sprite = sprite
-		self.bikeLevel = onBikeLevel
+class BirdAutomation {
+	constructor(sprite, onBikeLevel) {
+		sprite.isEnemy = true;
+		this.counter = 0;
+		this.mode = 'stalk'; // 'right' | 'left'
+		this.sprite = sprite;
+		this.bikeLevel = onBikeLevel;
+	}
 		
-	def doStuff(self, scene):
-		self.counter += 1
-		p = scene.player
-		sprite = self.sprite
-		if self.mode == 'stalk':
-			dy = p.y - self.sprite.y
+	function doStuff(scene) {
+		this.counter++;
+		p = scene.player;
+		sprite = this.sprite;
+		if (this.mode == 'stalk') {
+			dy = p.y - this.sprite.y;
 			
-			if abs(dy) < 6:
-				self.mode = 'right'
-			elif dy > 0:
-				self.sprite.dy += 3
-			else:
-				self.sprite.dy -= 3
-		elif self.mode == 'right':
-			if sprite.x < p.x:
-				sprite.dx = 6
-			else:
-				self.mode = 'left'
-		else: # mode == 'left'
-			spriteX = sprite.x
-			if self.bikeLevel:
-				spriteX -= self.counter * BIKE_SPEED
+			if ($abs(dy) < 6) {
+				this.mode = 'right';
+			} else if (dy > 0) {
+				this.sprite.dy += 3;
+			} else {
+				this.sprite.dy -= 3;
+			}
+		} else if (this.mode == 'right') {
+			if (sprite.x < p.x) {
+				sprite.dx = 6;
+			} else {
+				this.mode = 'left';
+			}
+		} else { // mode == 'left'
+			spriteX = sprite.x;
+			if (this.bikeLevel) {
+				spriteX -= this.counter * BIKE_SPEED;
+			}
 			
-			if spriteX > 7:
-				sprite.dx = -6
-			else:
-				self.mode = 'stalk'
+			if (spriteX > 7) {
+				sprite.dx = -6;
+			} else {
+				this.mode = 'stalk';
+			}
+		}
 		
-		if self.bikeLevel:
-			sprite.dx += BIKE_SPEED
+		if (this.bikeLeve) {
+			sprite.dx += BIKE_SPEED;
+		}
+	}
+}

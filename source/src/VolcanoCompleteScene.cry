@@ -1,23 +1,27 @@
-class VolcanoCompleteScene:
-	def __init__(self, scene, context):
-		self.next = self
-		self.flags = ''
-		self.bg = scene
-		self.context = context
-		self.counter = 0
-		self.player = scene.player
+class VolcanoCompleteScene {
+	constructor(scene, context) {
+		this.next = this;
+		this.flags = '';
+		this.bg = scene;
+		this.context = context;
+		this.counter = 0;
+		this.player = scene.player;
+	}
 	
-	def processInput(self, events, pressed):
-		pass
+	function processInput(events, pressed) { }
 	
-	def update(self):
-		self.counter += 1
-		if self.counter == 20:
-			self.next = DialogScene(self, 'Volcano', False)
+	function update() {
+		this.counter++;
+		if (this.counter == 20) {
+			this.next = new DialogScene('Volcano', false);
+		}
 		
-		if self.counter == 30:
-			self.next = PlayScene('ship_1', 8, 9, self.context)
-		
-	def render(self, screen, rc):
-		self.bg.render(screen, rc)
+		if (this.counter == 30) {
+			this.next = new PlayScene('ship_1', 8, 9, this.context);
+		}
+	}
 	
+	function render(rc) {
+		this.bg.render(rc);
+	}
+}

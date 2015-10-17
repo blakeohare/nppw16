@@ -1,84 +1,102 @@
-class JoystickConfigScreen:
-	def __init__(self, js_index, bg):
-		self.bg = bg
-		self.bg.next = self.bg
-		self.js_index = js_index
-		self.next = self
-		self.flags = ''
-		self.buttons = 'left right up down A B start'.split(' ')
-		self.phase = 0
-		self.configs_taken = {}
-		self.config = {}
+class JoystickConfigScreen {
+	constructor(js_index, bg) {
+		this.bg = bg;
+		this.bg.next = this.bg;
+		this.js_index = js_index;
+		this.next = this;
+		this.flags = '';
+		this.buttons = 'left right up down A B start'.split(' ');
+		this.phase = 0;
+		this.configs_taken = {};
+		this.config = {};
+	}
 	
-	def processInput(self, events, pressed):
-		pass
+	function processInput(events, pressed) { }
 	
-	def update(self):
-		if self.phase < len(self.buttons):
-			if self.do_poll():
-				self.phase += 1
+	function update() {
+		if (this.phase < this.buttons.length) {
+			if (this.do_poll()) {
+				this.phase++;
+			}
+		}
 		
-		if self.phase == len(self.buttons):
-			name = joystick_instances[self.js_index].get_name()
-			cached_joysticks[name] = self.config
-			set_active_joystick(name)
-			serialize_joystick_config()
-			self.next = TitleScene()
+		if (this.phase == this.buttons.length) {
+			name = joystick_instances[this.js_index].get_name();
+			cached_joysticks[name] = this.config;
+			set_active_joystick(name);
+			serialize_joystick_config();
+			this.next = new TitleScene();
+		}
+	}
 	
-	def do_poll(self):		
-		button = self.buttons[self.phase]
-		js = joystick_instances[self.js_index]
+	function do_poll() {
+		button = this.buttons[this.phase];
+		js = joystick_instances[this.js_index];
 		
-		for i in range(js.get_numbuttons()):
-			if js.get_button(i):
-				key = 'B' + str(i)
-				if not self.configs_taken.get(key, False):
-					self.configs_taken[key] = True
-					self.config[button] = ('B', i)
-					return True
+		for (i = 0; i < js.get_numbuttons(); ++i) {
+			if (js.get_button(i)) {
+				key = 'B' + i;
+				if (!this.configs_taken.get(key, false)) {
+					this.configs_taken[key] = true;
+					this.config[button] = ['B', i];
+					return true;
+				}
+			}
+		}
 		
-		for i in range(js.get_numaxes()):
-			value = js.get_axis(i)
-			if value > 0.5:
-				key = "A" + str(i) + '+'
-				if not self.configs_taken.get(key, False):
-					self.configs_taken[key] = True
-					self.config[button] = ('A', i, True)
-					return True
-			elif value < -0.5:
-				key = "A" + str(i) + '-'
-				if not self.configs_taken.get(key, False):
-					self.configs_taken[key] = True
-					self.config[button] = ('A', i, False)
-					return True
+		for (i = 0; i < js.get_numaxes(); ++i) {
+			value = js.get_axis(i);
+			if (value > 0.5) {
+				key = "A" + i + '+';
+				if (!this.configs_taken.get(key, false)) {
+					this.configs_taken[key] = true;
+					this.config[button] = ['A', i, true];
+					return true;
+				}
+			} else if (value < -0.5) {
+				key = "A" + i + '-';
+				if (!this.configs_taken.get(key, false)) {
+					this.configs_taken[key] = true;
+					this.config[button] = ['A', i, false];
+					return true;
+				}
+			}
+		}
 		
-		for i in range(js.get_numhats()):
-			value = js.get_hat(i)
-			for j in (0, 1):
-				if value[j] == 1:
-					key = 'H' + str(i) + "|" + str(j) + "+"
-					if not self.configs_taken.get(key, False):
-						self.configs_taken[key] = True
-						self.config[button] = ('H', i, j, True)
-						return True
-				elif value[j] == -1:
-					key = 'H' + str(i) + "|" + str(j) + '-'
-					if not self.configs_taken.get(key, False):
-						self.configs_taken[key] = True
-						self.config[button] = ('H', i, j, False)
-						return True
-		return False
+		for (i = 0; i < js.get_numhats(); ++i) {
+			value = js.get_hat(i);
+			for (j : [0, 1]) {
+				if (value[j] == 1) {
+					key = 'H' + i + "|" + j + "+";
+					if (!this.configs_taken.get(key, false)) {
+						this.configs_taken[key] = true;
+						this.config[button] = ['H', i, j, true];
+						return true;
+					}
+				} else if (value[j] == -1) {
+					key = 'H' + i + "|" + j + '-';
+					if (!this.configs_taken.get(key, false)) {
+						this.configs_taken[key] = true;
+						this.config[button] = ['H', i, j, false];
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
 	
-	def render(self, screen, rc):
-		self.bg.render(screen, rc)
-		drawBox(screen, 40, 64, 20, 15)
+	function render(rc) {
+		this.bg.render(rc);
+		drawBox(40, 64, 20, 15);
 		
-		if self.phase < len(self.buttons):
-			button = self.buttons[self.phase]
-			txt = getText((255, 255, 255), "Press " + button)
-			screen.blit(txt, (40 + 16, 64 + 16))
-			img_name = button.lower()
-			if ((rc // 6) % 2) == 0:
-				img_name = 'none'
-			screen.blit(getImage('misc/nes_' + img_name + '.png'), (40 + 16, 64 + 32))
-			
+		if (this.phase < this.buttons.length) {
+			button = this.buttons[this.phase];
+			drawText(255, 255, 255, "Press " + button, 40 + 16, 64 + 16);
+			img_name = button.lower();
+			if (((rc / 6) % 2) == 0)
+				img_name = 'none';
+			$gfx_blit_image(IMAGES.get('misc/nes_' + img_name + '.png'), 40 + 16, 64 + 32);
+		}
+	}
+}

@@ -1,109 +1,127 @@
-FPS = 30
-WIDTH = int(256 * 3.4)
-HEIGHT = 224 * 3
+FPS = 30;
+WIDTH = $floor(256 * 3.4);
+HEIGHT = $floor(224 * 3);
 
-DEBUG = {'counter':0}
-BLACK = (0, 0, 0)
-def main():
-	pygame.init()
+GAME_WIDTH = 256;
+GAME_HEIGHT = 224;
 
-	configureJoysticksFromFile()
-	getJoysticksPresent()	
-	if joysticks_present.get(previous_active_joystick) != None:
-		set_active_joystick(previous_active_joystick)
-	real_screen = pygame.display.set_mode((WIDTH, HEIGHT))
-	virtual_screen = pygame.Surface((256, 224))
-	
-	activeScene = OpeningScene()
-	renderCounter = 0
+DEBUG = { 'counter': 0 };
+BLACK = [0, 0, 0];
 
-	pygame.display.set_caption("Space Squirrel")
-	ico = getImage('sprites/space_overworld_right_2.png')
-	ico = pygame.transform.scale2x(ico)
-	pygame.display.set_icon(ico)
+class Object {
+	constructor() { }
+}
+
+DEBUG_MODE = false;
+JOYSTICKS_ENABLED = false;
+SOUND_ENABLED = false;
+
+import 'src/Util.cry';
+
+import 'src/EnemyAutomation/init.cry';
+import 'src/SpecialLevelStuff/init.cry';
+import 'src/SpriteRenderers/init.cry';
+
+import 'src/Backgrounds.cry';
+import 'src/Context.cry';
+import 'src/CreditsScene.cry';
+import 'src/DeathOverrideScene.cry';
+import 'src/DeathScene.cry';
+import 'src/Dialogs.cry';
+import 'src/DialogScene.cry';
+import 'src/GameOverScene.cry';
+import 'src/ImageLibrary.cry';
+import 'src/IntroScene.cry';
+import 'src/JoystickConfigScreen.cry';
+import 'src/JoystickMenuScene.cry';
+import 'src/JukeBox.cry';
+import 'src/MapParser.cry';
+import 'src/OpeningScene.cry';
+import 'src/PasswordScene.cry';
+import 'src/PauseScene.cry';
+import 'src/PlayScene.cry';
+import 'src/ReadyScene.cry';
+import 'src/Sound.cry';
+import 'src/Sprite.cry';
+import 'src/Text.cry';
+import 'src/TileStuff.cry';
+import 'src/TitleScene.cry';
+import 'src/VictorySequenceScene.cry';
+import 'src/VolcanoCompleteScene.cry';
+
+
+function main() {
+	$game_initialize(FPS);
 	
-	pressedActions = {}
-	for action in 'left up down right A B start'.split():
-		pressedActions[action] = False
+	if (JOYSTICKS_ENABLED) {
+		configureJoysticksFromFile();
+		getJoysticksPresent();
+		
+		if (joysticks_present.get(previous_active_joystick, null) != null) {
+			set_active_joystick(previous_active_joystick);
+		}
+	}
 	
-	while activeScene != None:
-		begin = time.time()
-		events = []
+	$game_initialize_screen_scaled(256, 224, WIDTH, HEIGHT);
+	
+	activeScene = new OpeningScene();
+	renderCounter = 0;
+
+	$game_set_title("Space Squirrel");
+	//ico = getImage('sprites/space_overworld_right_2.png')
+	//ico = pygame.transform.scale2x(ico)
+	//pygame.display.set_icon(ico)
+	
+	pressedActions = {};
+	for (action : 'left up down right A B start'.split(' ')) {
+		pressedActions[action] = false;
+	}
+	
+	events = [];
+	while (activeScene != null) {
+		events.clear();
+		if (JOYSTICKS_ENABLED) {
+			poll_active_joystick(events, pressedActions);
+		}
 		
-		poll_active_joystick(events, pressedActions)
+		quitAttempt = false;
 		
-		quitAttempt = False
-		pressedKeys = pygame.key.get_pressed()
-		altPressed = pressedKeys[pygame.K_LALT] or pressedKeys[pygame.K_RALT]
-		
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
-				quitAttempt = True
-				
-			if event.type == pygame.KEYDOWN and event.key == pygame.K_F4 and altPressed:
-				quitAttempt = True
-			
-			if event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:
-				down = event.type == pygame.KEYDOWN
-				if event.key == pygame.K_RETURN:
-					events.append(MyEvent('start', down))
-					pressedActions['start'] = down
-				elif event.key == pygame.K_LEFT:
-					events.append(MyEvent('left', down))
-					pressedActions['left'] = down
-				elif event.key == pygame.K_RIGHT:
-					events.append(MyEvent('right', down))
-					pressedActions['right'] = down
-				elif event.key == pygame.K_UP:
-					events.append(MyEvent('up', down))
-					pressedActions['up'] = down
-				elif event.key == pygame.K_DOWN:
-					events.append(MyEvent('down', down))
-					pressedActions['down'] = down
-				elif event.key == pygame.K_SPACE:
-					events.append(MyEvent('A', down))
-					pressedActions['A'] = down
-				elif event.key == pygame.K_b:
-					events.append(MyEvent('B', down))
-					pressedActions['B'] = down
-				elif event.key == pygame.K_F12 and down:
-					filename = 1
-					while os.path.exists('screencap_' + str(filename) + '.jpg'):
-						filename += 1
-					pygame.image.save(real_screen, 'screencap_' + str(filename) + '.jpg')
+		for (event : $game_pump_events()) {
+			if (event.is_quit) {
+				return;
+			} else if (event.is_key) {
+				down = event.down;
+				action = null;
+				switch (event.key) {
+					case 'enter': action = 'start'; break;
+					case 'a': action = 'A'; break;
+					case 'b': action = 'B'; break;
 					
-		if quitAttempt:
-			activeScene = None
-			
-		if activeScene != None:
-			largeScreen = 'W' in activeScene.flags
-			
-			activeScene.processInput(events, pressedActions)
-			activeScene.update()
-			if largeScreen:
-				activeScene.render(real_screen, renderCounter)
-			else:
-				activeScene.render(virtual_screen, renderCounter)
-			
-			activeScene = activeScene.next
-			
-			if not largeScreen:
-				pygame.transform.scale(virtual_screen, (WIDTH, HEIGHT), real_screen)
-			
-			pygame.display.flip()
+					case 'left':
+					case 'right':
+					case 'up':
+					case 'down':
+						action = event.key;
+						break;
+						
+					default: break;
+				}
+				if (action != null) {
+					ev = new Object();
+					ev.action = action;
+					ev.down = down;
+					ev.up = !down;
+					events.add(ev);
+					pressedActions[action] = down;
+				}
+			}
+		}
 		
-		renderCounter += 1
-		
-		end = time.time()
-		
-		diff = end - begin
-		
-		delay = 1.0 / FPS - diff
-		if delay > 0:
-			time.sleep(delay)
-		else:
-			if SHOW_FRAME_DROP:
-				print ("FRAME DROPPING:", 1.0 / diff, "FPS")
-		DEBUG['counter'] += 1
-
-main()
+		activeScene.processInput(events, pressedActions);
+		activeScene.update();
+		activeScene.render(renderCounter++);
+		activeScene = activeScene.next;
+		$game_clock_tick();
+	}
+}
+main();

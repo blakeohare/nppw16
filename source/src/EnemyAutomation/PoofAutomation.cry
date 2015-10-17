@@ -1,12 +1,15 @@
 
-class PoofAutomation:
-	def __init__(self, sprite, isBig):
-		self.sprite = sprite
-		self.counter = 0
-		self.isBig = isBig
-		
+class PoofAutomation {
+	constructor(sprite, isBig) {
+		this.sprite = sprite;
+		this.counter = 0;
+		this.isBig = isBig;
+	}	
 	
-	def doStuff(self, scene):
-		self.counter += 1
-		if self.counter == 15:
-			self.sprite.dead = True
+	function doStuff(scene) {
+		this.counter++;
+		if (this.counter == 15) {
+			this.sprite.dead = true;
+		}
+	}
+}

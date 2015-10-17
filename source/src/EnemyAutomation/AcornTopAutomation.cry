@@ -1,10 +1,10 @@
-ACORN_TOP_SPEED = 4.5
+ACORN_TOP_SPEED = 4.5;
 
-TRAIL = []
+TRAIL = [];
 
-# this is the best I can come up with off the top of my head. I'm sure there's a faster way to create a parametric function of the acorn top path
+// this is the best I can come up with off the top of my head. I'm sure there's a faster way to create a parametric function of the acorn top path
 
-ball = [0, 0]
+ball = [0, 0];
 
 waypoints = [
 	[-1, 0],
@@ -16,72 +16,78 @@ waypoints = [
 	[-1, -2],
 	[-0.4, -1.6],
 	[0, -1],
-	[0, -.5]]
+	[0, -.5]];
 
-v = ACORN_TOP_SPEED + 0.0
+v = ACORN_TOP_SPEED + 0.0;
 
-i = 0
-while i < len(waypoints):
+// TODO: use foreach loop?
+for (i = 0; i < waypoints.length; ++i) {
+	target = waypoints[i];
+	tx = target[0] * 16.0;
+	ty = target[1] * 16.0;
 	
-	target = waypoints[i]
-	tx = target[0] * 16.0
-	ty = target[1] * 16.0
-	
-	done = False
-	while not done:
-		dx = tx - ball[0]
-		dy = ty - ball[1]
-		distance = (dx ** 2 + dy ** 2) ** .5
-		if distance <= v:
-			done = True
-			TRAIL.append((tx, ty))
-			ball = [tx, ty]
-		else:
-			dx *= v / distance
-			dy *= v / distance
-			ball[0] += dx
-			ball[1] += dy
-			TRAIL.append((int(10 * ball[0]) / 10.0, int(10 * ball[1]) / 10.0))
-	i += 1
+	done = false;
+	while (!done) {
+		dx = tx - ball[0];
+		dy = ty - ball[1];
+		distance = (dx ** 2 + dy ** 2) ** .5;
+		if (distance <= v) {
+			done = true;
+			TRAIL.add([tx, ty]);
+			ball = [tx, ty];
+		} else {
+			dx *= v / distance;
+			dy *= v / distance;
+			ball[0] += dx;
+			ball[1] += dy;
+			TRAIL.add([$floor(10 * ball[0]) / 10.0, $floor(10 * ball[1]) / 10.0]);
+		}
+	}
+}
 
-
-class AcornTopAutomation:
-	def __init__(self, sprite):
-		self.sprite = sprite
-		self.trail = TRAIL[:]
-		self.trailIndex = 0
-		self.startX = sprite.modelX
-		self.startY = sprite.modelY
-		self.completed = False
+class AcornTopAutomation {
+	constructor(sprite) {
+		this.sprite = sprite;
+		this.trail = TRAIL.clone();
+		this.trailIndex = 0;
+		this.startX = sprite.modelX;
+		this.startY = sprite.modelY;
+		this.completed = false;
+	}
 	
-	def setGoLeft(self, goLeft):
-		self.goLeft = goLeft
-		self.xSign = 1 if self.goLeft else -1
+	function setGoLeft(goLeft) {
+		this.goLeft = goLeft;
+		this.xSign = this.goLeft ? 1 : -1;
+	}
 	
-	def setGoUp(self, goUp):
-		self.ySign = 1 if goUp else -1
+	function setGoUp(goUp) {
+		this.ySign = goUp ? 1 : -1;
+	}
 	
-	def doStuff(self, scene):
-		if self.trailIndex < len(self.trail):
+	function doStuff(scene) {
+		if (this.trailIndex < this.trail.length) {
 			
-			rawX = self.trail[self.trailIndex][0]
-			rawY = self.trail[self.trailIndex][1]
+			rawX = this.trail[this.trailIndex][0];
+			rawY = this.trail[this.trailIndex][1];
 			
-			rawX *= self.xSign
-			rawY *= self.ySign
+			rawX *= this.xSign;
+			rawY *= this.ySign;
 			
-			targetX = self.startX + rawX
-			targetY = self.startY + rawY
+			targetX = this.startX + rawX;
+			targetY = this.startY + rawY;
 			
-			dx = targetX - self.sprite.modelX
-			dy = targetY - self.sprite.modelY
+			dx = targetX - this.sprite.modelX;
+			dy = targetY - this.sprite.modelY;
 			
-			self.sprite.dx = dx
-			self.sprite.dy = dy
+			this.sprite.dx = dx;
+			this.sprite.dy = dy;
 			
-			self.trailIndex += 1
-		else:
-			if self.completed:
-				self.sprite.dead = True
-			self.completed = True
-				
+			this.trailIndex++;
+		} else {
+			if (this.completed) {
+				this.sprite.dead = true;
+			}
+			this.completed = true;
+		}
+	}
+}

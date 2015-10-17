@@ -178,19 +178,20 @@ DIALOGS = {
 		["Now her people have a",
 		 "beautiful new home, and",
 		 "it's all thanks to you!"]
-	]
+	],
+};
+
+tooBig = false;
+for (key : DIALOGS.keys()) {
+	for (stanza : DIALOGS[key]) {
+		for (line : stanza) {
+			if (line.length > 24) {
+				$print("The following line is too long in conversation '" + key + "':");
+				$print('    > ' + line);
+				tooBig = true;
+			}
+		}
+	}
 }
 
-tooBig = False
-for key in DIALOGS.keys():
-	for stanza in DIALOGS[key]:
-		for line in stanza:
-			if len(line) > 24:
-				print("The following line is too long in conversation '" + key + "':")
-				print('    >',line)
-				tooBig = True
-
-if tooBig:
-	print("Will divide by zero and crash until Satyrane fixes it.")
-	z = 1 / 0 # error
-				
+$assert(!tooBig, "Crash until Satyrane fixes it.");

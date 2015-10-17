@@ -1,50 +1,54 @@
-# TODO: intro slide show
+// TODO: intro slide show
 
-class IntroScene:
-	def __init__(self):
-		self.flags = ''
-		self.next = self
-		self.player = None # lol, pyweek hack
+class IntroScene {
+	constructor() {
+		this.flags = '';
+		this.next = this;
+		this.player = null; // lol, pyweek hack
 		
-		self.page = 0
-		self.pages = [
-			getImage('slides/open1.png'),
-			getImage('slides/open2.png'),
-			getImage('slides/open3.png')
-			]
+		this.page = 0;
+		this.pages = [
+			IMAGES.get('slides/open1.png'),
+			IMAGES.get('slides/open2.png'),
+			IMAGES.get('slides/open3.png')
+			];
 		
-		self.counter = 0
+		this.counter = 0;
+	}
 	
-	def processInput(self, events, pressedKeys):
-		pass 
+	function processInput(events, pressedKeys) { }
 	
-	def update(self):
-		if DEBUG_MODE:
-			self.next = self.getStartScene()
-			return
+	function update() {
+		if (DEBUG_MODE) {
+			this.next = this.getStartScene();
+			return;
+		}
 		
-		JUKEBOX.ensureSong('intro')
+		JUKEBOX.ensureSong('intro');
 		
-		self.counter += 1
+		this.counter++;
 		
-		if self.counter == 10:
-			self.next = DialogScene(self, 'Open1', False, True, True)
-		elif self.counter == 15:
-			self.page = 1
-		elif self.counter == 20:
-			self.next = DialogScene(self, 'Open2', False, True, True)
-		elif self.counter == 25:
-			self.page = 2
-		elif self.counter == 30:
-			self.next = DialogScene(self, 'Open3', False, True, False)
-		elif self.counter == 35:
-			self.next = self.getStartScene()
-		
-	def render(self, screen, rc):
-		screen.fill(BLACK)
-		screen.blit(self.pages[self.page], (0, 16))
+		if (this.counter == 10)
+			this.next = new DialogScene(this, 'Open1', false, true, true);
+		else if (this.counter == 15)
+			this.page = 1;
+		else if (this.counter == 20)
+			this.next = new DialogScene(this, 'Open2', false, true, true);
+		else if (this.counter == 25)
+			this.page = 2;
+		else if (this.counter == 30)
+			this.next = new DialogScene(this, 'Open3', false, true, false);
+		else if (this.counter == 35)
+			this.next = this.getStartScene();
+	}
 	
-	def getStartScene(self):
+	function render(rc) {
+		$gfx_fill_screen(0, 0, 0);
+		$gfx_blit_image(this.pages[this.page], 0, 16);
+	}
+	
+	function getStartScene() {
+		/*
 		if os.path.exists('fast_start.txt'):
 			c = open('fast_start.txt', 'rt')
 			t = c.read().split('\n')
@@ -92,5 +96,7 @@ class IntroScene:
 						c.balloonD = True
 				
 				return PlayScene(level, x, y, c)
-				
-		return PlayScene('ship_1', 8, 9, Context())
+		//*/
+		return new PlayScene('ship_1', 8, 9, new Context());
+	}
+}

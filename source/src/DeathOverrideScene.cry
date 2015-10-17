@@ -1,46 +1,55 @@
-class DeathOverrideScene:
-	# type = "lava", "collapse", "fall"
-	def __init__(self, bg, type):
-		self.bg = bg
-		self.context = bg.context
-		self.context.lifemeter = 0
-		self.flags = ''
-		self.next = self
-		self.type = type
-		self.counter = 0
-		self.bg.player.deathState = type
-		self.vy = -10
-		if type == 'fall':
-			self.vy = bg.player.vy
-		elif type == 'lava':
-			playNoise('lava_roast')
+class DeathOverrideScene {
+	// type = "lava", "collapse", "fall"
+	constructor(bg, type) {
+		this.bg = bg;
+		this.context = bg.context;
+		this.context.lifemeter = 0;
+		this.flags = '';
+		this.next = this;
+		this.type = type;
+		this.counter = 0;
+		this.bg.player.deathState = type;
+		this.vy = -10;
+		if (type == 'fall') {
+			this.vy = bg.player.vy;
+		} else if (type == 'lava') {
+			playNoise('lava_roast');
+		}
+	}	
 		
-		
-	def processInput(self, events, pressed):
-		pass # There is nothing you can do
+	function processInput(events, pressed) {
+		// There is nothing you can do
+	}
 	
-	def update(self):
-		
-		if self.counter == 0:
-			JUKEBOX.ensureSong('death')
+	function update() {
+		if (this.counter == 0) {
+			JUKEBOX.ensureSong('death');
+		}
 			
-		self.counter += 1
-		self.vy += 1
-		if self.type in ('lava', 'fall'):
-			self.bg.player.modelY += self.vy
-			self.bg.player.y = int(self.bg.player.modelY)
-			
-		if self.counter > 100:
-			self.context.lifemeter = 10
-			self.context.lives -= 1
-			if self.context.lives == 0:
-				self.context.lives = 3
-				self.next = GameOverScene(self.context)
-			else:
-				self.next = ReadyScene(self.bg, self.context)
-			# TODO: game over or beginning of same map at same door entrance
+		this.counter++;
+		this.vy++;
 		
+		if (this.type == 'lava' || this.type == 'fall') {
+			this.bg.player.modelY += this.vy;
+			this.bg.player.y = $floor(this.bg.player.modelY);
+		}
+			
+		if (this.counter > 100) {
+			this.context.lifemeter = 10;
+			this.context.lives--;
+			if (this.context.lives == 0) {
+				this.context.lives = 3;
+				this.next = new GameOverScene(this.context);
+			} else {
+				this.next = new ReadyScene(this.bg, this.context);
+			}
+			// TODO: game over or beginning of same map at same door entrance
+		}
+	}
 	
-	def render(self, screen, rc):
-		self.bg.render(screen, rc)
+	function render(rc) {
+		this.bg.render(rc);
+	}
+}
+
 	

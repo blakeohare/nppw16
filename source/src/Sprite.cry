@@ -1,8 +1,8 @@
-NEIGHBOR_RANGE = (-1, 0, 1)
+NEIGHBOR_RANGE = [-1, 0, 1];
 
-JUMPING_VY = -14
-RUN_JUMPING_VY = -16
-WATER_JUMPING_VY = -5
+JUMPING_VY = -14;
+RUN_JUMPING_VY = -16;
+WATER_JUMPING_VY = -5;
 
 SPRITE_HEIGHT = {
 	'player_side': 32,
@@ -19,548 +19,626 @@ SPRITE_HEIGHT = {
 	'moonsquid': 16,
 	'seed': 16,
 	'rocketbike': 32,
+};
+
+G = 0.7;
+STRONG_G = 1.55;
+WATER_G = 0.1;
+
+function getSpriteHeight(type) {
+	return SPRITE_HEIGHT.get(type, 16);
 }
 
-G = 0.7
-STRONG_G = 1.55
-WATER_G = 0.1
-
-def getSpriteHeight(type):
-	return SPRITE_HEIGHT.get(type, 16)
-
 XY_PAIRINGS = [
-	(0, 0),
-	(1, 0),
-	(2, 0),
-	(3, 0),
-	(4, 0),
-	(4, 1),
-	(4, 2),
-	(4, 3)
-]
+	[0, 0],
+	[1, 0],
+	[2, 0],
+	[3, 0],
+	[4, 0],
+	[4, 1],
+	[4, 2],
+	[4, 3]
+];
 
 ENEMY_TYPES = [
 	'acorn',
 	'acorntop'
-]
+];
 
-class Sprite:
-	def __init__(self, type, px, py):
-		self.type = type
-		self.isEnemy = False
-		self.height = getSpriteHeight(type)
-		self.x = px
-		self.y = py
-		self.modelX = px + 0.0
-		self.modelY = py + 0.0
-		self.xs = [None] * 5
-		self.ys = [None] * 5
-		self.vy = 0
+class Sprite {
+	constructor(type, px, py) {
+		this.type = type;
+		this.isEnemy = false;
+		this.height = getSpriteHeight(type);
+		this.x = px;
+		this.y = py;
+		this.modelX = px + 0.0;
+		this.modelY = py + 0.0;
+		this.xs = [null] * 5;
+		this.ys = [null] * 5;
+		this.vy = 0;
 		
-		self.moving = False
-		self.lastDirection = 'left'
-		self.onGround = False
-		self.neighbors = [None] * 36
-		self.spawns = None
-		self.dead = False
-		self.collidedWall = False
-		self.deleteWhenOffScreen = False
-		self.ghost = False
-		self.renderImpl = SPRITE_renderPlayerOver
-		self.automation = None
-		self.floats = False
-		self.deathState = None
-		self.sprinkle = False
-		self.isEnemy = type in ENEMY_TYPES
-		self.isBullet = type == 'lazor'
-		self.inBackground = False
-		self.bikemode = False
-		self.powerupInfo = None
-		if type == 'acorn':
-			self.renderImpl = SPRITE_renderAcorn
-			self.automation = AcornAutomation(self)
-		elif type == 'acorntop':
-			self.renderImpl = SPRITE_renderAcornTop
-			self.automation = AcornTopAutomation(self)
-			self.acorntopdir = 'left'
-		elif type == 'gravity_device':
-			self.renderImpl = SPRITE_renderGravityDevice
-			self.automation = None
-		elif type == 'lazor':
-			self.renderImpl = SPRITE_renderLazor
-			self.automation = LazorAutomation(self)
-		elif type == 'lavamonster':
-			self.renderImpl = SPRITE_renderLavaMonster
-			self.automation = LavaMonsterAutomation(self)
-			self.inBackground = True
-			self.floats = True
-			self.ghost = True
-		elif type == 'fireball':
-			self.renderImpl = SPRITE_renderFireball
-			self.automation = FireBallAutomation(self)
-			self.floats = True
-			# not a ghost, though. Collides with walls and that triggers it to fizzle.
-		elif type == 'waterpop':
-			self.renderImpl = SPRITE_renderWaterPop
-			self.automation = WaterPopAutomation(self)
-			self.floats = True
-		elif type == 'powerup':
-			self.renderImpl = SPRITE_renderPowerup
-			self.automation = PowerupAutomation(self)
-		elif type == 'poof_big':
-			self.renderImpl = SPRITE_renderPoof
-			self.automation = PoofAutomation(self, True)
-			self.floats = True
-		elif type == 'poof_small':
-			self.renderImpl = SPRITE_renderPoof
-			self.automation = PoofAutomation(self, False)
-			self.floats = True
-		elif type == 'byat':
-			self.renderImpl = SPRITE_renderByat
-			self.automation = ByatAutomation(self)
-			self.floats = True
-		elif type == 'moonsquid':
-			self.renderImpl = SPRITE_renderMoonSquid
-			self.automation = MoonSquidAutomation(self)
-			self.floats = True
-		elif type == 'seeds':
-			self.renderImpl = SPRITE_renderSeed
-			self.automation = SeedAutomation(self)
-		elif type == 'bird1':
-			self.renderImpl = SPRITE_renderBird
-			self.automation = BirdAutomation(self, False)
-			self.floats = True
-		elif type == 'bird2':
-			self.renderImpl = SPRITE_renderBird
-			self.automation = BirdAutomation(self, True)
-			self.floats = True
-			self.ghost = True
-		elif type == 'rocketbike':
-			self.renderImpl = SPRITE_renderRocketBike
-			self.automation = RocketBikeAutomation(self)
-			self.ghost = True
+		this.moving = false;
+		this.lastDirection = 'left';
+		this.onGround = false;
+		this.neighbors = [null] * 36;
+		this.spawns = null;
+		this.dead = false;
+		this.collidedWall = false;
+		this.deleteWhenOffScreen = false;
+		this.ghost = false;
+		this.renderImpl = SPRITE_renderPlayerOver;
+		this.automation = null;
+		this.floats = false;
+		this.deathState = null;
+		this.sprinkle = false;
+		this.isEnemy = ENEMY_TYPES.contains(type);
+		this.isBullet = type == 'lazor';
+		this.inBackground = false;
+		this.bikemode = false;
+		this.powerupInfo = null;
+		switch (type) {
+			case 'acorn':
+				this.renderImpl = SPRITE_renderAcorn;
+				this.automation = new AcornAutomation(this);
+				break;
+			case 'acorntop':
+				this.renderImpl = SPRITE_renderAcornTop;
+				this.automation = new AcornTopAutomation(this);
+				this.acorntopdir = 'left';
+				break;
+			case 'gravity_device':
+				this.renderImpl = SPRITE_renderGravityDevice;
+				this.automation = null;
+				break;
+			case 'lazor':
+				this.renderImpl = SPRITE_renderLazor;
+				this.automation = new LazorAutomation(this);
+				break;
+			case 'lavamonster':
+				this.renderImpl = SPRITE_renderLavaMonster;
+				this.automation = new LavaMonsterAutomation(this);
+				this.inBackground = true;
+				this.floats = true;
+				this.ghost = true;
+				break;
+			case 'fireball':
+				this.renderImpl = SPRITE_renderFireball;
+				this.automation = new FireBallAutomation(this);
+				this.floats = true;
+				// not a ghost, though. Collides with walls and that triggers it to fizzle.
+				break;
+			case 'waterpop':
+				this.renderImpl = SPRITE_renderWaterPop;
+				this.automation = new WaterPopAutomation(this);
+				this.floats = true;
+				break;
+			case 'powerup':
+				this.renderImpl = SPRITE_renderPowerup;
+				this.automation = new PowerupAutomation(this);
+				break;
+			case 'poof_big':
+				this.renderImpl = SPRITE_renderPoof;
+				this.automation = new PoofAutomation(this, true);
+				this.floats = true;
+				break;
+			case 'poof_small':
+				this.renderImpl = SPRITE_renderPoof;
+				this.automation = new PoofAutomation(this, false);
+				this.floats = true;
+				break;
+			case 'byat':
+				this.renderImpl = SPRITE_renderByat;
+				this.automation = new ByatAutomation(this);
+				this.floats = true;
+				break;
+			case 'moonsquid':
+				this.renderImpl = SPRITE_renderMoonSquid;
+				this.automation = new MoonSquidAutomation(this);
+				this.floats = true;
+				break;
+			case 'seeds':
+				this.renderImpl = SPRITE_renderSeed;
+				this.automation = new SeedAutomation(this);
+				break;
+			case 'bird1':
+				this.renderImpl = SPRITE_renderBird;
+				this.automation = new BirdAutomation(this, false);
+				this.floats = true;
+				break;
+			case 'bird2':
+				this.renderImpl = SPRITE_renderBird;
+				this.automation = new BirdAutomation(this, true);
+				this.floats = true;
+				this.ghost = true;
+				break;
+			case 'rocketbike':
+				this.renderImpl = SPRITE_renderRocketBike;
+				this.automation = new RocketBikeAutomation(this);
+				this.ghost = true;
+				break;
+			default:
+				break;
+		}
+		
+		this.dx = 0;
+		this.dy = 0;
+		this.iceVX = 0;
+		this.ddx = 0; // "damage dx", will stay set until you land on the ground or blink counter goes < 0
+		this.damageDir = null;
+		this.cling = false;
+		this.ladderDY = 0;
+		this.blinkCounter = -1;
+		this.cameFromIce = false;
+	}
+		
+	function checkNeighborCollision(scene, col, row, targetX, targetY) {
+		area_left = targetX - 5;
+		area_right = targetX + 5;
+		area_top = targetY - 5;
+		area_bottom = targetY + 5;
+		
+		width = scene.cols;
+		height = scene.rows;
+		left = col - 2;
+		right = col + 2;
+		top = row - 2;
+		bottom = row + 2;
+		if (left < 0) left = 0;
+		if (right >= width) right = width - 1;
+		if (top < 0) top = 0;
+		if (bottom >= height) bottom = height - 1;
+		index = 0;
+		for (y = top; y <= bottom; ++y) {
+			for (x = left; x <= right; ++x) {
+				cs = scene.tiles[x][y].collisions;
+				for (csi = cs.length - 1; csi >= 0; --csi) {
+					this.neighbors[index] = cs[csi];
+					index++;
+				}
+			}
+		}
+		
+		index--;
+		while (index >= 0) {
+			n = this.neighbors[index];
+			// WAT? TODO: Clean this up, plz.
+			if (n[0] > area_right) { }
+			else if (n[1] > area_bottom) { }
+			else if (n[2] < area_left) { }
+			else if (n[3] < area_top) { }
+			else {
+				return false;
+			}
+			--index;
+		}
+		return true;
+	}
+		
+	function update(scene) {
+		if (this.automation != null) {
+			this.automation.doStuff(scene);
+		}
+		
+		--this.blinkCounter;
+		
+		if (this.blinkCounter < 0 || this.onGround) {
+			this.ddx = 0;
+			if (this.damageDir != null) {
+				this.lastDirection = this.damageDir;
+			}
+			this.damageDir = null;
+		}
+		
+		if (this.damageDir != null) {
+			this.dx = 0;
+		}
+		
+		this.dx += this.ddx;
+		
+		if (scene.side) {
+			// hotspot is located in the center of the bottom most tile
+			areaX = this.modelX;
+			areaBottom = this.modelY + 8;
+			heightFromHotSpot = getSpriteHeight(this.type) - 8 - 4;
+			areaTop = this.modelY - heightFromHotSpot;
+			waterOnly = this.type == 'moonsquid';
 			
-		
-		self.dx = 0
-		self.dy = 0
-		self.iceVX = 0
-		self.ddx = 0 # "damage dx", will stay set until you land on the ground or blink counter goes < 0
-		self.damageDir = None
-		self.cling = False
-		self.ladderDY = 0
-		self.blinkCounter = -1
-		self.cameFromIce = False
-		
-	def checkNeighborCollision(self, scene, col, row, targetX, targetY):
-		area_left = targetX - 5
-		area_right = targetX + 5
-		area_top = targetY - 5
-		area_bottom = targetY + 5
-		
-		width = scene.cols
-		height = scene.rows
-		left = col - 2
-		right = col + 2
-		top = row - 2
-		bottom = row + 2
-		if left < 0: left = 0
-		if right >= width: right = width - 1
-		if top < 0: top = 0
-		if bottom >= height: bottom = height - 1
-		index = 0
-		y = top
-		while y <= bottom:
-			x = left
-			while x <= right:
-				cs = scene.tiles[x][y].collisions
-				csi = len(cs) - 1
-				while csi >= 0:
-					self.neighbors[index] = cs[csi]
-					csi -= 1
-					index += 1
-				x += 1
-			y += 1
-		
-		index -= 1
-		while index >= 0:
-			n = self.neighbors[index]
-			if n[0] > area_right:
-				pass
-			elif n[1] > area_bottom:
-				pass
-			elif n[2] < area_left:
-				pass
-			elif n[3] < area_top:
-				pass
-			else:
-				return False
-			index -= 1
-		return True
-		
-	def update(self, scene):
-		
-		if self.automation != None:
-			self.automation.doStuff(scene)
-		
-		self.blinkCounter -= 1
-		if self.blinkCounter < 0 or self.onGround:
-			self.ddx = 0
-			if self.damageDir != None:
-				self.lastDirection = self.damageDir
-			self.damageDir = None
-		
-		if self.damageDir != None:
-			self.dx = 0
-		
-		self.dx += self.ddx
-		if scene.side:
-			# hotspot is located in the center of the bottom most tile
-			areaX = self.modelX
-			areaBottom = self.modelY + 8
-			heightFromHotSpot = getSpriteHeight(self.type) - 8 - 4
-			areaTop = self.modelY - heightFromHotSpot
-			waterOnly = self.type == 'moonsquid'
+			width = scene.cols;
+			height = scene.rows;
 			
-			width = scene.cols
-			height = scene.rows
+			isPlayer = this == scene.player;
+			bikePhysics = isPlayer && scene.id == 'bike_level';
 			
-			isPlayer = self == scene.player 
-			bikePhysics = isPlayer and scene.id == 'bike_level'
-			
-			if bikePhysics:
-				offsetX = -(scene.updateCounter * BIKE_SPEED)
-				if offsetX > 0: offsetX = 0
-				right = -(scene.cols * 16 - 256)
-				if offsetX < right: offsetX = right
+			if (bikePhysics) {
+				offsetX = -(scene.updateCounter * BIKE_SPEED);
+				if (offsetX > 0) offsetX = 0;
+				right = -(scene.cols * 16 - 256);
+				if (offsetX < right) offsetX = right;
 				
-				
-				newX = areaX + self.dx
-				pixelX = newX + offsetX
-				if pixelX < 8:
-					self.dx = BIKE_SPEED
-				elif pixelX > 248:
-					self.dx = BIKE_SPEED
-				
+				newX = areaX + this.dx;
+				pixelX = newX + offsetX;
+				if (pixelX < 8)
+					this.dx = BIKE_SPEED;
+				else if (pixelX > 248)
+					this.dx = BIKE_SPEED;
+			}	
 			
-			tileBottomIceCheck = int(areaBottom // 16)
-			tileX = int(areaX // 16)
-			inWater = False
-			onIce = False
-			if tileX >= 0 and tileBottomIceCheck > 0 and tileX < scene.cols and tileBottomIceCheck < scene.rows:
-				tileBelow = scene.tiles[tileX][tileBottomIceCheck]
-				if tileBelow != None:
-					onIce = tileBelow.isIce
+			tileBottomIceCheck = $floor(areaBottom / 16);
+			tileX = $floor(areaX / 16);
+			inWater = false;
+			onIce = false;
+			if (tileX >= 0 && tileBottomIceCheck > 0 && tileX < scene.cols && tileBottomIceCheck < scene.rows) {
+				tileBelow = scene.tiles[tileX][tileBottomIceCheck];
+				if (tileBelow != null) {
+					onIce = tileBelow.isIce;
+				}
 				
-				inWater = scene.tiles[tileX][tileBottomIceCheck - 1].isWater
+				inWater = scene.tiles[tileX][tileBottomIceCheck - 1].isWater;
+			}
 			
-			ICE_DIMINISH = .1
-			ICE_MAX_SPEED = 8
+			// TODO: move these to global area
+			ICE_DIMINISH = .1;
+			ICE_MAX_SPEED = 8;
 			
-			if self.type != 'lazor' and (onIce or (self.cameFromIce and not self.onGround and not self.cling)):
+			if (this.type != 'lazor' && (onIce || (this.cameFromIce && !this.onGround && !this.cling))) {
 				
-				if self.dx == 0:
-					if self.iceVX > 0:
-						self.iceVX -= ICE_DIMINISH
-						if self.iceVX < 0:
-							self.iceVX = 0
-					elif self.iceVX < 0:
-						self.iceVX += ICE_DIMINISH
-						if self.iceVX > 0:
-							self.iceVX = 0
-				elif self.dx > 0:
-					self.iceVX += ICE_DIMINISH
-				elif self.dx < 0:
-					self.iceVX -= ICE_DIMINISH
+				if (this.dx == 0) {
+					if (this.iceVX > 0) {
+						this.iceVX -= ICE_DIMINISH;
+						if (this.iceVX < 0) {
+							this.iceVX = 0;
+						}
+					} else if (this.iceVX < 0) {
+						this.iceVX += ICE_DIMINISH;
+						if (this.iceVX > 0) {
+							this.iceVX = 0;
+						}
+					}
+				} else if (this.dx > 0) {
+					this.iceVX += ICE_DIMINISH;
+				} else if (this.dx < 0) {
+					this.iceVX -= ICE_DIMINISH;
+				}
 				
-				self.dx = self.iceVX
-				if self.dx > ICE_MAX_SPEED:
-					self.dx = ICE_MAX_SPEED
-				elif self.dx < -ICE_MAX_SPEED:
-					self.dx = -ICE_MAX_SPEED
-				self.cameFromIce = True
-			else:
-				self.iceVX = 0
-				if self.onGround:
-					self.cameFromIce = False
+				this.dx = this.iceVX;
+				if (this.dx > ICE_MAX_SPEED) {
+					this.dx = ICE_MAX_SPEED;
+				} else if (this.dx < -ICE_MAX_SPEED) {
+					this.dx = -ICE_MAX_SPEED;
+				}
+				this.cameFromIce = true;
+			} else {
+				this.iceVX = 0;
+				if (this.onGround) {
+					this.cameFromIce = false;
+				}
+			}
 			
-			self.moving = self.dx != 0 or self.dy != 0
-			self.collidedWall = False
-			# side-to-side calcuation is done first, independent of whether you are on the ground.
-			if self.dx != 0:
-				if inWater and isPlayer:
-					maxDX = 1.0 if self.onGround else 1.5
-					if self.dx < -maxDX:
-						self.dx = -maxDX
-					elif self.dx > maxDX:
-						self.dx = maxDX
+			this.moving = this.dx != 0 || this.dy != 0;
+			this.collidedWall = false;
+			// side-to-side calcuation is done first, independent of whether you are on the ground.
+			if (this.dx != 0) {
+				if (inWater && isPlayer) {
+					maxDX = this.onGround ? 1.0 : 1.5;
+					if (this.dx < -maxDX) {
+						this.dx = -maxDX;
+					} else if (this.dx > maxDX) {
+						this.dx = maxDX;
+					}
+				}
 					
-					
-				newX = self.modelX + self.dx
+				newX = this.modelX + this.dx;
 				
-				# isCollision ignores collisions near the sprite's feet
-				# if you are near ground, you will be automatically placed standing
-				# upon it at the end of the vertical adjustment phase.
-				if self.ghost or not scene.isCollision(newX, areaTop, newX, areaBottom):
-				
-					if self.cling:
-						if int(newX // 16) != int(self.modelX // 16):
-							newX = self.modelX
-					self.modelX = newX
-					if self.dx > 0:
-						self.lastDirection = 'right'
-					else:
-						self.lastDirection = 'left'
-				else:
-					self.iceVX = 0
-					self.collidedWall = not self.ghost
-				self.dx = 0
+				// isCollision ignores collisions near the sprite's feet
+				// if you are near ground, you will be automatically placed standing
+				// upon it at the end of the vertical adjustment phase.
+				if (this.ghost || !scene.isCollision(newX, areaTop, newX, areaBottom)) {
+					if (this.cling) {
+						if ($floor(newX / 16) != $floor(this.modelX / 16)) {
+							newX = this.modelX;
+						}
+					}
+					this.modelX = newX;
+					if (this.dx > 0) {
+						this.lastDirection = 'right';
+					} else {
+						this.lastDirection = 'left';
+					}
+				} else {
+					this.iceVX = 0;
+					this.collidedWall = !this.ghost;
+				}
+				this.dx = 0;
+			}
 			
-			tileX = int(self.modelX / 16)
-			tileY = int(self.modelY / 16)
+			tileX = $floor(this.modelX / 16);
+			tileY = $floor(this.modelY / 16);
 			
-			offScreen = tileX < 0 or tileX >= scene.cols or tileY < 0 or tileY >= scene.rows
-			onScreen = not offScreen
+			offScreen = tileX < 0 || tileX >= scene.cols || tileY < 0 || tileY >= scene.rows;
+			onScreen = !offScreen;
 			
-			if bikePhysics and self.collidedWall:
-				scene.next = DeathOverrideScene(scene, 'lava')
+			if (bikePhysics && this.collidedWall) {
+				scene.next = new DeathOverrideScene(scene, 'lava');
+			}
 			
-			# vertical adjustment phase
-			# assume sprite is flying through the air unless you see ground
-			wasOnGround = self.onGround # save the previous ground state. If you weren't on ground before but suddenly are, then you "landed" and a sound should be played. 
-			self.onGround = False
+			// vertical adjustment phase
+			// assume sprite is flying through the air unless you see ground
+			wasOnGround = this.onGround; // save the previous ground state. If you weren't on ground before but suddenly are, then you "landed" and a sound should be played. 
+			this.onGround = false;
 			
-			if wasOnGround or self.floats:
-				self.vy = 0
-			else:
-				if inWater:
-					self.vy += WATER_G
-				elif scene.context.gravity:
-					self.vy += STRONG_G
-				else:
-					self.vy += G
+			if (wasOnGround || this.floats) {
+				this.vy = 0;
+			} else {
+				if (inWater) {
+					this.vy += WATER_G;
+				} else if (scene.context.gravity) {
+					this.vy += STRONG_G;
+				} else {
+					this.vy += G;
+				}
+			}
 			
-			rocketJump = False
-			if inWater and isPlayer and self.vy < 0:
-				tileY = int(self.modelY / 16) - 1
-				if tileY >= 0:
-					if not scene.tiles[tileX][tileY].isWater:
-						# moving up, bottom half is in water, top half is not
-						rocketJump = True # jump out with high velocity
+			rocketJump = false;
+			if (inWater && isPlayer && this.vy < 0) {
+				tileY = $floor(this.modelY / 16) - 1;
+				if (tileY >= 0) {
+					if (!scene.tiles[tileX][tileY].isWater) {
+						// moving up, bottom half is in water, top half is not
+						rocketJump = true; // jump out with high velocity
+					}
+				}
+			}
 			
-			# If you're clinging to a ladder, then throw out the vy entirely.
-			# Use self.ladderDY instead
-			if self.cling:
-				self.dy = self.ladderDY
-				self.vy = 0
-				if self.dy != 0:
-					self.moving = True
-			else:
-				self.dy += self.vy
+			// If you're clinging to a ladder, then throw out the vy entirely.
+			// Use this.ladderDY instead
+			if (this.cling) {
+				this.dy = this.ladderDY;
+				this.vy = 0;
+				if (this.dy != 0) {
+					this.moving = true;
+				}
+			} else {
+				this.dy += this.vy;
+			}
 			
-			oldLadderDY = self.ladderDY
-			self.ladderDY = 0
+			oldLadderDY = this.ladderDY;
+			this.ladderDY = 0;
 			
-			maxDY = 10
-			if self.dy > 4 and inWater:
-				self.dy = 4
+			maxDY = 10;
+			if (this.dy > 4 && inWater) {
+				this.dy = 4;
+			}
 			
-			if self.dy > maxDY:
-				self.dy = maxDY
-			elif self.dy < -maxDY:
-				self.dy = -maxDY
+			if (this.dy > maxDY) {
+				this.dy = maxDY;
+			} else if (this.dy < -maxDY) {
+				this.dy = -maxDY;
+			}
 			
+			if (rocketJump) {
+				this.dy = -15;
+			}
 			
-			if rocketJump:
-				self.dy = -15
+			wasCling = this.cling;
+			movedUp = false;
 			
+			newBottom = areaBottom + this.dy;
+			newTop = areaTop + this.dy;
 			
-			wasCling = self.cling
-			movedUp = False
+			no = false;
 			
-			newBottom = areaBottom + self.dy
-			newTop = areaTop + self.dy
-			
-			no = False
-			
-			if self.ghost:
-				pass # just go with it
-			else:
-				if self.dy < 0:
-					# Going Up
-					if newTop < 0:
-						# TODO: do top transitions here.
-						no = True
-					else:
-						newTileTop = int(newTop / 16)
+			if (this.ghost) {
+				// just go with it
+			} else {
+				if (this.dy < 0) {
+					// Going Up
+					if (newTop < 0) {
+						// TODO: do top transitions here.
+						no = true;
+					} else {
+						newTileTop = $floor(newTop / 16);
 						
-						offScreen = tileX < 0 or tileX >= scene.cols or newTileTop < 0 or newTileTop >= scene.rows
-						onScreen = not offScreen
+						offScreen = tileX < 0 || tileX >= scene.cols || newTileTop < 0 || newTileTop >= scene.rows;
+						onScreen = !offScreen;
 						
-						if onScreen:
-							t = scene.tiles[tileX][newTileTop]
-							if t.solid or (waterOnly and not t.isWater):
-								if wasOnGround:
-									self.onGround = True
-								no = True
+						if (onScreen) {
+							t = scene.tiles[tileX][newTileTop];
+							if (t.solid || (waterOnly && !t.isWater)) {
+								if (wasOnGround) {
+									this.onGround = true;
+								}
+								no = true;
 								
-								if self.modelY % 16 == 8:
-									no = False
-								self.vy = 0
-								self.dy = 0
-								if self == scene.player:
-									playNoise('head_bonk')
-							else:
-								movedUp = True
-						else:
-							movedUp = True
-				else:
-					# Going Down (or staying the same)
-					# The philosophy here is different. When you encounter a collision,
-					# rather than stop the movement, you find where the top of the collided
-					# tile is and place the sprite there.
+								if (this.modelY % 16 == 8) {
+									no = false;
+								}
+								this.vy = 0;
+								this.dy = 0;
+								if (this == scene.player) {
+									playNoise('head_bonk');
+								}
+							} else {
+								movedUp = true;
+							}
+						} else {
+							movedUp = true;
+						}
+					}
+				} else {
+					// Going Down (or staying the same)
+					// The philosophy here is different. When you encounter a collision,
+					// rather than stop the movement, you find where the top of the collided
+					// tile is and place the sprite there.
 					
-					newTileBottom = int(newBottom / 16)
+					newTileBottom = $floor(newBottom / 16);
 					
-					# If the player fell off the bottom
-					if isPlayer and newTileBottom >= height:
-						# TODO: check if there is a transition registered with the map.
-						# If so begin that transition instead of killing the player.
-						playNoise('fall_to_death')
-						scene.next = DeathOverrideScene(scene, 'fall')
-						no = True
-					else:
-					
-						offScreen = tileX < 0 or tileX >= scene.cols or newTileBottom < 0 or newTileBottom >= scene.rows
-						onScreen = not offScreen
+					// If the player fell off the bottom
+					if (isPlayer && newTileBottom >= height) {
+						// TODO: check if there is a transition registered with the map.
+						// If so begin that transition instead of killing the player.
+						playNoise('fall_to_death');
+						scene.next = new DeathOverrideScene(scene, 'fall');
+						no = true;
+					} else {
+						offScreen = tileX < 0 || tileX >= scene.cols || newTileBottom < 0 || newTileBottom >= scene.rows;
+						onScreen = !offScreen;
 						
-						if onScreen:
-							t = scene.tiles[tileX][newTileBottom]
-							topStop = False
-							if t.isTop:
-								oldTileBottom = int(areaBottom / 16)
-								if newTileBottom > oldTileBottom:
-									topStop = True
-								elif newTileBottom == oldTileBottom and areaBottom == newBottom:
-									topStop = True
-							if t.solid or topStop:
-								no = True
-								self.cling = False
-								self.onGround = True
-								self.modelY = newTileBottom * 16 - 8
-								self.vy = 0
-								if not wasOnGround and self == scene.player:
-									playNoise('land_on_ground')
-						else:
-							no = True
+						if (onScreen) {
+							t = scene.tiles[tileX][newTileBottom];
+							topStop = false;
+							if (t.isTop) {
+								oldTileBottom = $floor(areaBottom / 16);
+								if (newTileBottom > oldTileBottom) {
+									topStop = true;
+								} else if (newTileBottom == oldTileBottom && areaBottom == newBottom) {
+									topStop = true;
+								}
+							}
+							
+							if (t.solid || topStop) {
+								no = true;
+								this.cling = false;
+								this.onGround = true;
+								this.modelY = newTileBottom * 16 - 8;
+								this.vy = 0;
+								if (!wasOnGround && this == scene.player) {
+									playNoise('land_on_ground');
+								}
+							}
+						} else {
+							no = true;
+						}
+					}
+				}
+			}
 					
-			if not no:
-				self.modelY = newBottom - 8
-			self.x = int(self.modelX)
-			self.y = int(self.modelY)
-			self.dy = 0
-			self.dy = 0
+			if (!no) {
+				this.modelY = newBottom - 8;
+			}
 			
-			tileY = int(self.modelY / 16)
+			this.x = $floor(this.modelX);
+			this.y = $floor(this.modelY);
+			this.dy = 0; // TODO: isn't this supposed to be this.dx?
+			this.dy = 0;
 			
-			offScreen = tileX < 0 or tileX >= scene.cols or tileY < 0 or tileY >= scene.rows
-			onScreen = not offScreen
-			if onScreen and scene.tiles[tileX][tileY].isLadder:
-				pass
-			else:
-				self.cling = False
+			tileY = $floor(this.modelY / 16);
 			
-			if movedUp and wasCling and not self.cling:
-				self.modelY = 16 * tileY # maybe?
+			offScreen = tileX < 0 || tileX >= scene.cols || tileY < 0 || tileY >= scene.rows;
+			onScreen = !offScreen;
+			if (onScreen && scene.tiles[tileX][tileY].isLadder) {
+				// TODO: why are there so many inverted expressions like this?
+			} else {
+				this.cling = false;
+			}
 			
-		else:
-			self.moving = False
-			if self.dx != 0 or self.dy != 0:
-				self.moving = True
+			if (movedUp && wasCling && !this.cling) {
+				this.modelY = 16 * tileY; // maybe?
+			}
+		} else {
+			this.moving = false;
+			if (this.dx != 0 || this.dy != 0) {
+				this.moving = true;
 				
-				if self.dy < 0:
-					self.lastDirection = 'up'
-				elif self.dy > 0:
-					self.lastDirection = 'down'
-				elif self.dx < 0:
-					self.lastDirection = 'left'
-				else:
-					self.lastDirection = 'right'
+				if (this.dy < 0) {
+					this.lastDirection = 'up';
+				} else if (this.dy > 0) {
+					this.lastDirection = 'down';
+				} else if (this.dx < 0) {
+					this.lastDirection = 'left';
+				} else {
+					this.lastDirection = 'right';
+				}
 					
-				xs = self.xs
-				ys = self.ys
+				xs = this.xs;
+				ys = this.ys;
 				
-				xs[0] = self.modelX + self.dx
-				xs[1] = self.modelX + self.dx * 3.0 / 4
-				xs[2] = self.modelX + self.dx / 2.0
-				xs[3] = self.modelX + self.dx / 4.0
-				xs[4] = self.modelX
+				xs[0] = this.modelX + this.dx;
+				xs[1] = this.modelX + this.dx * 3.0 / 4;
+				xs[2] = this.modelX + this.dx / 2.0;
+				xs[3] = this.modelX + this.dx / 4.0;
+				xs[4] = this.modelX;
 				
-				ys[0] = self.modelY + self.dy
-				ys[1] = self.modelY + self.dy * 3.0 / 4
-				ys[2] = self.modelY + self.dy / 2.0
-				ys[3] = self.modelY + self.dy / 4.0
+				ys[0] = this.modelY + this.dy;
+				ys[1] = this.modelY + this.dy * 3.0 / 4;
+				ys[2] = this.modelY + this.dy / 2.0;
+				ys[3] = this.modelY + this.dy / 4.0;
 
-				for pairing in XY_PAIRINGS:
-					newx = xs[pairing[0]]
-					newy = ys[pairing[1]]
-					col = int(newx / 16)
-					row = int(newy / 16)
+				for (pairing : XY_PAIRINGS) {
+					newx = xs[pairing[0]];
+					newy = ys[pairing[1]];
+					col = $floor(newx / 16);
+					row = $floor(newy / 16);
 
-					if self.checkNeighborCollision(scene, col, row, newx, newy):
-						self.modelX = newx
-						self.modelY = newy
-						self.x = int(self.modelX)
-						self.y = int(self.modelY)
-						break
+					if (this.checkNeighborCollision(scene, col, row, newx, newy)) {
+						this.modelX = newx;
+						this.modelY = newy;
+						this.x = $floor(this.modelX);
+						this.y = $floor(this.modelY);
+						break;
+					}
+				}
 				
-				self.dx = 0
-				self.dy = 0
+				this.dx = 0;
+				this.dy = 0;
+			}
+		}
+	}
 	
-	def render(self, scene, screen, offsetX, offsetY, rc):
-		if self.blinkCounter < 0 or (self.blinkCounter & 1) == 0:
-			self.renderImpl(self, scene, screen, offsetX, offsetY, rc)
+	function render(scene, offsetX, offsetY, rc) {
+		if (this.blinkCounter < 0 || (this.blinkCounter & 1) == 0) {
+			this.renderImpl(this, scene, offsetX, offsetY, rc);
+		}
+	}
 	
-	def isCollision(self, other):
-		left = self.x - 8
-		oleft = other.x - 8
-		right = left + 16
-		oright = oleft + 16
+	function isCollision(other) {
+		left = this.x - 8;
+		oleft = other.x - 8;
+		right = left + 16;
+		oright = oleft + 16;
 		
-		if left >= oright or right <= oleft:
-			return False
+		if (left >= oright || right <= oleft) {
+			return false;
+		}
 		
-		bottom = self.y + 8
-		obottom = other.y + 8
-		top = bottom - self.height
-		otop = obottom - other.height
+		bottom = this.y + 8;
+		obottom = other.y + 8;
+		top = bottom - this.height;
+		otop = obottom - other.height;
 		
-		if top >= obottom or otop >= bottom:
-			return False
-		return True
+		if (top >= obottom || otop >= bottom)
+			return false;
+		return true;
+	}
 	
-	def hit(self, scene, amount):
-		self.blinkCounter = 40
-		scene.context.adjustHealth(scene, -amount)
-		self.blinkDirection = self.lastDirection
+	function hit(scene, amount) {
+		this.blinkCounter = 40;
+		scene.context.adjustHealth(scene, -amount);
+		this.blinkDirection = this.lastDirection;
 		
-		if scene.id != 'bike_level':
-		
-			tiles = scene.tiles
-			tx = self.x // 16
-			ty = self.y // 16
+		if (scene.id != 'bike_level') {
+			tiles = scene.tiles;
+			tx = this.x / 16;
+			ty = this.y / 16;
 			
-			inWater = False
-			if tx >= 0 and ty >= 0 and tx < scene.cols and ty < scene.rows:
-				t = tiles[tx][ty]
-				inWater = t.isWater
+			inWater = false;
+			if (tx >= 0 && ty >= 0 && tx < scene.cols && ty < scene.rows) {
+				t = tiles[tx][ty];
+				inWater = t.isWater;
+			}
 			
-			self.damageDir = self.lastDirection
-			if self.lastDirection == 'left':
-				self.ddx = 3
-			else:
-				self.ddx = -3
-			self.onGround = False
-			if inWater:
-				self.vy = -1
-			else:
-				self.vy = -6
+			this.damageDir = this.lastDirection;
+			if (this.lastDirection == 'left') {
+				this.ddx = 3;
+			} else {
+				this.ddx = -3;
+			}
+			this.onGround = false;
+			if (inWater) {
+				this.vy = -1;
+			} else {
+				this.vy = -6;
+			}
+		}
+	}
+}

@@ -1,18 +1,18 @@
 SONG_LOOKUP = {
-	# name : (file, should loop?)
-	'title': ('tensebranches', True),
-	'intro': ('open_skies', True),
-	'overworld': ('open_skies', True),
-	'ship': ('spacemachine', True),
-	'credits': ('credits', True),
-	'password': ('fluffytales', True),
-	'volcano': ('lunacy', True),
-	'bike': ('nopressure', True),
-	'water': ('squirrels_can_swim', True),
-	'gravity': ('deadlyacorns', True),
-	'death': ('oopsdead', False),
-	'gameover': ('fluffytales', True),
-}
+	// name : [file, should loop?],
+	'title': ['tensebranches', true],
+	'intro': ['open_skies', true],
+	'overworld': ['open_skies', true],
+	'ship': ['spacemachine', true],
+	'credits': ['credits', true],
+	'password': ['fluffytales', true],
+	'volcano': ['lunacy', true],
+	'bike': ['nopressure', true],
+	'water': ['squirrels_can_swim', true],
+	'gravity': ['deadlyacorns', true],
+	'death': ['oopsdead', false],
+	'gameover': ['fluffytales', true],
+};
 
 SONG_BY_MAP = {
 	'ship_1': 'ship',
@@ -84,47 +84,45 @@ SONG_BY_MAP = {
 	'wlink_E1_water': 'water',
 	'wlink_E2': 'water',
 	'wlink_E3': 'water',
+};
+
+
+class JukeBox {
+	constructor() {
+		this.currentSong = null;
+		this.actuallyPlaying = false;
+	}
+	
+	function ensureSong(id) {
+		if (!SOUND_ENABLED)
+			return;
+		
+		if (this.currentSong != id) {
+			if (this.currentSong != null && this.actuallyPlaying) {
+				$music_stop();
+			}
+			song = SONG_LOOKUP.get(id, null);
+			if (song != null) {
+				file = song[0];
+				loop = song[1];
+				path = 'music/' + song[0] + '.ogg';
+				music = $music_load_from_resource(path);
+				$music_play(music, loop, 0, 0, 0);
+				this.actuallyPlaying = true;
+			} else {
+				this.actuallyPlaying = false;
+			}
+			
+			this.currentSong = id;
+		}
+	}
+	
+	function playSongForLevelMaybe(id) {
+		song = SONG_BY_MAP.get(id, null);
+		if (song != null) {
+			this.ensureSong(song);
+		}
+	}
 }
 
-for file in os.listdir('maps'):
-	if file.endswith('.map'):
-		if 'overlay' in file:
-			pass
-		else:
-			song = SONG_BY_MAP.get(file.split('.')[0])
-			if song == None:
-				print("ERROR: no song assigned to map file: " + file)
-
-
-
-class JukeBox:
-	def __init__(self):
-		self.currentSong = None
-		self.actuallyPlaying = False
-	
-	def ensureSong(self, id):
-		if not SOUND_ENABLED:
-			return
-		
-		if self.currentSong != id:
-			if self.currentSong != None and self.actuallyPlaying:
-				pygame.mixer.music.stop()
-			song = SONG_LOOKUP.get(id)
-			if song != None:
-				file = song[0]
-				loop = song[1]
-				path = 'music/' + song[0] + '.ogg'
-				pygame.mixer.music.load(path.replace('/', os.sep))
-				pygame.mixer.music.play(-1 if loop else 0)
-				self.actuallyPlaying = True
-			else:
-				self.actuallyPlaying = False
-			
-			self.currentSong = id
-	
-	def playSongForLevelMaybe(self, id):
-		song = SONG_BY_MAP.get(id)
-		if song != None:
-			self.ensureSong(song)
-	
-JUKEBOX = JukeBox()
+JUKEBOX = new JukeBox();

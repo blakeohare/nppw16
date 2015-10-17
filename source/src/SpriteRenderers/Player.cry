@@ -1,89 +1,104 @@
-
-#arc = adjusted render counter (slowed down for animation frames, so I don't have to do rc = (rc // 4) to slow things down
-def SPRITE_renderPlayerOver(sprite, scene, screen, offsetX, offsetY, arc):
-	left = sprite.x + offsetX - 8
-	top = sprite.y + offsetY - 8
-	width = 16
-	height = 16
-	gun = scene.lazor_cooldown > 0
-	if scene.side:
-		top -= 16
-		height = 32
-	if sprite.bikemode:
-		if (arc & 1) == 0:
-			img = getImage('sprites/rocket_bike_1.png')
-		else:
-			img = getImage('sprites/rocket_bike_2.png')
-	elif scene.side:
+// arc = adjusted render counter (slowed down for animation frames, so I don't have to do rc = (rc // 4) to slow things down
+function SPRITE_renderPlayerOver(sprite, scene, offsetX, offsetY, arc) {
+	left = sprite.x + offsetX - 8;
+	top = sprite.y + offsetY - 8;
+	width = 16;
+	height = 16;
+	gun = scene.lazor_cooldown > 0;
+	if (scene.side) {
+		top -= 16;
+		height = 32;
+	}
 	
-		if sprite.damageDir != None:
-			dir = sprite.damageDir
-		else:
-			dir = sprite.lastDirection
-		reverse = dir == 'left'
+	if (sprite.bikemode) {
+		if ((arc & 1) == 0) {
+			img = IMAGES.get('sprites/rocket_bike_1.png');
+		} else {
+			img = IMAGES.get('sprites/rocket_bike_2.png');
+		}
+	} else if (scene.side) {
+		if (sprite.damageDir != null) {
+			dir = sprite.damageDir;
+		} else {
+			dir = sprite.lastDirection;
+		}
+		reverse = dir == 'left';
 		
-		base = 'cave' if scene.hasAtmosphere else 'space'
-		moving = sprite.moving
-		if sprite.cling:
-			path = base + '_climb_'
-			if gun:
-				path += 'shoot'
-				if reverse:
-					left -= 8
-				else:
-					left += 8
-			elif moving:
-				path += '1232'[arc % 4]
-			else:
-				path += '2'
-		else:
-			path = base + '_'
-			if gun:
-				if moving:
-					path += 'shooting_' + '1213'[arc % 4]
-				else:
-					path += 'shooting'
-			else:
-				if moving or (sprite.cling and sprite.vy != 0):
-					# TODO: running, cut RC in half
-					path += '1213'[arc % 4]
-				else:
-					path += '1'
-		
-		x = left
-		y = top
-		if sprite.deathState != None and sprite.deathState != 'fall':
-			if sprite.deathState == 'collapse':
-				img = getImage('sprites/' + base + '_death.png')
-				top += 16
-				left -= 8
-			elif sprite.deathState == 'lava':
-				if reverse:
-					img = getBackwardsImage('sprites/roasted.png')
-				else:
-					img = getImage('sprites/roasted.png')
-					left = left + 16 - img.get_width()
-		else:
-			if sprite.sprinkle:
-				img = getImage('sprites/space_sprinkle.png')
-				left = left + 16 - img.get_width()
-			elif reverse:
-				img = getBackwardsImage('sprites/' + path +'.png')
-			else:
-				img = getImage('sprites/' + path +'.png')
-				left = left + 16 - img.get_width()
-			
-	else:
-		counter = '1232'[arc % 4] if sprite.moving else '2'
-		dir = sprite.lastDirection
-		reverse = False
-		if dir == 'left':
-			reverse = True
-			dir = 'right'
-		base = 'space'
-		ctx = scene.context
-		if ctx.volcanoA and ctx.volcanoB and ctx.volcanoC:
-			base = 'cave'
-		path = 'sprites/' + base + '_overworld_' + dir + '_' + counter + '.png'
-		img = getBackwardsImage(path) if reverse else getImage(path) 
-	screen.blit(img, (left, top))
+		b = scene.hasAtmosphere ? 'cave' : 'space';
+		moving = sprite.moving;
+		if (sprite.cling) {
+			path = b + '_climb_';
+			if (gun) {
+				path += 'shoot';
+				if (reverse) {
+					left -= 8;
+				} else {
+					left += 8;
+				}
+			} else if (moving) {
+				path += '1232'[arc % 4];
+			} else {
+				path += '2';
+			}
+		} else {
+			path = b + '_';
+			if (gun) {
+				if (moving) {
+					path += 'shooting_' + '1213'[arc % 4];
+				} else {
+					path += 'shooting';
+				}
+			} else {
+				if (moving || (sprite.cling && sprite.vy != 0)) {
+					// TODO: running, cut RC in half
+					path += '1213'[arc % 4];
+				} else {
+					path += '1';
+				}
+			}
+		}
+		x = left;
+		y = top;
+		if (sprite.deathState != null && sprite.deathState != 'fall') {
+			if (sprite.deathState == 'collapse') {
+				img = IMAGES.get('sprites/' + b + '_death.png');
+				top += 16;
+				left -= 8;
+			} else if (sprite.deathState == 'lava') {
+				if (reverse) {
+					img = IMAGES.getBackwards('sprites/roasted.png');
+				} else {
+					img = IMAGES.get('sprites/roasted.png');
+					left = left + 16 - img.width;
+				}
+			}
+		} else {
+			if (sprite.sprinkle) {
+				img = IMAGES.get('sprites/space_sprinkle.png');
+				left = left + 16 - img.width;
+			} else if (reverse) {
+				img = IMAGES.getBackwards('sprites/' + path +'.png');
+			} else {
+				img = IMAGES.get('sprites/' + path +'.png');
+				left = left + 16 - img.width;
+			}
+		}
+	} else {
+		counter = sprite.moving ? '1232'[arc % 4] : '2';
+		dir = sprite.lastDirection;
+		reverse = false;
+		if (dir == 'left') {
+			reverse = true;
+			dir = 'right';
+		}
+		b = 'space';
+		ctx = scene.context;
+		if (ctx.volcanoA && ctx.volcanoB && ctx.volcanoC) {
+			b = 'cave';
+		}
+		path = 'sprites/' + b + '_overworld_' + dir + '_' + counter + '.png';
+		img = reverse ? IMAGES.getBackwards(path) : IMAGES.get(path);
+	}
+	
+	$gfx_blit_image(img, left, top);
+}

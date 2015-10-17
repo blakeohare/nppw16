@@ -1,43 +1,49 @@
-class VictorySequenceScene:
-	def __init__(self, bg):
-		self.next = self
-		self.bg = bg
-		self.flags = ''
+class VictorySequenceScene {
+	constructor(bg) {
+		this.next = this;
+		this.bg = bg;
+		this.flags = '';
 	
-		self.images = [
-			getImage('slides/close1.png'),
-			getImage('slides/close2.png')]
+		this.images = [
+			IMAGES.get('slides/close1.png'),
+			IMAGES.get('slides/close2.png')];
 	
-		self.player = None
+		this.player = null;
 	
-		self.counter = 0
+		this.counter = 0;
+	}
 	
-	def processInput(self, events, pressed):
-		pass
+	function processInput(events, pressed) { }
 	
-	def update(self):
-		pygame.mixer.music.stop()
-		self.counter += 1
+	function update() {
+		$music_stop();
+		this.counter++;
+	}
 	
-	def render(self, screen, rc):
-		screen.fill(BLACK)
-		if self.counter < 60:
-			img = self.images[0]
-		elif self.counter > 120:
-			img = self.images[1]
-		else:
-			img = self.images[self.counter & 1]
+	function render(rc) {
+		$gfx_fill_screen(0, 0, 0);
 		
-		if self.counter == 60:
-			playNoise('screen_shaking')
+		if (this.counter < 60) {
+			img = this.images[0];
+		} else if (this.counter > 120) {
+			img = this.images[1];
+		} else {
+			img = this.images[this.counter & 1];
+		}
 		
-		if self.counter == 150:
-			self.next = DialogScene(self, 'CloseDialog', False, True, False)
-			self.counter += 1
+		if (this.counter == 60) {
+			playNoise('screen_shaking');
+		}
 		
-		if self.counter == 160:
-			self.next = CreditsScene()
+		if (this.counter == 150) {
+			this.next = new DialogScene(this, 'CloseDialog', false, true, false);
+			this.counter++;
+		}
 		
-		screen.blit(img, (0, 16))
-	
-	
+		if (this.counter == 160) {
+			this.next = new CreditsScene();
+		}
+		
+		$gfx_blit_image(img, 0, 16);
+	}
+}

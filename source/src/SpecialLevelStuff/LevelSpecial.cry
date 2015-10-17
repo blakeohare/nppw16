@@ -1,50 +1,41 @@
-def getSpecialLevelStuff(id, scene):
-	if id == 'main':
-		return [BalloonPopping(scene, 'water1'),
-			BalloonPopping(scene, 'water4'),
-			BalloonPopping(scene, 'lava1')]
-	if id == 'ship_1':
-		return [ShipTransmission(scene)]
-	if id == 'grav_core':
-		return [GravityCorePlacement(scene)]
-	if id == 'grav_ascent':
-		return [GravityAscentExit(scene)]
-	if id == 'volcano_1_core':
-		return [VolcanoCoreActivation(scene, 1)]
-	if id == 'volcano_2_core':
-		return [VolcanoCoreActivation(scene, 2)]
-	if id == 'volcano_3_core':
-		return [VolcanoCoreActivation(scene, 3)]
-	if id == 'balloon_2_overland':
-		return [BalloonPopping(scene, 'water2')]
-	if id == 'balloon_3_overland':
-		return [BalloonPopping(scene, 'water3')]
-	if id == 'bike_level':
-		return [BikeLevelStuff(scene)]
-	if id == 'volcano_2_overland':
-		return [BalloonPopping(scene, 'lava2')]
-	if id == 'volcano_3_overland':
-		return [BalloonPopping(scene, 'lava3')]
-	if id == 'birdfeeder':
-		return [BirdFeeder(scene)]
-	return []
+function getSpecialLevelStuff(id, scene) {
+	switch (id) {
+		case 'main': return [new BalloonPopping(scene, 'water1'), new BalloonPopping(scene, 'water4'), new BalloonPopping(scene, 'lava1')];
+		case  'ship_1': return [new ShipTransmission(scene)];
+		case  'grav_core': return [new GravityCorePlacement(scene)];
+		case  'grav_ascent': return [new GravityAscentExit(scene)];
+		case  'volcano_1_core': return [new VolcanoCoreActivation(scene, 1)];
+		case  'volcano_2_core': return [new VolcanoCoreActivation(scene, 2)];
+		case  'volcano_3_core': return [new VolcanoCoreActivation(scene, 3)];
+		case  'balloon_2_overland': return [new BalloonPopping(scene, 'water2')];
+		case  'balloon_3_overland': return [new BalloonPopping(scene, 'water3')];
+		case  'bike_level': return [new BikeLevelStuff(scene)];
+		case  'volcano_2_overland': return [new BalloonPopping(scene, 'lava2')];
+		case  'volcano_3_overland': return [new BalloonPopping(scene, 'lava3')];
+		case  'birdfeeder': return [new BirdFeeder(scene)];
+		default: return [];
+	}
+}
 
-class SpecialLevelStuff:
-	def __init__(self, scene):
-		self.scene = scene
-		self.context = scene.context
-		self.tiles = scene.tiles
-		self.hasUpdate = False
-		self.hasPostInit = False
-		self.hasDoorTrigger = False
-		self.hasRender = False
+class SpecialLevelStuff {
+	constructor(scene) {
+		this.scene = scene;
+		this.context = scene.context;
+		this.tiles = scene.tiles;
+		this.hasUpdate = false;
+		this.hasPostInit = false;
+		this.hasDoorTrigger = false;
+		this.hasRender = false;
 		
-		# meh, hacks
-		self.lavaLevel = 0
-		self.shakeScreen = False
-		self.freeze = False
+		// meh, hacks
+		this.lavaLevel = 0;
+		this.shakeScreen = false;
+		this.freeze = false;
+	}
 	
-	# override and return None if you want that door to do something special. 
-	# The doorId will be post-swapped.
-	def doorTrigger(self, doorId):
-		return doorId
+	// override and return None if you want that door to do something special. 
+	// The doorId will be post-swapped.
+	function doorTrigger(doorId) {
+		return doorId;
+	}
+}

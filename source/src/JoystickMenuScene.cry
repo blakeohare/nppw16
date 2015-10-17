@@ -1,57 +1,69 @@
-class JoystickMenuScene:
-	def __init__(self):
-		self.next = self
-		self.flags = ''
-		self.options = ['None'] + get_joystick_manifest()
-		self.index = 0 if (active_joystick == None) else (1 + joysticks_present[active_joystick])
-		self.blink_counter = 0
+class JoystickMenuScene {
+	constructor() {
+		this.next = this;
+		this.flags = '';
+		this.options = ['None'] + get_joystick_manifest();
+		this.index = active_joystick == null ? 0 : (1 + joysticks_present[active_joystick]);
+		this.blink_counter = 0;
+	}
 	
-	def processInput(self, events, pressedActions):
-		for event in events:
-			if event.down and self.blink_counter <= 0:
-				if event.action == 'up':
-					self.index -= 1
-				elif event.action == 'down':
-					self.index += 1
-				elif event.action in ['A', 'B', 'start']:
-					if self.index == 0:
-						set_active_joystick(None)
-						self.next = TitleScene()
-					else:
-						self.blink_counter = 30
-				if self.index < 0:
-					self.index = 0
-				if self.index >= len(self.options):
-					self.index = len(self.options) - 1
+	function processInput(events, pressedActions) {
+		for (event : events) {
+			if (event.down && this.blink_counter <= 0) {
+				if (event.action == 'up') {
+					this.index--;
+				} else if (event.action == 'down') {
+					this.index++;
+				} else if (event.action == 'A' || event.action == 'B' || event.action == 'start') {
+					if (this.index == 0) {
+						set_active_joystick(null);
+						this.next = new TitleScene();
+					} else {
+						this.blink_counter = 30;
+					}
+				}
 				
+				if (this.index < 0) {
+					this.index = 0;
+				}
+				
+				if (this.index >= this.options.length) {
+					this.index = this.options.length - 1;
+				}
+			}
+		}
+	}
 	
-	def update(self):
-		self.blink_counter -= 1
-		if self.blink_counter == 1:
-			self.next = JoystickConfigScreen(self.index - 1, self)
-			self.blink_counter = 0
+	function update() {
+		this.blink_counter--;
+		if (this.blink_counter == 1) {
+			this.next = new JoystickConfigScreen(this.index - 1, this);
+			this.blink_counter = 0;
+		}
+	}
 	
-	def render(self, screen, rc):
-		title = getText((255, 255, 0), "Joystick Selection")
-		cursor = getText((255, 255, 255), ">")
-		screen.fill((0, 0, 0))
+	function render(rc) {
+		$gfx_fill_screen(0, 0, 0);
 		
-		left = 32
-		drawBox(screen, left - 16, 16, 30, (len(self.options) + 1) * 2 + 3)
+		left = 32;
+		drawBox(left - 16, 16, 30, (this.options.length + 1) * 2 + 3);
 		
-		y = 32
-		screen.blit(title, (32, y))
-		y += 16
-		index = 0
-		for option in self.options:
-			selected = False
-			if index == self.index:
-				screen.blit(cursor, (left, y))
-				selected = True
+		y = 32;
+		drawText(255, 255, 0, "Joystick Selection", 32, y);
+		y += 16;
+		index = 0;
+		for (option : this.options) {
+			selected = false;
+			if (index == this.index) {
+				drawText(255, 255, 255, '>', left, y);
+				selected = true;
+			}
 			
-			if not selected or self.blink_counter <= 0 or rc % 4 < 2:
-				screen.blit(getText((255, 255, 255), option), (left + 16, y))
-			index += 1
-			y += 16
-		
-		
+			if (!selected || this.blink_counter <= 0 || rc % 4 < 2) {
+				drawText(255, 255, 255, option, left + 16, y);
+			}
+			index++;
+			y += 16;
+		}
+	}
+}

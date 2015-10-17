@@ -1,5 +1,79 @@
 
-class OpeningScene:
+enum OpeningSceneMode {
+	START,
+	LOADING,
+	GO,
+}
+
+class OpeningScene {
+	constructor() {
+		this.next = this;
+		this.mode = OpeningSceneMode.START;
+		this.mode_counter = 0;
+	}
+	
+	
+	function processInput(events, pressedActions) {
+		
+	}
+	
+	function update() {
+		switch (this.mode) {
+			case OpeningSceneMode.START:
+				$gfx_image_sheet_load('all');
+				this.mode = OpeningSceneMode.LOADING;
+				this.mode_counter = 0;
+				break;
+				
+			case OpeningSceneMode.LOADING:
+				if ($gfx_image_sheet_loaded('all')) {
+					this.mode = OpeningSceneMode.GO;
+					this.mode_counter = 0;
+				} else {
+					// waiting.
+				}
+				break;
+				
+			case OpeningSceneMode.GO:
+				if (this.mode_counter > 20) {
+					this.next = new TitleScene();
+				}
+				break;
+				
+			default:
+				$assert(false, "Unknown mode");
+				break;
+		}
+		
+		this.mode_counter++;
+	}
+	
+	function render(rc) {
+	
+		switch (this.mode) {
+			case OpeningSceneMode.START:
+				break;
+				
+			case OpeningSceneMode.LOADING:
+				break;
+				
+			case OpeningSceneMode.GO:
+				if (this.mode_counter < 10) {
+					$gfx_fill_screen(255, 80, 255);
+				} else {
+					$gfx_fill_screen(200, 200, 200);
+				}
+				break;
+				
+			default:
+				$assert(false, "Unknown mode");
+				break;
+		}
+		
+	}
+	
+	// TODO: port this using an image of static and then rectangle draws
+	/*
 	def __init__(self):
 		self.static_width = 150
 		if GO_TO_TITLE:
@@ -126,4 +200,5 @@ class OpeningScene:
 			self.dark.set_alpha(v)
 			if (v > 0):
 				screen.blit(self.dark, (0, 0))
-				
+	*/
+}

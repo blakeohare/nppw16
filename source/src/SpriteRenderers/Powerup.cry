@@ -1,16 +1,17 @@
-
-def SPRITE_renderPowerup(sprite, scene, screen, offsetX, offsetY, arc):
+function SPRITE_renderPowerup(sprite, scene, offsetX, offsetY, arc) {
 	
-	if sprite.automation.visible:
+	if (sprite.automation.visible) {
+		left = sprite.x + offsetX - 8;
+		top = sprite.y + offsetY - 8;
+		type = sprite.powerupInfo.type;
+		if (type == '1up') {
+			path = 'sprites/1up.png';
+		} else if (type == 'life_small') {
+			path = 'sprites/life_small.png';
+		} else if (type == 'life_big') {
+			path = 'sprites/life_big.png';
+		}
 		
-		left = sprite.x + offsetX - 8
-		top = sprite.y + offsetY - 8
-		type = sprite.powerupInfo.type
-		if type == '1up':
-			path = 'sprites/1up.png'
-		elif type == 'life_small':
-			path = 'sprites/life_small.png'
-		elif type == 'life_big':
-			path = 'sprites/life_big.png'
-		
-		screen.blit(getImage(path), (left, top))
+		$gfx_blit_image(IMAGES.get(path), left, top);
+	}
+}

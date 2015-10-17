@@ -1,10 +1,14 @@
 
-class LazorAutomation:
-	def __init__(self, sprite):
-		self.sprite = sprite
+class LazorAutomation {
+	constructor(sprite) {
+		this.sprite = sprite;
+	}
 		
-	def doStuff(self, scene):
-		vx = self.sprite.bvx
-		self.sprite.dx = self.sprite.bvx
-		if scene.id == 'bike_level':
-			self.sprite.dx += 5
+	function doStuff(scene) {
+		vx = this.sprite.bvx;
+		this.sprite.dx = this.sprite.bvx;
+		if (scene.id == 'bike_level') {
+			this.sprite.dx += 5;
+		}
+	}
+}

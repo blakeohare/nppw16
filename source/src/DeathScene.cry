@@ -1,15 +1,12 @@
-class DeathScene:
-	def __init__(self):
-		print("Death!")
-		self.next = None
-		self.flags = ''
+class DeathScene {
+	constructor() {
+		this.next = null;
+		this.flags = '';
+	}
 	
-	def processInput(self, events, pressed):
-		pass
+	function processInput(events, pressed) { }
 	
-	def update(self):
-		pass
+	function update() { }
 	
-	def render(self, screen, rc):
-		pass
-		
+	function render(rc) { }
+}

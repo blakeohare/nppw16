@@ -1,639 +1,714 @@
-WHITE = (255, 255, 255)
-GOOD_HEALTH_COLOR = WHITE
-POOR_HEALTH_COLOR = (255, 128, 128)
 
-BIKE_SPEED = 6
+GOOD_HEALTH_COLOR = [255, 255, 255];
+POOR_HEALTH_COLOR = [255, 128, 128];
 
-class PlayScene:
-	def __init__(self, map, startCol, startRow, context):
-		self.startArgs = (map, startCol, startRow)
-		self.updateCounter = 0
-		self.context = context
-		self.next = self
-		self.flags = 'M'
-		levelname = map.split('.')[0]
-		if DEBUG_MODE:
-			print("Active map:", levelname)
-		self.id = levelname
-		if not map.endswith('.map'):
-			map += '.map'
-		mapParser = MapParser(map)
-		map = mapParser.parse()
-		
-		self.hasAtmosphere = context.volcanoA and context.volcanoB and context.volcanoC
+BIKE_SPEED = 6;
 
-		self.bg = getBackground(levelname)
-		stars = legacyMap(lambda x:getImage('tiles/background/stars' + str(x) + '.png'), [1, 2, 3, 4, 5]) + ([None] * 10)
-		stars *= 3
-		random.shuffle(stars)
-		self.stars = stars
-		self.runCounter = 0
-		self.runCounterValidFor = ':P'
+class PlayScene {
+	constructor(map, startCol, startRow, context) {
+		this.startArgs = [map, startCol, startRow];
+		this.updateCounter = 0;
+		this.context = context;
+		this.next = this;
+		this.flags = 'M';
+		levelname = map.split('.')[0];
+		if (DEBUG_MODE)
+			$print("Active map: " + levelname);
+		this.id = levelname;
+		if (!map.endsWith('.map'))
+			map += '.map';
+		mapParser = new MapParser(map);
+		map = mapParser.parse();
 		
-		self.cols = map.width
-		self.rows = map.height
-		self.upper = map.upper
-		self.lower = map.lower
-		self.side = map.side
+		this.hasAtmosphere = context.volcanoA && context.volcanoB && context.volcanoC;
+
+		this.bg = getBackground(levelname);
+		stars = [];
+		for (i = 1; i <= 5; ++i) {
+			stars.add(IMAGES.get('tiles/background/stars' + i + '.png'));
+		}
+		stars.concat([null] * 10);
+		stars *= 3;
+		stars.shuffle();
+		this.stars = stars;
+		this.runCounter = 0;
+		this.runCounterValidFor = ':P';
 		
-		self.lazor_cooldown = 0
+		this.cols = map.width;
+		this.rows = map.height;
+		this.upper = map.upper;
+		this.lower = map.lower;
+		this.side = map.side;
 		
-		self.tiles = makeGrid(self.cols, self.rows)
+		this.lazor_cooldown = 0;
 		
-		self.doorSwaps = map.doorswaps
+		this.tiles = makeGrid(this.cols, this.rows);
 		
-		doorTiles = []
-		ladderTiles = {}
-		lowerdoors = []
-		y = self.rows - 1
-		while y >= 0:
-			x = 0
-			while x < self.cols:
+		this.doorSwaps = map.doorswaps;
+		
+		doorTiles = [];
+		ladderTiles = {};
+		lowerdoors = [];
+		for (y = this.rows - 1; y >= 0; --y) {
+			for (x = 0; x < this.cols; ++x) {
 				
-				t = makeTile(self.lower[x][y], self.upper[x][y], x, y)
-				self.tiles[x][y] = t
-				if t.isDoor:
-					doorTiles.append((str(x) + '|' + str(y), t))
-					if self.side and y + 1 < self.rows:
-						# add the tile below the door to the potential door tiles
-						# the door list from the map parser will check for the tile below a door iff it's a tall door and is 
-						# expecting to find it in this list. If not, then this gets safely ignored
-						doorTiles.append((str(x) + '|' + str(y + 1), self.tiles[x][y + 1]))
+				t = makeTile(this.lower[x][y], this.upper[x][y], x, y);
+				this.tiles[x][y] = t;
+				if (t.isDoor) {
+					doorTiles.add([x + '|' + y, t]);
+					if (this.side && y + 1 < this.rows) {
+						// add the tile below the door to the potential door tiles
+						// the door list from the map parser will check for the tile below a door iff it's a tall door and is 
+						// expecting to find it in this list. If not, then this gets safely ignored
+						doorTiles.add([x + '|' + (y + 1), this.tiles[x][y + 1]]);
+					}
+				}
+				if (t.isLadder) {
+					ladderTiles[x + '|' + y] = [x, y];
+				}
+			}
+		}
+		
+		for (lk : ladderTiles.keys()) {
+			coord = ladderTiles[lk];
+			x = coord[0];
+			y = coord[1];
+			if (y > 0) {
+				if (ladderTiles.get(x + "|" + (y - 1), null) == null) {
+					this.tiles[x][y].isTop = true;
+				}
+			}
+		}
+		doorLookup = {};
+		for (door : map.doors) {
+			xys = [[door.sx, door.sy]];
+			if (this.side) {
+				xys.add([door.sx, door.sy + 1]);
+			}
+			for (xy : xys) {
+				doorLookup[xy[0] + '|' + xy[1]] = door;
+			}
+		}
+		
+		for (doorTile : doorTiles) {
+			dk = doorTile[0];
+			door = doorLookup.get(dk, null);
+			if (door != null) {
+				doorTile[1].door = door;
+				doorTile[1].collisions = [];
+				doorTile[1].solid = false;
+			}
+		}
+		
+		this.cameraX = 0;
+		this.cameraY = 0;
+		
+		this.player = new Sprite('player_' + (this.side ? 'side' : 'over'), startCol * 16 + 8, startRow * 16 + 7);
+		this.sprites = [this.player];
+		
+		if (levelname == 'bike_level') {
+			this.player.bikemode = true;
+			this.player.floats = true;
+		}
+		
+		for (enemy : map.enemies) {
+			sprite = new Sprite(enemy.id, enemy.col * 16 + 8, enemy.row * 16 + 8);
+			sprite.isEnemy = true;
+			this.sprites.add(sprite);
+		}
+		
+		this.overlayTriggers = map.overlayTriggers;
+		
+		for (powerup : map.powerups) {
+			puid = powerup.id;
+			if (!context.powerupsTaken.get(puid, false)) {
+				powerupSprite = new Sprite('powerup', powerup.col * 16 + 8, powerup.row * 16 + 7);
+				powerupSprite.powerupInfo = powerup;
+				this.sprites.add(powerupSprite);
+			}
+		}
+		
+		this.special = getSpecialLevelStuff(levelname, this);
+		for (special : this.special) {
+			if (special.hasPostInit) {
+				special.postInit();
+			}
+		}
+	}
+	
+	function playersTile(offsetX = 0, offsetY = 0) {
+		if (this.player == null) return null;
+		p = this.player;
+		tx = $floor(p.modelX / 16) + offsetX;
+		ty = $floor(p.modelY / 16) + offsetY;
+		if (tx >= 0 && ty >= 0 && tx < this.cols && ty < this.rows) {
+			return this.tiles[tx][ty];
+		}
+		return null;
+	}
+	
+	function processInput(events, pressed) {
+		frozen = false;
+		for (s : this.special) {
+			if (s.freeze) {
+				frozen = true;
+			}
+		}
+		
+		this.shooting = this.lazor_cooldown > 0;
+		
+		pause = false;
+		
+		if (!frozen) {
+			if (this.side) {
+				dx = 0;
+				dy = 0;
+				running = false;
+				if (this.context.gravity) {
+					if (pressed['B'] && !this.player.cling) {
+						running = true;
+						v = 5;
+					} else {
+						v = 3;
+					}
+				} else {
+					v = 2.5;
+				}
+				
+				if (this.player.bikemode) {
+					v = 2.0;
+				}
+				
+				if (pressed['left']) {
+					dx = -v;
+					if (running && this.runCounterValidFor == 'left') {
+						this.runCounter++;
+					} else {
+						this.runCounter = 0;
+						this.runCounterValidFor = 'left';
+					}
+				} else if (pressed['right']) {
+					dx = v;
+					if (running && this.runCounterValidFor == 'right') {
+						this.runCounter++;
+					} else {
+						this.runCounter = 0;
+						this.runCounterValidFor = 'right';
+					}
+				} else {
+					this.runCounter = 0;
+					this.runCounterValidFor = 'nothing';
+				}
+					
+				
+				if (pressed['up']) {
+					if (this.player.bikemode) {
+						dy = -v;
+					}
+					
+					pt = this.playersTile();
+					if (pt != null && pt.isLadder) {
+						this.player.cling = true;
+						//this.player.onGround = false;
+						this.player.ladderDY = -2;
+					}
+				} else if (pressed['down']) {
+					if (this.player.bikemode) {
+						dy = v;
+					}
+					
+					pt = this.playersTile();
+					if (pt != null && pt.isLadder) {
+						this.player.ladderDY = 2;
+					} else {
+						pt = this.playersTile(0, 1);
+						if (pt != null && pt.isLadder) {
+							this.player.modelY += 8;
+							this.player.ladderDY = 2;
+							this.player.cling = true;
+						}
+					}
+				}
+				
+				if (this.player != null) {
+					if (this.player.bikemode)
+						dx += BIKE_SPEED;
+					this.player.dx = dx;
+					this.player.dy = dy;
+				}
+				
+				for (event : events) {
+					if (event.action == 'A') {
+						if (event.down) {
+							pt = this.playersTile();
+							if (this.player.onGround || this.player.cling || (pt != null && pt.isWater)) {
+								this.player.onGround = false;
+								this.player.cling = false;
+								this.player.ladderDY = 0;
+								if (pt.isWater) {
+									this.player.vy += WATER_JUMPING_VY;
+									playNoise('swim');
+								} else {
+									this.player.vy = JUMPING_VY;
+									if (this.runCounter > 5 && this.context.gravity)
+										this.player.vy = RUN_JUMPING_VY;
+									playNoise('jump');
+								}
+							}
+						} else {
+							if (this.player.vy < 0) {
+								this.player.vy = this.player.vy / 4.0; // maybe set to 0 instead?
+							}
+						}
+					} else if (event.action == 'B' && event.down) {
+						// SHOOT UR LAZOR PEW PEW!!!!1
+						if (this.lazor_cooldown <= 0) { // && !this.player.cling) {
+							p = this.player;
+							lazorLeft = this.player.lastDirection == 'left';
+							if (this.player.damageDir != null) {
+								lazorLeft = this.player.damageDir == 'left';
+							}
+							lazorVX = 8;
+							if (lazorLeft) {
+								lazorVX = -8;
+							}
+							
+							x = p.x + lazorVX;
+							y = p.y - 8;
+							
+							if (p.spawns == null) {
+								p.spawns = [];
+							}
+							
+							playNoise('lazor');
+							bullet = new Sprite('lazor', x, y);
+							bullet.bvx = lazorVX;
+							bullet.isBullet = true;
+							bullet.ghost = true;
+							bullet.floats = true;
+							p.spawns.add(bullet);
+							this.lazor_cooldown = 6;
+						}
+					} else if (event.action == 'start' && event.down) {
+						this.next = new PauseScene(this);
+					}
+				}
+			} else {
+				v = 3;
+				dx = 0;
+				dy = 0;
+				
+				if (pressed['left']) {
+					dx = -v;
+				} else if (pressed['right']) {
+					dx = v;
+				}
+					
+				if (pressed['up']) {
+					dy = -v;
+				} else if (pressed['down']) {
+					dy = v;
+				}
+				
+				for (event : events) {
+					if (event.action == 'start' && event.down) {
+						this.next = new PauseScene(this);
+					}
+				}
+				
+				this.player.dx = dx;
+				this.player.dy = dy;
+			}
+		}
+	}
+	
+	function playMusic() {
+		JUKEBOX.playSongForLevelMaybe(this.id);
+	}
+	
+	function update() {
+		this.updateCounter++;
+		this.playMusic();
+		
+		playerX = this.player.modelX;
+		playerY = this.player.modelY;
+		sprites = this.sprites;
+		this.lazor_cooldown--;
+		newsprites = [];
+		allBullets = [];
+		for (i = 0; i < sprites.length; ++i) { // use an indexed loop instead of for loop since you're adding spawned sprites to the list while iterating through it.
+			sprite = sprites[i];
+			if (sprite != null && !sprite.dead) {
+				sprite.update(this);
+				if (sprite.isEnemy && this.player != null) {
+					if (sprite.isCollision(this.player)) {
+						this.playerHit();
+					}
+				}
+				
+				if (sprite.spawns != null) {
+					for (spawn : sprite.spawns) {
+						sprites.add(spawn);
+					}
+				}
+				sprite.spawns = null;
+				
+				if (sprite.isBullet) {
+					allBullets.add(sprite);
+				}
+			}
+		}
+		new_sprites = [];
+		
+		for (i = 0; i < sprites.length; ++i) {
+			sprite = sprites[i];
+			if (allBullets.length > 0 && sprite.type != 'bird1' && sprite.type != 'bird2') {
+				if (sprite.isEnemy) {
+					left = sprite.x - 8;
+					right = sprite.x + 8;
+					bottom = sprite.y + 8;
+					top = bottom - sprite.height;
+					
+					for (j = 0; j < allBullets.length; ++j) {
+						bullet = allBullets[j];
+						bleft = bullet.x - 8;
+						bright = bleft + 16;
+						bbottom = bullet.y + 4;
+						btop = bbottom - 8;
 						
-				if t.isLadder:
-					ladderTiles[str(x) + '|' + str(y)] = (x, y)
-				x += 1
-			y -= 1 # go backwards so doors can add lower neighbor
-		
-		for lk in ladderTiles.keys():
-			coord = ladderTiles[lk]
-			x = coord[0]
-			y = coord[1]
-			if y > 0:
-				if ladderTiles.get(str(x) + "|" + str(y - 1)) == None:
-					self.tiles[x][y].isTop = True
-		
-		doorLookup = {}
-		for door in map.doors:
-			xys = [(door.sx, door.sy)]
-			if self.side:
-				xys.append((door.sx, door.sy + 1))
-			for xy in xys:
-				doorLookup[str(xy[0]) + '|' + str(xy[1])] = door
-		
-		for doorTile in doorTiles:
-			dk = doorTile[0]
-			door = doorLookup.get(dk, None)
-			if door != None:
-				doorTile[1].door = door
-				doorTile[1].collisions = []
-				doorTile[1].solid = False
-		
-		self.cameraX = 0
-		self.cameraY = 0
-		
-		self.player = Sprite('player_' + ('side' if self.side else 'over'), startCol * 16 + 8, startRow * 16 + 7)
-		self.sprites = [self.player]
-		
-		if levelname == 'bike_level':
-			self.player.bikemode = True
-			self.player.floats = True
-		
-		for enemy in map.enemies:
-			sprite = Sprite(enemy.id, enemy.col * 16 + 8, enemy.row * 16 + 8)
-			sprite.isEnemy = True
-			self.sprites.append(sprite)
-		
-		self.overlayTriggers = map.overlayTriggers
-		
-		for powerup in map.powerups:
-			puid = powerup.id
-			if context.powerupsTaken.get(puid, False):
-				pass
-			else:
-				powerupSprite = Sprite('powerup', powerup.col * 16 + 8, powerup.row * 16 + 7)
-				powerupSprite.powerupInfo = powerup
-				self.sprites.append(powerupSprite)
-		
-		self.special = getSpecialLevelStuff(levelname, self)
-		for special in self.special:
-			if special.hasPostInit:
-				special.postInit()
-	
-	def playersTile(self, offsetX=0, offsetY=0):
-		if self.player == None: return None
-		p = self.player
-		tx = int(p.modelX / 16) + offsetX
-		ty = int(p.modelY / 16) + offsetY
-		if tx >= 0 and ty >= 0 and tx < self.cols and ty < self.rows:
-			return self.tiles[tx][ty]
-		return None
-	
-	def processInput(self, events, pressed):
-		frozen = False
-		for s in self.special:
-			if s.freeze:
-				frozen = True
-		
-		self.shooting = self.lazor_cooldown > 0
-		
-		pause = False
-		
-		if not frozen:
-			if self.side:
-				dx = 0
-				dy = 0
-				running = False
-				if self.context.gravity:
-					if pressed['B'] and not self.player.cling:
-						running = True
-						v = 5
-					else:
-						v = 3
-				else:
-					v = 2.5
-				
-				if self.player.bikemode:
-					v = 2.0
-				
-				
-				if pressed['left']:
-					dx = -v
-					if running and self.runCounterValidFor == 'left':
-						self.runCounter += 1
-					else:
-						self.runCounter = 0
-						self.runCounterValidFor = 'left'
-				elif pressed['right']:
-					dx = v
-					if running and self.runCounterValidFor == 'right':
-						self.runCounter += 1
-					else:
-						self.runCounter = 0
-						self.runCounterValidFor = 'right'
-				else:
-					self.runCounter = 0
-					self.runCounterValidFor = 'nothing'
-					
-				
-				if pressed['up']:
-					
-					if self.player.bikemode:
-						dy = -v
-					
-					pt = self.playersTile()
-					if pt != None and pt.isLadder:
-						self.player.cling = True
-						#self.player.onGround = False
-						self.player.ladderDY = -2
-				elif pressed['down']:
-					
-					if self.player.bikemode:
-						dy = v
-					
-					pt = self.playersTile()
-					if pt != None and pt.isLadder:
-						self.player.ladderDY = 2
-					else:
-						pt = self.playersTile(0, 1)
-						if pt != None and pt.isLadder:
-							self.player.modelY += 8
-							self.player.ladderDY = 2
-							self.player.cling = True
-				
-				if self.player != None:
-					if self.player.bikemode:
-						dx += BIKE_SPEED
-					self.player.dx = dx
-					self.player.dy = dy
-				
-				for event in events:
-					if event.action == 'A':
-						if event.down:
-							pt = self.playersTile()
-							if self.player.onGround or self.player.cling or (pt != None and pt.isWater):
-								self.player.onGround = False
-								self.player.cling = False
-								self.player.ladderDY = 0
-								if pt.isWater:
-									self.player.vy += WATER_JUMPING_VY
-									playNoise('swim')
-								else:
-									self.player.vy = JUMPING_VY
-									if self.runCounter > 5 and self.context.gravity:
-										self.player.vy = RUN_JUMPING_VY
-									playNoise('jump')
-						else:
-							if self.player.vy < 0:
-								self.player.vy = self.player.vy / 4.0 # maybe set to 0 instead?
-					
-					# SHOOT UR LAZOR PEW PEW!!!!1
-					elif event.action == 'B' and event.down:
-						if self.lazor_cooldown <= 0:#and not self.player.cling:
-							p = self.player
-							lazorLeft = self.player.lastDirection == 'left'
-							if self.player.damageDir != None:
-								lazorLeft = self.player.damageDir == 'left'
-							lazorVX = 8
-							if lazorLeft:
-								lazorVX = -8
+						// WAT?
+						// I probably wrote this when I was about to collapse during PyWeek.
+						if (bleft > right) { }
+						else if (bright < left) { }
+						else if (btop > bottom) { }
+						else if (bbottom < top) { }
+						else {
+							sprite.dead = true;
+							bullet.dead = true;
+							switch (sprite.type) {
+								case 'acorn':
+								case 'acorntop':
+								case 'byat':
+								case 'moonsquid':
+								case 'lavamonster':
+									dropN = $floor($random() * 200);
+									drop = null;
+									if (dropN == 0) {
+										drop = '1up';
+									} else if (dropN < 8) {
+										drop = 'life_big';
+									} else if (dropN < 30) {
+										drop = 'life_small';
+									}
+									
+									if (drop != null) {
+										// Can't do spawns since it'll get filtered out before then.
+										powerup = new Sprite('powerup', sprite.x, sprite.y - 1);
+										info = new Object();
+										info.id = null;
+										info.type = drop;
+										powerup.powerupInfo = info;
+										new_sprites.add(powerup);
+									}
+									break;
+									
+								default:
+									break;
+							}
+							poofType = 'poof_small';
+							if (sprite.type == 'lavamonster') {
+								poofType = 'poof_big';
+							}
 							
-							x = p.x + lazorVX
-							y = p.y - 8
+							poof = new Sprite(poofType, sprite.x, sprite.y);
+							new_sprites.add(poof);
+							playNoise('enemy_dies');
+						}
+					}
+				}
+			}
+			
+			if (!sprite.dead) {
+				new_sprites.add(sprite);
+			}
+		}
+		this.sprites = new_sprites;
+		
+		player_tx = $floor(this.player.modelX / 16);
+		player_ty = $floor(this.player.modelY / 16);
+		activeTile = this.tiles[player_tx][player_ty];
+		if (activeTile.door != null) {
+			door = activeTile.door;
+			target = door.target;
+			swaps = this.doorSwaps.get(target, null);
+			
+			if (swaps != null) {
+				ctx = this.context;
+				for (swap : swaps) {
+					trigger = swap[0];
+					if ((trigger == 'gravity' && ctx.gravity) ||
+						(trigger == 'lavaA' && ctx.volcanoA) ||
+						(trigger == 'lavaB' && ctx.volcanoB) ||
+						(trigger == 'lavaC' && ctx.volcanoC) ||
+						(trigger == 'waterA' && ctx.balloonA) ||
+						(trigger == 'waterB' && ctx.balloonB) ||
+						(trigger == 'waterC' && ctx.balloonC) ||
+						(trigger == 'waterD' && ctx.balloonD)) {
+						target = swap[1];
+						break;
+					}
+				}
+			}
+			
+			for (special : this.special) {
+				if (special.hasDoorTrigger) {
+					target = special.doorTrigger(target);
+					break;
+				}
+			}
+			
+			if (target != null) {
+				this.next = new PlayScene(target, door.tx, door.ty, this.context);
+			}
+		}
+		
+		pUp = this.playersTile(0, -1);
+		pDown = this.playersTile(0, 0);
+		
+		if ((pUp != null && pUp.isSpike) || (pDown != null && pDown.isSpike)) {
+			this.playerHit(3);
+		}
+		
+		if ((pUp != null && pUp.isLava) || (pDown != null && pDown.isLava)) {
+			this.next = new DeathOverrideScene(this, 'lava');
+		}
+		
+		for (special : this.special) {
+			if (special.hasUpdate) {
+				special.update();
+			}
+		}
+	}
+	
+	function playerHit(amount = 1) {
+		if (this.player.blinkCounter < 0) {
+			this.player.hit(this, amount);
+		}
+	}
+	
+	function isCollision(pLeft, pTop, pRight, pBottom) {
+		if (pLeft < 0) return true;
+		if (pTop < 0) return true;
+		tLeft = $floor(pLeft / 16);
+		tRight = (pRight == pLeft) ? tLeft : $floor(pRight / 16);
+		tTop = $floor(pTop / 16);
+		
+		// potentially a bug
+		// bottom row of sprite is technically top row of ground below. This intersection should be ignored.
+		tBottom = $floor((pBottom - 3) / 16);
+		
+		if (tLeft < 0) return true;
+		if (tTop < 0) return true;
+		if (tRight >= this.cols) return true;
+		if (tBottom >= this.rows) return true;
+		
+		y = tTop;
+		for (y = tTop; y <= tBottom; ++y) {
+			for (x = tLeft; x <= tRight; ++x) {
+				if (this.tiles[x][y].solid) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	function renderOverlay() {
+		$gfx_draw_rectangle(0, 0, 256, 8, 0, 0, 0, 255);
+		$gfx_blit_image(IMAGES.get('misc/lives.png'), 0, 0);
+		drawText(255, 255, 255, 'x' + this.context.lives, 8, 0);
+		
+		x = 112;
+		drawText(255, 255, 255, 'HEALTH', x, 0);
+		
+		x += 'HEALTH'.length * 8 + 8;
+		
+		health = this.context.lifemeter;
+		color = GOOD_HEALTH_COLOR;
+		if (health < 4) {
+			color = POOR_HEALTH_COLOR;
+		}
+		for (i = 0; i < 5; ++i) {
+			$gfx_draw_rectangle(x, 0, 16, 8, 128, 128, 128, 255);
+			if (health >= ((i + 1) * 2)) {
+				$gfx_draw_rectangle(x + 1, 1, 14, 6, color[0], color[1], color[2], 255);
+			} else if (health == 2 * i + 1) {
+				$gfx_draw_rectangle(x + 1, 1, 7, 6, color[0], color[1], color[2], 255);
+			}
+			x += 16;
+		}
+		
+		cat = this.context.getCurrentCountAndType();
+		if (cat != null) {
+			cnt = cat[1];
+			
+			if (cat[0] == 'W') {
+				img = IMAGES.get('misc/water_icon.png');
+				total = 4;
+			} else {
+				img = IMAGES.get('misc/volcano_icon.png');
+				total = 3;
+			}
 							
-							if p.spawns == None:
-								p.spawns = []
-							
-							playNoise('lazor')
-							bullet = Sprite('lazor', x, y)
-							bullet.bvx = lazorVX
-							bullet.isBullet = True
-							bullet.ghost = True
-							bullet.floats = True
-							p.spawns.append(bullet)
-							self.lazor_cooldown = 6
-					elif event.action == 'start' and event.down:
-						self.next = PauseScene(self)
-			else:
-				v = 3
-				dx = 0
-				dy = 0
-				
-				if pressed['left']:
-					dx = -v
-				elif pressed['right']:
-					dx = v
-					
-				if pressed['up']:
-					dy = -v
-				elif pressed['down']:
-					dy = v
-				
-				for event in events:
-					if event.action == 'start' and event.down:
-						self.next = PauseScene(self)
-				
-				self.player.dx = dx
-				self.player.dy = dy
+			$gfx_blit_image(img, 48, 0);
+			drawText(255, 255, 255, cnt + '/' + total, 56, 0);
+		}
+	}
 	
-	def playMusic(self):
-		JUKEBOX.playSongForLevelMaybe(self.id)
-	
-	def update(self):
-		self.updateCounter += 1
-		self.playMusic()
+	function render(rc) {
+		if (this.bg == 'stars') {
+			$gfx_fill_screen(0, 0, 0);
+		} else if (this.bg == 'cave') {
+		} else if (this.bg == 'volcano') {
+		} else {
+			$gfx_fill_screen(0, 0, 40); // sky
+		}
 		
-		playerX = self.player.modelX
-		playerY = self.player.modelY
-		sprites = self.sprites
-		self.lazor_cooldown -= 1
-		newsprites = [] # TODO: filter out the dead
+		colStart = 0;
+		colEnd = this.cols - 1;
 		
-		allBullets = []
-		i = 0
-		while i < len(sprites):
-			sprite = sprites[i]
-			if sprite != None and not sprite.dead:
-				sprite.update(self)	
-				if sprite.isEnemy and self.player != None:
-					if sprite.isCollision(self.player):
-						self.playerHit()
+		rowStart = 0;
+		rowEnd = this.rows - 1;
+		
+		offsetX = -(this.player.x - 128);
+		offsetY = -(this.player.y - 112);
+		
+		if (this.player.bikemode) {
+			offsetX = -(this.updateCounter * BIKE_SPEED);
+		}
+		
+		if (offsetX > 0) offsetX = 0;
+		if (offsetY > 0) offsetY = 0;
+		
+		right = -(this.cols * 16 - 256);
+		if (offsetX < right) offsetX = right;
+		
+		bottom = -(this.rows * 16 - 224);
+		if (offsetY < bottom) offsetY = bottom;
+		
+		if (this.cols * 16 < 256)
+			offsetX = (256 - this.cols * 16) / 2;
+		if (this.rows * 16 < 224)
+			offsetY = (224 - this.rows * 16) / 2;
+		
+		cave = IMAGES.get('tiles/background/cave.png');
+		volcano_bg = IMAGES.get('tiles/background/volcano.png');
+		starlen = this.stars.length;
+		stars = this.stars;
+		counter = 0;
+		
+		idealColStart = -$floor(offsetX / 16) - 1;
+		if (idealColStart > colStart)
+			colStart = idealColStart;
+		
+		idealColEnd = colStart + 17;
+		if (idealColEnd < colEnd)
+			colEnd = idealColEnd;
+		
+		idealRowStart = -$floor(offsetY / 16) - 1;
+		if (idealRowStart > rowStart)
+			rowStart = idealRowStart;
+		
+		idealRowEnd = rowStart + 15;
+		if (idealRowEnd < rowEnd)
+			rowEnd = idealRowEnd;
+		
+		lavaLevel = 0;
+		shake = 0;
+		for (s : this.special) {
+			lavaLevel = max(lavaLevel, s.lavaLevel);
+			shake = max(shake, s.shakeScreen ? 3 : 0);
+		}
+		
+		offsetX += shake;
+		offsetY += shake / 3;
+		
+		lavaRowType = null;
+		
+		for (row = rowStart; row <= rowEnd; ++row) {
+			fromBottom = rowEnd - row + 1;
+			if (lavaLevel > 0) {
+				if (fromBottom == lavaLevel) {
+					lavaRowType = 'upper';
+					lc = $floor((rc / 4) % 4) + 1;
+					lu = IMAGES.get('tiles/fluids/lava' + lc + '.png');
+				} else if (fromBottom < lavaLevel) {
+					lavaRowType = 'inner' ;
+					lu = IMAGES.get('tiles/fluids/lava.png');
+				}
+			}
+			
+			for (col = colStart; col <= colEnd; ++col) {
+				counter++;
+				x = col * 16 + offsetX;
+				y = row * 16 + offsetY;
+				if (this.bg == 'cave') {
+					$gfx_blit_image(cave, x, y);
+				} else if (this.bg == 'volcano') {
+					$gfx_blit_image(volcano_bg, x, y);
+					if (lavaRowType != null) {
+						$gfx_blit_image(lu, x, y);
+					}
+				} else if (this.bg == 'stars') {
+					bgimg = stars[(col + this.rows * row + row * row) % starlen];
+					if (bgimg != null) {
+						$gfx_blit_image(bgimg, x, y);
+					}
+				}
 				
-				if sprite.spawns != None:
-					for spawn in sprite.spawns:
-						sprites.append(spawn)
-				sprite.spawns = None
-				
-				if sprite.isBullet:
-					allBullets.append(sprite)
-			i += 1
+				for (template : this.tiles[col][row].templates) {
+					$gfx_blit_image(template.getImage(rc), x, y);
+				}
+			}
+		}
 		
-		new_sprites = []
+		re_render = [];
+		arc = rc / 4;
+		for (sprite : this.sprites) {
+			if (sprite != null && !sprite.dead) {
+				sprite.render(this, offsetX, offsetY, arc);
+				if (sprite.inBackground) {
+					tx = sprite.x / 16;
+					ty = (sprite.y + 8) / 16;
+					re_render.add([tx, ty]);
+					re_render.add([tx, ty - 1]);
+					re_render.add([tx, ty - 2]);
+				}
+			}
+		}
 		
-		i = 0
-		while i < len(sprites):
-			sprite = sprites[i]
-			if len(allBullets) > 0 and sprite.type != 'bird1' and sprite.type != 'bird2':
-				if sprite.isEnemy:
-					left = sprite.x - 8
-					right = sprite.x + 8
-					bottom = sprite.y + 8
-					top = bottom - sprite.height
-					
-					j = 0
-					while j < len(allBullets):
-						bullet = allBullets[j]
-						bleft = bullet.x - 8
-						bright = bleft + 16
-						bbottom = bullet.y + 4
-						btop = bbottom - 8
-						
-						if bleft > right:
-							pass
-						elif bright < left:
-							pass
-						elif btop > bottom:
-							pass
-						elif bbottom < top:
-							pass
-						else:
-							sprite.dead = True
-							bullet.dead = True
-							if sprite.type in ('acorn', 'acorntop', 'byat', 'moonsquid', 'lavamonster'):
-								dropN = int(random.random() * 200)
-								drop = None
-								if dropN == 0:
-									drop = '1up'
-								elif dropN < 8:
-									drop = 'life_big'
-								elif dropN < 30:
-									drop = 'life_small'
-								
-								if drop != None:
-									# Can't do spawns since it'll get filtered out before then.
-									powerup = Sprite('powerup', sprite.x, sprite.y - 1)
-									info = StemCell()
-									info.id = None
-									info.type = drop
-									powerup.powerupInfo = info
-									new_sprites.append(powerup)
-							
-							poofType = 'poof_small'
-							if sprite.type == 'lavamonster':
-								poofType = 'poof_big'
-							poof = Sprite(poofType, sprite.x, sprite.y)
-							new_sprites.append(poof)
-							playNoise('enemy_dies')
-						
-						j += 1
-			
-			if not sprite.dead:
-				new_sprites.append(sprite)
-			i += 1
+		for (rr : re_render) {
+			col = rr[0];
+			row = rr[1];
+			if (row >= 0) {
+				x = col * 16 + offsetX;
+				y = row * 16 + offsetY;
+				for (template : this.tiles[col][row].templates) {
+					$gfx_blit_image(template.getImage(rc), x, y);
+				}
+			}
+		}
 		
-		self.sprites = new_sprites
+		for (s : this.special) {
+			if (s.hasRender) {
+				s.render(rc, offsetX, offsetY);
+			}
+		}
 		
-		player_tx = int(self.player.modelX / 16)
-		player_ty = int(self.player.modelY / 16)
-		activeTile = self.tiles[player_tx][player_ty]
-		if activeTile.door != None:
-			door = activeTile.door
-			target = door.target
-			swaps = self.doorSwaps.get(target)
-			
-			if swaps != None:
-				ctx = self.context
-				for swap in swaps:
-					trigger = swap[0]
-					if ((
-						trigger == 'gravity' and ctx.gravity) or (
-						trigger == 'lavaA' and ctx.volcanoA) or (
-						trigger == 'lavaB' and ctx.volcanoB) or (
-						trigger == 'lavaC' and ctx.volcanoC) or (
-						trigger == 'waterA' and ctx.balloonA) or (
-						trigger == 'waterB' and ctx.balloonB) or (
-						trigger == 'waterC' and ctx.balloonC) or (
-						trigger == 'waterD' and ctx.balloonD)):
-						target = swap[1]
-						break
-			
-			for special in self.special:
-				if special.hasDoorTrigger:
-					target = special.doorTrigger(target)
-					break
-			
-			if target != None:
-				self.next = PlayScene(target, door.tx, door.ty, self.context)
-		
-		pUp = self.playersTile(0, -1)
-		pDown = self.playersTile(0, 0)
-		
-		if (pUp != None and pUp.isSpike) or (pDown != None and pDown.isSpike):
-			self.playerHit(3)
-		
-		if (pUp != None and pUp.isLava) or (pDown != None and pDown.isLava):
-			self.next = DeathOverrideScene(self, 'lava')
-		
-		for special in self.special:
-			if special.hasUpdate:
-				special.update()
+		this.renderOverlay();
+	}
 	
-	def playerHit(self, amount=1):
-		if self.player.blinkCounter < 0:
-			self.player.hit(self, amount)
-	
-	def isCollision(self, pLeft, pTop, pRight, pBottom):
-		if pLeft < 0: return True
-		if pTop < 0: return True
-		tLeft = int(pLeft / 16)
-		tRight = tLeft if (pRight == pLeft) else int(pRight / 16)
-		tTop = int(pTop / 16)
-		
-		# potentially a bug
-		# bottom row of sprite is technically top row of ground below. This intersection should be ignored.
-		tBottom = int((pBottom - 3) / 16) 
-		
-		if tLeft < 0: return True
-		if tTop < 0: return True
-		if tRight >= self.cols: return True
-		if tBottom >= self.rows: return True
-		
-		y = tTop
-		while y <= tBottom:
-			x = tLeft
-			while x <= tRight:
-				if self.tiles[x][y].solid:
-					return True
-				x += 1
-			y += 1
-		return False
-	
-	def renderOverlay(self, screen):
-		pygame.draw.rect(screen, (0, 0, 0), pygame.Rect(0, 0, 256, 8))
-		
-		screen.blit(getImage('misc/lives.png'), (0, 0))
-		txt = getText(WHITE, 'x' + str(self.context.lives))
-		screen.blit(txt, (8, 0))
-		
-		x = 112
-		txt = getText(WHITE, 'HEALTH')
-		screen.blit(txt, (x, 0))
-		
-		x += txt.get_width() + 8
-		
-		health = self.context.lifemeter
-		color = GOOD_HEALTH_COLOR
-		if health < 4:
-			color = POOR_HEALTH_COLOR
-		i = 0
-		while i < 5:
-			pygame.draw.rect(screen, (128, 128, 128), pygame.Rect(x, 0, 16, 8), 1)
-			if health >= ((i + 1) * 2):
-				pygame.draw.rect(screen, color, pygame.Rect(x + 1, 1, 14, 6))
-			elif health == 2 * i + 1:
-				pygame.draw.rect(screen, color, pygame.Rect(x + 1, 1, 7, 6))
-			
-			x += 16
-			i += 1
-		
-		cat = self.context.getCurrentCountAndType()
-		if cat != None:
-			cnt = cat[1]
-			
-			if cat[0] == 'W':
-				img = getImage('misc/water_icon.png')
-				total = 4
-			else:
-				img = getImage('misc/volcano_icon.png')
-				total = 3
-							
-			screen.blit(img, (48, 0))
-			screen.blit(getText(WHITE, str(cnt) + '/' + str(total)), (56, 0))
-	def render(self, screen, rc):
-		if self.bg == 'stars':
-			screen.fill((0, 0, 0))
-		elif self.bg == 'cave':
-			pass
-		elif self.bg == 'volcano':
-			pass
-		else:
-			screen.fill((0, 0, 40)) # sky
-		
-		colStart = 0
-		colEnd = self.cols - 1
-		
-		rowStart = 0
-		rowEnd = self.rows - 1
-		
-		offsetX = -(self.player.x - 128)
-		offsetY = -(self.player.y - 112)
-		
-		if self.player.bikemode:
-			offsetX = -(self.updateCounter * BIKE_SPEED)
-		
-		if offsetX > 0: offsetX = 0
-		if offsetY > 0: offsetY = 0
-		
-		right = -(self.cols * 16 - 256)
-		if offsetX < right: offsetX = right
-		
-		bottom = -(self.rows * 16 - 224)
-		if offsetY < bottom: offsetY = bottom
-		
-		if self.cols * 16 < 256:
-			offsetX = (256 - self.cols * 16) // 2
-		if self.rows * 16 < 224:
-			offsetY = (224 - self.rows * 16) // 2
-		
-		cave = getImage('tiles/background/cave.png')
-		volcano_bg = getImage('tiles/background/volcano.png')
-		starlen = len(self.stars)
-		stars = self.stars
-		counter = 0
-		
-		idealColStart = -int(offsetX / 16) - 1
-		if idealColStart > colStart:
-			colStart = idealColStart
-		
-		idealColEnd = colStart + 17
-		if idealColEnd < colEnd:
-			colEnd = idealColEnd
-		
-		idealRowStart = -int(offsetY / 16) - 1
-		if idealRowStart > rowStart:
-			rowStart = idealRowStart
-		
-		idealRowEnd = rowStart + 15
-		if idealRowEnd < rowEnd:
-			rowEnd = idealRowEnd
-		
-		lavaLevel = 0
-		shake = 0
-		for s in self.special:
-			lavaLevel = max(lavaLevel, s.lavaLevel)
-			shake = max(shake, 3 if s.shakeScreen else 0)
-		
-		offsetX += shake
-		offsetY += shake // 3
-		
-		lavaRowType = None
-		
-		row = rowStart
-		while row <= rowEnd:
-			
-			fromBottom = rowEnd - row + 1
-			if lavaLevel > 0:
-				if fromBottom == lavaLevel:
-					lavaRowType = 'upper'
-					lc = str(int((rc // 4) % 4) + 1)
-					lu = getImage('tiles/fluids/lava' + lc + '.png')
-				elif fromBottom < lavaLevel:
-					lavaRowType = 'inner' 
-					lu = getImage('tiles/fluids/lava.png')
-			
-			
-			
-			col = colStart
-			while col <= colEnd:
-				counter += 1
-				x = col * 16 + offsetX
-				y = row * 16 + offsetY
-				pt = (x, y)
-				if self.bg == 'cave':
-					screen.blit(cave, pt)
-				elif self.bg == 'volcano':
-					screen.blit(volcano_bg, pt)
-					if lavaRowType != None:
-						screen.blit(lu, pt)
-					
-				elif self.bg == 'stars':
-					bgimg = stars[(col + self.rows * row + row * row) % starlen]
-					if bgimg != None:
-						screen.blit(bgimg, pt)
-				templates = self.tiles[col][row].templates
-				i = 0
-				while i < len(templates):
-					img = templates[i].getImage(rc)
-					screen.blit(img, pt)
-					i += 1
-				
-				col += 1
-			row += 1
-		
-		re_render = []
-		arc = rc // 4
-		for sprite in self.sprites:
-			if sprite != None and not sprite.dead:
-				sprite.render(self, screen, offsetX, offsetY, arc)
-				if sprite.inBackground:
-					tx = sprite.x // 16
-					ty = (sprite.y + 8) // 16
-					re_render.append((tx, ty))
-					re_render.append((tx, ty - 1))
-					re_render.append((tx, ty - 2))
-		
-		for rr in re_render:
-			col = rr[0]
-			row = rr[1]
-			if row >= 0:
-				x = col * 16 + offsetX
-				y = row * 16 + offsetY
-				pt = (x, y)
-				templates = self.tiles[col][row].templates
-				i = 0
-				while i < len(templates):
-					img = templates[i].getImage(rc)
-					screen.blit(img, pt)
-					i += 1
-				
-		
-		for s in self.special:
-			if s.hasRender:
-				s.render(screen, rc, offsetX, offsetY)
-		
-				
-		self.renderOverlay(screen)
-	
-	def triggerDialog(self, id, slightDelay=False):
-		self.next = DialogScene(self, id, slightDelay)
-		
+	function triggerDialog(id, slightDelay = false) {
+		this.next = new DialogScene(this, id, slightDelay);
+	}
+}

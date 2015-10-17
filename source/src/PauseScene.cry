@@ -1,30 +1,37 @@
-class PauseScene:
-	def __init__(self, bg):
-		self.bg = bg
-		self.next = self
-		self.flags = ''
-		self.counter = 0
+class PauseScene {
+	constructor(bg) {
+		this.bg = bg;
+		this.next = this;
+		this.flags = '';
+		this.counter = 0;
+	}
 	
-	def processInput(self, events, pressed):
-		for event in events:
-			if event.down and event.action == 'start':
-				if 'M' in self.bg.flags:
-					playNoise('pause_sound')
-					pygame.mixer.music.unpause()
-				self.next = self.bg
-				self.bg.next = self.bg
+	function processInput(events, pressed) {
+		for (event : events) {
+			if (event.down && event.action == 'start') {
+				if (this.bg.flags.contains('M')) {
+					playNoise('pause_sound');
+					$music_resume();
+				}
+				this.next = this.bg;
+				this.bg.next = this.bg;
+			}
+		}
+	}
 	
-	def update(self):
-		if 'M' in self.bg.flags:
-			if self.counter == 0:
-				pygame.mixer.music.pause()
-				playNoise('pause_sound')
+	function update() {
+		if (this.bg.flags.contains('M')) {
+			if (this.counter == 0) {
+				$music_pause();
+				playNoise('pause_sound');
+			}
+		}
 		
-		self.counter += 1
+		this.counter++;
+	}
 	
-	def render(self, screen, rc):
-		screen.fill(BLACK)
-		img = getText(WHITE, "PAUSE")
-		x = 128 - img.get_width() // 2
-		y = 112 - img.get_height() // 2
-		screen.blit(img, (x, y))
+	function render(rc) {
+		$gfx_fill_screen(0, 0, 0);
+		drawText(255, 255, 255, "PAUSE", 108, 108);
+	}
+}

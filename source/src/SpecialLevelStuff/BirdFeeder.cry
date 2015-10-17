@@ -1,39 +1,40 @@
-class BirdFeeder(SpecialLevelStuff):
-	def __init__(self, scene):
-		SpecialLevelStuff.__init__(self, scene)
-		self.hasPostInit = True
-		self.hasUpdate = True
-		self.counter = 0
-		seeds = [(4,36),
-			(11,30),
-			(4,24),
-			(11,18),
-			(4,12),
-			(11,6)]
-		self.seedsLeft = len(seeds)
-		for seed in seeds:
-			scene.sprites.append(Sprite('seeds', seed[0] * 16 + 8, seed[1] * 16 + 7))
+class BirdFeeder : SpecialLevelStuff {
+	constructor(scene) : base(scene) {
+		this.hasPostInit = true;
+		this.hasUpdate = true;
+		this.counter = 0;
+		seeds = [[4,36],
+			[11,30],
+			[4,24],
+			[11,18],
+			[4,12],
+			[11,6]];
+		this.seedsLeft = seeds.length;
+		for (seed : seeds) {
+			scene.sprites.add(new Sprite('seeds', seed[0] * 16 + 8, seed[1] * 16 + 7));
+		}
 		
-		bike = Sprite('rocketbike', 12 * 16 + 8, 39 * 16 + 8)
-		bike.floats = True
-		scene.sprites.append(bike)
+		bike = new Sprite('rocketbike', 12 * 16 + 8, 39 * 16 + 8);
+		bike.floats = true;
+		scene.sprites.add(bike);
 		
-		self.closingShown = False
+		this.closingShown = false;
+	}
 		
-	def update(self):
-		p = self.scene.player
-		self.counter += 1
+	function update() {
+		p = this.scene.player;
+		this.counter++;
 		
-		if self.counter == 3:
-			self.scene.next = DialogScene(self.scene, "Feeder1", False, False, False)
+		if (this.counter == 3) {
+			this.scene.next = new DialogScene(this.scene, "Feeder1", false, false, false);
+		}
 		
-		if self.seedsLeft == 0 and not self.closingShown:
-			self.scene.next = DialogScene(self.scene, "Feeder2", False, False, False)
-			self.scene.sprites.append(Sprite('bird1', 8, 8))
-			self.closingShown = True
+		if (this.seedsLeft == 0 && !this.closingShown) {
+			this.scene.next = new DialogScene(this.scene, "Feeder2", false, false, false);
+			this.scene.sprites.add(new Sprite('bird1', 8, 8));
+			this.closingShown = true;
+		}
+	}
 		
-		
-		
-	def postInit(self):
-		pass
-		
+	function postInit() { }
+}

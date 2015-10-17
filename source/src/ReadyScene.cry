@@ -1,26 +1,31 @@
-class ReadyScene:
-	def __init__(self, previousScene, context):
-		self.next = self
-		self.flags = ''
-		self.context = context
-		self.startArgs = previousScene.startArgs
-		self.counter = 0
-		self.playscene = PlayScene(self.startArgs[0], self.startArgs[1], self.startArgs[2], self.context)
+class ReadyScene {
+	constructor(previousScene, context) {
+		this.next = this;
+		this.flags = '';
+		this.context = context;
+		this.startArgs = previousScene.startArgs;
+		this.counter = 0;
+		this.playscene = new PlayScene(this.startArgs[0], this.startArgs[1], this.startArgs[2], this.context);
+	}
 	
-	def processInput(self, events, pressed):
-		pass
+	function processInput(events, pressed) { }
 	
-	def update(self):
-		self.playscene.playMusic()
-		self.counter += 1
-		if self.counter > 90:
-			self.next = self.playscene
+	function update() {
+		this.playscene.playMusic();
+		this.counter++;
+		if (this.counter > 90) {
+			this.next = this.playscene;
+		}
+	}
 	
-	def render(self, screen, rc):
-		if self.counter < 21:
-			screen.fill((0, 0, 0))
-		else:
-			self.playscene.render(screen, 0)
-			txt = getText(WHITE, 'ready')
-			if (rc % 8 < 4):
-				screen.blit(txt, (112, 112))
+	function render(rc) {
+		if (this.counter < 21) {
+			$gfx_fill_screen(0, 0, 0);
+		} else {
+			this.playscene.render(0);
+			if (rc % 8 < 4) {
+				drawText(255, 255, 255, 'ready', 112, 112);
+			}
+		}
+	}
+}

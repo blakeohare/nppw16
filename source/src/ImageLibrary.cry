@@ -1,22 +1,28 @@
-_imageLibrary = {}
-_reversedLibrary = {}
+class ImageLibrary {
+	constructor() {
+		this.images = {};
+		this.flipped = {};
+	}
+	
+	function get(path) {
+		img = this.images.get(path, null);
+		if (img == null) {
+			$gfx_image_load_from_resource('t', 'images/' + path);
+			img = $gfx_image_get('t');
+			this.images[path] = img;
+		}
+		return img;
+	}
+	
+	function getBackwards(path) {
+		img = this.flipped.get(path, null);
+		if (img == null) {
+			img = this.get(path);
+			img = $gfx_flip_image(img, true, false);
+			this.flipped[path] = img;
+		}
+		return img;
+	}
+}
 
-def getImage(path):
-	img = _imageLibrary.get(path)
-	if img == None:
-		alphaImg = pygame.image.load(('images/' + path).replace('/', os.sep).replace('\\', os.sep))
-		magenta = pygame.Surface(alphaImg.get_size()).convert()
-		magenta.fill((255, 0, 255))
-		magenta.blit(alphaImg, (0, 0))
-		magenta.set_colorkey((255, 0, 255))
-		img = magenta
-		_imageLibrary[path] = img
-	return img
-
-def getBackwardsImage(path):
-	img = _reversedLibrary.get(path)
-	if img == None:
-		img = getImage(path)
-		img = pygame.transform.flip(img, True, False)
-		_reversedLibrary[path] = img
-	return img
+IMAGES = new ImageLibrary();
