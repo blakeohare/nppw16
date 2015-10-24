@@ -63,6 +63,7 @@ function main() {
 	}
 	
 	$game_initialize_screen_scaled(256, 224, WIDTH, HEIGHT);
+	$gamepad_enable_recent('active');
 	
 	activeScene = new OpeningScene();
 	renderCounter = 0;
@@ -85,10 +86,12 @@ function main() {
 		}
 		
 		quitAttempt = false;
-		
-		for (event : $game_pump_events()) {
+		raw_events = $game_pump_events();
+		for (event : raw_events) {
 			if (event.is_quit) {
 				return;
+			} else if (event.is_gamepad) {
+				$print(event.player + '/' + event.name + ' --> ' + event.value);
 			} else if (event.is_key) {
 				down = event.down;
 				action = null;
@@ -118,6 +121,7 @@ function main() {
 		}
 		
 		activeScene.processInput(events, pressedActions);
+		activeScene._omghax_raw_events = raw_events;
 		activeScene.update();
 		activeScene.render(renderCounter++);
 		activeScene = activeScene.next;

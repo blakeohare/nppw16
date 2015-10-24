@@ -48,9 +48,15 @@ class TextRenderer {
 		
 		for (c : text) {
 			img = lookup.get(c, null);
+			
+			if (img == null && c != ' ') {
+				img = lookup.get('?', null);
+			}
+			
 			if (img != null) {
 				$gfx_blit_image(img, x, y);
 			}
+			
 			x += 8;
 		}
 	}
@@ -74,7 +80,6 @@ function drawText(r, g, b, text, x, y) {
 	}
 	
 	if (color == null) $assert(false, "Unknown color: " + r + ', ' + g + ', ' + b);
-	
 	TEXT_RENDERER.drawText(color, text, x, y);
 }
 

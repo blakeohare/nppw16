@@ -1,9 +1,19 @@
+_ACTIVE_JOYSTICK = [null];
+
 class JoystickMenuScene {
 	constructor() {
 		this.next = this;
 		this.flags = '';
-		this.options = ['None'] + get_joystick_manifest();
-		this.index = active_joystick == null ? 0 : (1 + joysticks_present[active_joystick]);
+		this.gamepads = [null];
+		this.index = 0;
+		for (i = 0; i < $gamepad_count(); ++i) {
+			gamepad = $gamepad_get_device(i);
+			this.gamepads.add(gamepad);
+			if (gamepad.id == 'active') {
+				this.index = i + 1;
+			}
+		}
+		
 		this.blink_counter = 0;
 	}
 	
@@ -11,24 +21,31 @@ class JoystickMenuScene {
 		for (event : events) {
 			if (event.down && this.blink_counter <= 0) {
 				if (event.action == 'up') {
-					this.index--;
+					if (this.blink_counter < 0) {
+						this.index--;
+					}
 				} else if (event.action == 'down') {
-					this.index++;
+					if (this.blink_counter < 0) {
+						this.index++;
+					}
 				} else if (event.action == 'A' || event.action == 'B' || event.action == 'start') {
-					if (this.index == 0) {
-						set_active_joystick(null);
+					gamepad = this.gamepads[this.index];
+					_ACTIVE_JOYSTICK[0] = gamepad;
+					if (gamepad == null) {
+						$gamepad_clear_ids();
 						this.next = new TitleScene();
 					} else {
-						this.blink_counter = 30;
+						$gamepad_set_id(gamepad, 'active'); // automatically bumps the 'active' ID from any other gamepads
 					}
+					this.blink_counter = 30;
 				}
 				
 				if (this.index < 0) {
 					this.index = 0;
 				}
 				
-				if (this.index >= this.options.length) {
-					this.index = this.options.length - 1;
+				if (this.index >= this.gamepads.length) {
+					this.index = this.gamepads.length - 1;
 				}
 			}
 		}
@@ -37,7 +54,12 @@ class JoystickMenuScene {
 	function update() {
 		this.blink_counter--;
 		if (this.blink_counter == 1) {
-			this.next = new JoystickConfigScreen(this.index - 1, this);
+			gamepad = _ACTIVE_JOYSTICK[0];
+			if (gamepad == null) {
+				this.next = new TitleScene();
+			} else {
+				this.next = new JoystickConfigScreen(gamepad, this);
+			}
 			this.blink_counter = 0;
 		}
 	}
@@ -46,13 +68,13 @@ class JoystickMenuScene {
 		$gfx_fill_screen(0, 0, 0);
 		
 		left = 32;
-		drawBox(left - 16, 16, 30, (this.options.length + 1) * 2 + 3);
+		drawBox(left - 16, 16, 30, (this.gamepads.length + 1) * 2 + 3);
 		
 		y = 32;
 		drawText(255, 255, 0, "Joystick Selection", 32, y);
 		y += 16;
 		index = 0;
-		for (option : this.options) {
+		for (gamepad : this.gamepads) {
 			selected = false;
 			if (index == this.index) {
 				drawText(255, 255, 255, '>', left, y);
@@ -60,7 +82,7 @@ class JoystickMenuScene {
 			}
 			
 			if (!selected || this.blink_counter <= 0 || rc % 4 < 2) {
-				drawText(255, 255, 255, option, left + 16, y);
+				drawText(255, 255, 255, gamepad == null ? "None" : gamepad.name, left + 16, y);
 			}
 			index++;
 			y += 16;

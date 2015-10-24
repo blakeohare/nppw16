@@ -74,15 +74,12 @@ class TitleScene {
 		left = 64;
 		
 		drawBox(left - 32, y - 16, 24, 9);
-		
 		for (option : this.options) {
-			
-			if (index == this.index)
+			if (index == this.index) {
 				drawText(255, 255, 255, ">", left - 16, y);
-			
+			}
 			if (index != this.index || showText)
 				drawText(255, 255, 255, option[1], left, y);
-			
 			index++;
 			y += 16;
 		}

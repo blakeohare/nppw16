@@ -1,14 +1,15 @@
 class JoystickConfigScreen {
-	constructor(js_index, bg) {
+	constructor(gamepad, bg) {
 		this.bg = bg;
 		this.bg.next = this.bg;
-		this.js_index = js_index;
+		this.gamepad = gamepad;
 		this.next = this;
 		this.flags = '';
 		this.buttons = 'left right up down A B start'.split(' ');
 		this.phase = 0;
 		this.configs_taken = {};
 		this.config = {};
+		this._omghax_raw_events = [];
 	}
 	
 	function processInput(events, pressed) { }
@@ -21,65 +22,20 @@ class JoystickConfigScreen {
 		}
 		
 		if (this.phase == this.buttons.length) {
-			name = joystick_instances[this.js_index].get_name();
-			cached_joysticks[name] = this.config;
-			set_active_joystick(name);
-			serialize_joystick_config();
+			$gamepad_save_config();
 			this.next = new TitleScene();
 		}
 	}
 	
 	function do_poll() {
-		button = this.buttons[this.phase];
-		js = joystick_instances[this.js_index];
-		
-		for (i = 0; i < js.get_numbuttons(); ++i) {
-			if (js.get_button(i)) {
-				key = 'B' + i;
-				if (!this.configs_taken.get(key, false)) {
-					this.configs_taken[key] = true;
-					this.config[button] = ['B', i];
+		for (raw_event : this._omghax_raw_events) {
+			if (raw_event.is_hardware && 
+				raw_event.device.id == this.gamepad.id && 
+				raw_event.is_significant // filters out analog axis noise
+			) {
+				alias = this.buttons[this.phase];
+				if ($gamepad_bind_digital(this.gamepad, raw_event.descriptor, alias)) {
 					return true;
-				}
-			}
-		}
-		
-		for (i = 0; i < js.get_numaxes(); ++i) {
-			value = js.get_axis(i);
-			if (value > 0.5) {
-				key = "A" + i + '+';
-				if (!this.configs_taken.get(key, false)) {
-					this.configs_taken[key] = true;
-					this.config[button] = ['A', i, true];
-					return true;
-				}
-			} else if (value < -0.5) {
-				key = "A" + i + '-';
-				if (!this.configs_taken.get(key, false)) {
-					this.configs_taken[key] = true;
-					this.config[button] = ['A', i, false];
-					return true;
-				}
-			}
-		}
-		
-		for (i = 0; i < js.get_numhats(); ++i) {
-			value = js.get_hat(i);
-			for (j : [0, 1]) {
-				if (value[j] == 1) {
-					key = 'H' + i + "|" + j + "+";
-					if (!this.configs_taken.get(key, false)) {
-						this.configs_taken[key] = true;
-						this.config[button] = ['H', i, j, true];
-						return true;
-					}
-				} else if (value[j] == -1) {
-					key = 'H' + i + "|" + j + '-';
-					if (!this.configs_taken.get(key, false)) {
-						this.configs_taken[key] = true;
-						this.config[button] = ['H', i, j, false];
-						return true;
-					}
 				}
 			}
 		}

@@ -83,7 +83,7 @@ class VolcanoCoreActivation : SpecialLevelStuff {
 		}
 	}
 
-	function postInit(self) {
+	function postInit() {
 		isLavaOn = false;
 		if (this.id == 1) {
 			isLavaOn = this.context.volcanoA;
