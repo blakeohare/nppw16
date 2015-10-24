@@ -90,25 +90,32 @@ function main() {
 		for (event : raw_events) {
 			if (event.is_quit) {
 				return;
-			} else if (event.is_gamepad) {
-				$print(event.player + '/' + event.name + ' --> ' + event.value);
-			} else if (event.is_key) {
-				down = event.down;
+			} else {
+				down = false;
 				action = null;
-				switch (event.key) {
-					case 'enter': action = 'start'; break;
-					case 'a': action = 'A'; break;
-					case 'b': action = 'B'; break;
+				if (event.is_gamepad) {
+					action = event.name;
+					down = event.value;
 					
-					case 'left':
-					case 'right':
-					case 'up':
-					case 'down':
-						action = event.key;
-						break;
+				} else if (event.is_key) {
+					down = event.down;
+					action = null;
+					switch (event.key) {
+						case 'enter': action = 'start'; break;
+						case 'a': action = 'A'; break;
+						case 'b': action = 'B'; break;
 						
-					default: break;
+						case 'left':
+						case 'right':
+						case 'up':
+						case 'down':
+							action = event.key;
+							break;
+							
+						default: break;
+					}
 				}
+				
 				if (action != null) {
 					ev = new Object();
 					ev.action = action;

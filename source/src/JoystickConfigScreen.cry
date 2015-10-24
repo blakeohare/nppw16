@@ -10,6 +10,7 @@ class JoystickConfigScreen {
 		this.configs_taken = {};
 		this.config = {};
 		this._omghax_raw_events = [];
+		$gamepad_clear_bindings(gamepad);
 	}
 	
 	function processInput(events, pressed) { }
