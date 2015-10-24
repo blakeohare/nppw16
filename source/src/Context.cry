@@ -56,7 +56,7 @@ class Context {
 		}
 		
 		if (count >= 2) {
-			value = this.volcanoA + (this.volcanoB * 2) + (this.volcanoC * 4);
+			value = this.volcanoA + (this.volcanoB ? 2 : 0) + (this.volcanoC ? 4 : 0);
 			letter = $chr($ord('1') + value - 1);
 			password += letter;
 		} else {
@@ -64,7 +64,7 @@ class Context {
 		}
 		
 		if (count >= 3) {
-			value = this.balloonA + (this.balloonB * 2) + (this.balloonC * 4) + (this.balloonD * 8);
+			value = this.balloonA + (this.balloonB ? 2 : 0) + (this.balloonC ? 4 : 0) + (this.balloonD ? 8 : 0);
 			letter = $chr($ord('A') + value - 1);
 			password += letter;
 		} else {
