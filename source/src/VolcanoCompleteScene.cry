@@ -13,7 +13,7 @@ class VolcanoCompleteScene {
 	function update() {
 		this.counter++;
 		if (this.counter == 20) {
-			this.next = new DialogScene('Volcano', false);
+			this.next = new DialogScene(this, 'Volcano', false);
 		}
 		
 		if (this.counter == 30) {
