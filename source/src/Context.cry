@@ -56,7 +56,7 @@ class Context {
 		}
 		
 		if (count >= 2) {
-			value = this.volcanoA + (this.volcanoB ? 2 : 0) + (this.volcanoC ? 4 : 0);
+			value = (this.volcanoA ? 1 : 0) + (this.volcanoB ? 2 : 0) + (this.volcanoC ? 4 : 0);
 			letter = $chr($ord('1') + value - 1);
 			password += letter;
 		} else {

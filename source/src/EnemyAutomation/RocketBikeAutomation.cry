@@ -7,8 +7,8 @@ class RocketBikeAutomation {
 		
 	function doStuff(scene) {
 		p = scene.player;
-		dx = p.x - self.sprite.x;
-		dy = p.y - self.sprite.y;
+		dx = p.x - this.sprite.x;
+		dy = p.y - this.sprite.y;
 		if (dx * dx + dy * dy < 10 ** 2) {
 			if (scene.special[0].seedsLeft == 0) {
 				scene.next = new PlayScene('bike_level', 8, 7, scene.context);

@@ -89,10 +89,10 @@ class TitleScene {
 			active_joystick_text = "Active joystick:";
 			drawText(128, 128, 128, active_joystick_text, 8, y);
 			x = (active_joystick_text.length + 1) * 8;
-			if (active_joystick == null) {
+			if (_ACTIVE_JOYSTICK[0] == null) {
 				drawText(255, 0, 0, "None", x, y);
 			} else {
-				drawText(255, 255, 255, active_joystick, x, y);
+				drawText(255, 255, 255, _ACTIVE_JOYSTICK[0].name, x, y);
 			}
 		}
 	}

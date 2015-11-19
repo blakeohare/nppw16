@@ -7,9 +7,9 @@ class SeedAutomation {
 		
 	function doStuff(scene) {
 		p = scene.player;
-		dx = p.x - self.sprite.x;
-		dy = p.y - self.sprite.y;
-		if (dx * dx + dy * dy < 10 ** 2 && !self.used) {
+		dx = p.x - this.sprite.x;
+		dy = p.y - this.sprite.y;
+		if (dx * dx + dy * dy < 10 ** 2 && !this.used) {
 			this.sprite.dead = true;
 			this.used = true;
 			scene.special[0].seedsLeft--;

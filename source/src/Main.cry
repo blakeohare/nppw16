@@ -14,7 +14,7 @@ class Object {
 
 DEBUG_MODE = false;
 JOYSTICKS_ENABLED = false;
-SOUND_ENABLED = false;
+SOUND_ENABLED = true;
 
 import 'src/Util.cry';
 
@@ -53,15 +53,6 @@ import 'src/VolcanoCompleteScene.cry';
 function main() {
 	$game_initialize(FPS);
 	
-	if (JOYSTICKS_ENABLED) {
-		configureJoysticksFromFile();
-		getJoysticksPresent();
-		
-		if (joysticks_present.get(previous_active_joystick, null) != null) {
-			set_active_joystick(previous_active_joystick);
-		}
-	}
-	
 	$game_initialize_screen_scaled(256, 224, WIDTH, HEIGHT);
 	$gamepad_enable_recent('active');
 	
@@ -81,9 +72,6 @@ function main() {
 	events = [];
 	while (activeScene != null) {
 		events.clear();
-		if (JOYSTICKS_ENABLED) {
-			poll_active_joystick(events, pressedActions);
-		}
 		
 		quitAttempt = false;
 		raw_events = $game_pump_events();
