@@ -132,7 +132,7 @@ class Context {
 			}
 		}
 		
-		if ('BC'.contains(p2)) {
+		if ('BC'.contains(p1)) {
 			value = $ord(p3) - $ord('1') + 1;
 			$print(value + $ord(p3));
 			this.volcanoA = (value & 1) != 0;
