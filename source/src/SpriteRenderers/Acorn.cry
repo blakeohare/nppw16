@@ -1,0 +1,27 @@
+function SPRITE_renderAcorn(sprite, scene, offsetX, offsetY, arc) {
+	left = sprite.x + offsetX - 8;
+	top = sprite.y + offsetY - 8;
+	width = 16;
+	height = 16;
+
+	b = 'acorn';
+	m = sprite.automation.mode;
+	if (m == 'throwing' || m == 'baldpatrolling') {
+		b = 'acorn_capless';
+	}
+	
+	if (sprite.moving) {
+		path = b + '_' + '13'[(arc / 2) & 1];
+	} else {
+		path = b + '_2';
+	}
+	
+	path = 'sprites/' + path + '.png';
+	reverse = sprite.lastDirection == 'left';
+	if (reverse) {
+		img = IMAGES.getBackwards(path);
+	} else {
+		img = IMAGES.get(path);
+	}
+	$gfx_blit_image(img, left, top);
+}

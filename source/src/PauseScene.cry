@@ -1,0 +1,37 @@
+class PauseScene {
+	constructor(bg) {
+		this.bg = bg;
+		this.next = this;
+		this.flags = '';
+		this.counter = 0;
+	}
+	
+	function processInput(events, pressed) {
+		for (event : events) {
+			if (event.down && event.action == 'start') {
+				if (this.bg.flags.contains('M')) {
+					playNoise('pause_sound');
+					$music_resume();
+				}
+				this.next = this.bg;
+				this.bg.next = this.bg;
+			}
+		}
+	}
+	
+	function update() {
+		if (this.bg.flags.contains('M')) {
+			if (this.counter == 0) {
+				$music_pause();
+				playNoise('pause_sound');
+			}
+		}
+		
+		this.counter++;
+	}
+	
+	function render(rc) {
+		$gfx_fill_screen(0, 0, 0);
+		drawText(255, 255, 255, "PAUSE", 108, 108);
+	}
+}

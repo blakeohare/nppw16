@@ -1,0 +1,55 @@
+class DeathOverrideScene {
+	// type = "lava", "collapse", "fall"
+	constructor(bg, type) {
+		this.bg = bg;
+		this.context = bg.context;
+		this.context.lifemeter = 0;
+		this.flags = '';
+		this.next = this;
+		this.type = type;
+		this.counter = 0;
+		this.bg.player.deathState = type;
+		this.vy = -10;
+		if (type == 'fall') {
+			this.vy = bg.player.vy;
+		} else if (type == 'lava') {
+			playNoise('lava_roast');
+		}
+	}	
+		
+	function processInput(events, pressed) {
+		// There is nothing you can do
+	}
+	
+	function update() {
+		if (this.counter == 0) {
+			JUKEBOX.ensureSong('death');
+		}
+			
+		this.counter++;
+		this.vy++;
+		
+		if (this.type == 'lava' || this.type == 'fall') {
+			this.bg.player.modelY += this.vy;
+			this.bg.player.y = $floor(this.bg.player.modelY);
+		}
+			
+		if (this.counter > 100) {
+			this.context.lifemeter = 10;
+			this.context.lives--;
+			if (this.context.lives == 0) {
+				this.context.lives = 3;
+				this.next = new GameOverScene(this.context);
+			} else {
+				this.next = new ReadyScene(this.bg, this.context);
+			}
+			// TODO: game over or beginning of same map at same door entrance
+		}
+	}
+	
+	function render(rc) {
+		this.bg.render(rc);
+	}
+}
+
+	

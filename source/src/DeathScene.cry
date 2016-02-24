@@ -1,0 +1,12 @@
+class DeathScene {
+	constructor() {
+		this.next = null;
+		this.flags = '';
+	}
+	
+	function processInput(events, pressed) { }
+	
+	function update() { }
+	
+	function render(rc) { }
+}

@@ -1,0 +1,47 @@
+class BirdAutomation {
+	constructor(sprite, onBikeLevel) {
+		sprite.isEnemy = true;
+		this.counter = 0;
+		this.mode = 'stalk'; // 'right' | 'left'
+		this.sprite = sprite;
+		this.bikeLevel = onBikeLevel;
+	}
+		
+	function doStuff(scene) {
+		this.counter++;
+		p = scene.player;
+		sprite = this.sprite;
+		if (this.mode == 'stalk') {
+			dy = p.y - this.sprite.y;
+			
+			if ($abs(dy) < 6) {
+				this.mode = 'right';
+			} else if (dy > 0) {
+				this.sprite.dy += 3;
+			} else {
+				this.sprite.dy -= 3;
+			}
+		} else if (this.mode == 'right') {
+			if (sprite.x < p.x) {
+				sprite.dx = 6;
+			} else {
+				this.mode = 'left';
+			}
+		} else { // mode == 'left'
+			spriteX = sprite.x;
+			if (this.bikeLevel) {
+				spriteX -= this.counter * BIKE_SPEED;
+			}
+			
+			if (spriteX > 7) {
+				sprite.dx = -6;
+			} else {
+				this.mode = 'stalk';
+			}
+		}
+		
+		if (this.bikeLevel) {
+			sprite.dx += BIKE_SPEED;
+		}
+	}
+}

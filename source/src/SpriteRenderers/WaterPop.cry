@@ -1,0 +1,6 @@
+function SPRITE_renderWaterPop(sprite, scene, offsetX, offsetY, arc) {
+	
+	left = sprite.x + offsetX - 24;
+	top = sprite.y + offsetY - 8;
+	$gfx_blit_image(IMAGES.get('tiles/balloons/pop.png'), left, top);
+}

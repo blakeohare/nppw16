@@ -1,0 +1,6 @@
+function SPRITE_renderBird(sprite, scene, offsetX, offsetY, arc) {
+	left = sprite.x + offsetX - 16;
+	top = sprite.y + offsetY - 16;
+	img = IMAGES.get('sprites/bird_chase_' + ((((arc / 2) & 1) == 0) ? '1' : '2') + '.png');
+	$gfx_blit_image(img, left, top);
+}

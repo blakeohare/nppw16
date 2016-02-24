@@ -1,0 +1,52 @@
+RISE_SPEED = 1;
+WAIT_INTERVAL = FPS * 4;
+
+class LavaMonsterAutomation {
+	constructor(sprite) {
+		this.sprite = sprite;
+		this.counter = 0;
+		this.mode = 'wait'; // { wait | rise | shoot | fall }
+		this.mouthOpen = false;
+	}
+	
+	function doStuff(scene) {
+		this.counter++;
+		this.mouthOpen = false;
+		faceLeft = scene.player.x < this.sprite.x;
+		this.sprite.lastDirection = faceLeft ? 'left' : 'right';
+		if (this.mode == 'wait') {
+			if (this.counter == WAIT_INTERVAL) {
+				this.counter = 0;
+				this.mode = 'rise';
+			}
+		} else if (this.mode == 'rise') {
+			if (this.counter == 16) {
+				this.mode = 'shoot';
+				this.counter = 0;
+			}
+			this.sprite.dy = -1;
+		} else if (this.mode == 'shoot') {
+			if (this.counter == 60) {
+				this.mode = 'fall';
+				this.counter = 0;
+			}
+			if (this.counter == 7) {
+				this.createFireBall();
+			}
+			if (this.counter > 0 && this.counter < 14) {
+				this.mouthOpen = true;
+			}
+		} else if (this.mode == 'fall') {
+			if (this.counter == 16) {
+				this.mode = 'wait';
+				this.counter = 0;
+			}
+			this.sprite.dy = 1;
+		}
+	}
+		
+	function createFireBall() {
+		fireball = new Sprite('fireball', this.sprite.x, this.sprite.y);
+		this.sprite.spawns = [fireball];
+	}
+}

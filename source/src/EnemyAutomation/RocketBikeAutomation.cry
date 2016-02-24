@@ -1,0 +1,18 @@
+class RocketBikeAutomation {
+	constructor(sprite) {
+		this.counter = 0;
+		this.sprite = sprite;
+		this.used = false;
+	}
+		
+	function doStuff(scene) {
+		p = scene.player;
+		dx = p.x - this.sprite.x;
+		dy = p.y - this.sprite.y;
+		if (dx * dx + dy * dy < 10 ** 2) {
+			if (scene.special[0].seedsLeft == 0) {
+				scene.next = new PlayScene('bike_level', 8, 7, scene.context);
+			}
+		}
+	}
+}

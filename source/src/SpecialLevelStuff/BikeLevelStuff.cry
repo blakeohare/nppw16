@@ -1,0 +1,48 @@
+class BikeLevelStuff : SpecialLevelStuff {
+	constructor(scene) : base(scene) {
+		this.hasUpdate = true;
+		this.hasRender = true;
+		this.particles = [];
+		this.counter = 0;
+	}
+		
+	function update() {
+		if (this.counter == 0) {
+			this.scene.sprites.add(new Sprite('bird2', 16, 48));
+		}
+		
+		this.counter++;
+		
+		scene = this.scene;
+		player = scene.player;
+		if (player.x > (scene.cols - 1) * 16) { // one less because you can't technically go off screen
+			scene.next = new VictorySequenceScene(scene);
+		}
+		
+		if (this.counter % 2 == 0) {
+			pt = new Object();
+			pt.x = player.x;
+			pt.y = player.y;
+			pt.vx = $random() * 16 - 8;
+			pt.vy = $random() * 6 - 5;
+			this.particles.add(pt);
+		}
+		
+		for (pt : this.particles) {
+			pt.x += pt.vx;
+			pt.y += pt.vy;
+			pt.vy += 2;
+		}
+	}
+	
+	function render(rc, offsetX, offsetY) {
+		p = this.scene.player;
+		for (pt : this.particles) {
+			$gfx_draw_rectangle($floor(pt.x + offsetX), $floor(pt.y + offsetY), 3, 3, 255, 255, 128, 255);
+		}
+		
+		if (this.particles.length > 40) {
+			this.particles = this.particles[1:];
+		}
+	}
+}

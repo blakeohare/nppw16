@@ -1,0 +1,41 @@
+function makeGrid(width, height) {
+	cols = [];
+	while (width-- > 0) {
+		cols.add([null] * height);
+	}
+	return cols;
+}
+
+function drawBox(x, y, cols, rows) {
+	left = x;
+	top = y;
+	bottom = y + (rows - 1) * 8;
+	right = x + (cols - 1) * 8;
+	$gfx_blit_image(IMAGES.get('misc/border_nw.png'), left, top);
+	$gfx_blit_image(IMAGES.get('misc/border_ne.png'), right, top);
+	$gfx_blit_image(IMAGES.get('misc/border_se.png'), right, bottom);
+	$gfx_blit_image(IMAGES.get('misc/border_sw.png'), left, bottom);
+	for (x = left + 8; x < right; x += 8) {
+		$gfx_blit_image(IMAGES.get('misc/border_n.png'), x, top);
+		$gfx_blit_image(IMAGES.get('misc/border_s.png'), x, bottom);
+	}
+	for (y = top + 8; y < bottom; y += 8) {
+		$gfx_blit_image(IMAGES.get('misc/border_w.png'), left, y);
+		$gfx_blit_image(IMAGES.get('misc/border_e.png'), right, y);
+	}
+	
+	$gfx_draw_rectangle(left + 8, top + 8, right - left - 8, bottom - top - 8, 0, 0, 0, 255);
+}
+
+
+function min(a, b) {
+	return a < b ? a : b;
+}
+
+function max(a, b) {
+	return a < b ? b : a;
+}
+
+function bool2Num(b) {
+	return b ? 1 : 0;
+}

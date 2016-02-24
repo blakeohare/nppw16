@@ -1,0 +1,13 @@
+class WaterPopAutomation {
+	constructor(sprite) {
+		this.counter = 0;
+		this.sprite = sprite;
+	}
+		
+	function doStuff(scene) {
+		this.counter++;
+		if (this.counter >= 15) {
+			this.sprite.dead = true;
+		}
+	}
+}

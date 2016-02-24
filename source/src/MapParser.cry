@@ -1,0 +1,151 @@
+class MapParser {
+	constructor(file) {
+		path = 'maps/' + file;
+		t = $resource_read_text(path);
+		values = {};
+		for (line : t.split('\n')) {
+			parts = line.split(':');
+			if (parts.length < 2)
+				continue;
+			
+			key = parts[0][1:].trim();
+			value = parts[1:].join(':').trim();
+			values[key] = value.trim();
+		}
+		
+		this.values = values;
+	}
+	
+	function parse() {
+		// TODO: create a real Map definition.
+		m = new Object();
+		m.width = $parse_int(this.values['width']);
+		m.height = $parse_int(this.values['height']);
+		m.side = this.values.get('view', 'side').lower() == 'side';
+		m.upper = this.getTiles(this.values['upper'], m.width, m.height);
+		m.lower = this.getTiles(this.values['lower'], m.width, m.height);
+		m.doors = this.getDoors(this.values.get('doors', ''));
+		m.enemies = this.getEnemies(this.values.get('enemies', ''));
+		m.doorswaps = this.getDoorswaps(this.values.get('doorswaps', ''));
+		m.overlayTriggers = this.getOverlayTriggers(this.values.get('overlay', ''));
+		m.powerups = this.getPowerups(this.values.get('powerups', ''));
+		return m;
+	}
+	
+	function getPowerups(sv) {
+		sv = sv.trim();
+		if (sv.length == 0) {
+			return [];
+		}
+
+		output = [];
+		for (item : sv.split(',')) {
+			parts = item.split('|');
+			pu = new Object();
+			pu.type = parts[0];
+			pu.id = parts[1];
+			pu.col = $parse_int(parts[2]);
+			pu.row = $parse_int(parts[3]);
+			output.add(pu);
+		}
+		return output;
+	}
+		
+	function getOverlayTriggers(strValue) {
+		strValue = strValue.trim();
+		if (strValue.length == 0) {
+			return {};
+		}
+		
+		output = {};
+		items = strValue.split(',');
+		for (item : items) {
+			parts = item.split('|');
+		
+			if (parts.length == 2) {
+				output[parts[0].trim()] = parts[1].trim();
+			}
+		}
+		
+		return output;
+	}
+	
+	// door swap output format:
+	// { original ID => List[ Pair<trigger, swapped ID> ] }
+	function getDoorswaps(strValue) {
+		strValue = strValue.trim();
+		if (strValue.length == 0) {
+			return {};
+		}
+		swaps = {};
+		for (swap : strValue.split(',')) {
+			parts = swap.split('|');
+			trigger = parts[0].trim();
+			original = parts[1].trim();
+			swapped = parts[2].trim();
+			
+			swaps[original] = swaps.get(original, []);
+			swaps[original].add([trigger, swapped]);
+		}
+		return swaps;
+	}
+	
+	function getEnemies(enemyString) {
+		enemyString = enemyString.trim();
+		if (enemyString.length == 0) {
+			return [];
+		}
+		enemies = [];
+		for (value : enemyString.split(',')) {
+			parts = value.split('|');
+			id = parts[0];
+			col = $parse_int(parts[1]);
+			row = $parse_int(parts[2]);
+			e = new Object();
+			e.id = id;
+			e.col = col;
+			e.row = row;
+			enemies.add(e);
+		}
+		return enemies;
+	}
+	
+	function getDoors(doorString) {
+		doorString = doorString.trim();
+		if (doorString.length == 0)
+			return [];
+		doors = [];
+		for (door : doorString.split(',')) {
+			door = door.split('|');
+			d = new Object();
+			d.target = door[0];
+			d.sx = $parse_int(door[1]);
+			d.sy = $parse_int(door[2]);
+			d.tx = $parse_int(door[3]);
+			d.ty = $parse_int(door[4]);
+			doors.add(d);
+		}
+		return doors;
+	}
+		
+	function getTiles(ids, width, height) {
+		output = [];
+		for (id : ids.split(',')) {
+			id = id.trim();
+			if (id == '') {
+				output.add(null);
+			} else {
+				output.add(getTile(id));
+			}
+		}
+		
+		grid = makeGrid(width, height);
+		index = 0;
+		for (y = 0; y < height; ++y) {
+			for (x = 0; x < width; ++x) {
+				grid[x][y] = output[index++];
+			}
+		}
+		return grid;
+	}
+}

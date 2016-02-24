@@ -1,0 +1,15 @@
+
+class PoofAutomation {
+	constructor(sprite, isBig) {
+		this.sprite = sprite;
+		this.counter = 0;
+		this.isBig = isBig;
+	}	
+	
+	function doStuff(scene) {
+		this.counter++;
+		if (this.counter == 15) {
+			this.sprite.dead = true;
+		}
+	}
+}

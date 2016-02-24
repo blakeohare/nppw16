@@ -11,7 +11,7 @@ def getFiles(dir):
 				output.append(path)
 	return output
 	
-files = getFiles('source')
+files = getFiles('python-source')
 all = []
 header = ''
 footer = ''
@@ -24,9 +24,9 @@ for file in files:
 	contents = c.read()
 	c.close()
 	
-	if file == 'source' + os.sep + 'main.py':
+	if file == 'python-source' + os.sep + 'main.py':
 		footer = contents
-	elif file == 'source' + os.sep + 'header.py':
+	elif file == 'python-source' + os.sep + 'header.py':
 		header = contents
 	elif file.split(os.sep)[-1] in priority_files:
 		priority.append(contents)

@@ -1,0 +1,13 @@
+import 'src/EnemyAutomation/AcornAutomation.cry';
+import 'src/EnemyAutomation/AcornTopAutomation.cry';
+import 'src/EnemyAutomation/BirdAutomation.cry';
+import 'src/EnemyAutomation/ByatAutomation.cry';
+import 'src/EnemyAutomation/FireBallAutomation.cry';
+import 'src/EnemyAutomation/LavaMonsterAutomation.cry';
+import 'src/EnemyAutomation/LazorAutomation.cry';
+import 'src/EnemyAutomation/MoonSquidAutomation.cry';
+import 'src/EnemyAutomation/PoofAutomation.cry';
+import 'src/EnemyAutomation/PowerupAutomation.cry';
+import 'src/EnemyAutomation/RocketBikeAutomation.cry';
+import 'src/EnemyAutomation/SeedAutomation.cry';
+import 'src/EnemyAutomation/WaterPopAutomation.cry';

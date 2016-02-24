@@ -1,0 +1,126 @@
+FPS = 30;
+WIDTH = $floor(256 * 3.4);
+HEIGHT = $floor(224 * 3);
+
+GAME_WIDTH = 256;
+GAME_HEIGHT = 224;
+
+DEBUG = { 'counter': 0 };
+BLACK = [0, 0, 0];
+
+class Object {
+	constructor() { }
+}
+
+DEBUG_MODE = false;
+JOYSTICKS_ENABLED = false;
+SOUND_ENABLED = true;
+
+import 'src/Util.cry';
+
+import 'src/EnemyAutomation/init.cry';
+import 'src/SpecialLevelStuff/init.cry';
+import 'src/SpriteRenderers/init.cry';
+
+import 'src/Backgrounds.cry';
+import 'src/Context.cry';
+import 'src/CreditsScene.cry';
+import 'src/DeathOverrideScene.cry';
+import 'src/DeathScene.cry';
+import 'src/Dialogs.cry';
+import 'src/DialogScene.cry';
+import 'src/GameOverScene.cry';
+import 'src/ImageLibrary.cry';
+import 'src/IntroScene.cry';
+import 'src/JoystickConfigScreen.cry';
+import 'src/JoystickMenuScene.cry';
+import 'src/JukeBox.cry';
+import 'src/MapParser.cry';
+import 'src/OpeningScene.cry';
+import 'src/PasswordScene.cry';
+import 'src/PauseScene.cry';
+import 'src/PlayScene.cry';
+import 'src/ReadyScene.cry';
+import 'src/Sound.cry';
+import 'src/Sprite.cry';
+import 'src/Text.cry';
+import 'src/TileStuff.cry';
+import 'src/TitleScene.cry';
+import 'src/VictorySequenceScene.cry';
+import 'src/VolcanoCompleteScene.cry';
+
+
+function main() {
+	$game_initialize(FPS);
+	
+	$game_initialize_screen_scaled(256, 224, WIDTH, HEIGHT);
+	$gamepad_enable_recent('active');
+	
+	activeScene = new OpeningScene();
+	renderCounter = 0;
+
+	$game_set_title("Space Squirrel");
+	//ico = getImage('sprites/space_overworld_right_2.png')
+	//ico = pygame.transform.scale2x(ico)
+	//pygame.display.set_icon(ico)
+	
+	pressedActions = {};
+	for (action : 'left up down right A B start'.split(' ')) {
+		pressedActions[action] = false;
+	}
+	
+	events = [];
+	while (activeScene != null) {
+		events.clear();
+		
+		quitAttempt = false;
+		raw_events = $game_pump_events();
+		for (event : raw_events) {
+			if (event.is_quit) {
+				return;
+			} else {
+				down = false;
+				action = null;
+				if (event.is_gamepad) {
+					action = event.name;
+					down = event.value;
+					
+				} else if (event.is_key) {
+					down = event.down;
+					action = null;
+					switch (event.key) {
+						case 'enter': action = 'start'; break;
+						case 'a': action = 'A'; break;
+						case 'b': action = 'B'; break;
+						
+						case 'left':
+						case 'right':
+						case 'up':
+						case 'down':
+							action = event.key;
+							break;
+							
+						default: break;
+					}
+				}
+				
+				if (action != null) {
+					ev = new Object();
+					ev.action = action;
+					ev.down = down;
+					ev.up = !down;
+					events.add(ev);
+					pressedActions[action] = down;
+				}
+			}
+		}
+		
+		activeScene.processInput(events, pressedActions);
+		activeScene._omghax_raw_events = raw_events;
+		activeScene.update();
+		activeScene.render(renderCounter++);
+		activeScene = activeScene.next;
+		$game_clock_tick();
+	}
+}
+main();

@@ -1,0 +1,15 @@
+import 'src/SpriteRenderers/Acorn.cry';
+import 'src/SpriteRenderers/AcornTop.cry';
+import 'src/SpriteRenderers/Bird.cry';
+import 'src/SpriteRenderers/Byat.cry';
+import 'src/SpriteRenderers/Fireball.cry';
+import 'src/SpriteRenderers/GravityDevice.cry';
+import 'src/SpriteRenderers/LavaMonster.cry';
+import 'src/SpriteRenderers/Lazor.cry';
+import 'src/SpriteRenderers/MoonSquid.cry';
+import 'src/SpriteRenderers/Player.cry';
+import 'src/SpriteRenderers/Poof.cry';
+import 'src/SpriteRenderers/Powerup.cry';
+import 'src/SpriteRenderers/RocketBike.cry';
+import 'src/SpriteRenderers/Seed.cry';
+import 'src/SpriteRenderers/WaterPop.cry';

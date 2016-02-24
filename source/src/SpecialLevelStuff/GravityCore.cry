@@ -1,0 +1,36 @@
+class GravityCorePlacement : SpecialLevelStuff {
+	constructor(scene) : base(scene) {
+		this.hasPostInit = true;
+		this.hasUpdate = true;
+		this.col = 11;
+		this.row = 9;
+		this.done = false;
+	}
+	
+	function update() {
+		player = this.scene.player;
+		tx = $floor(player.x / 16);
+		ty = $floor(player.y / 16);
+	
+		if (tx == this.col && $abs(ty - this.row) < 2 && !this.done) {
+			this.addGDevice(true);
+		}
+	}
+	
+	function postInit() {
+		if (this.context.gravity) {
+			this.addGDevice();
+		}
+	}
+	
+	function addGDevice(showDialog = false) {
+		this.done = true;
+		this.context.gravity = true;
+		gd = new Sprite('gravity_device', this.col * 16, this.row * 16);
+		gd.floats = true;
+		this.scene.sprites.add(gd);
+		if (showDialog) {
+			this.scene.next = new DialogScene(this.scene, 'GravityDone', true, false, false);
+		}
+	}
+}

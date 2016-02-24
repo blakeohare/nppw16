@@ -1,0 +1,122 @@
+
+class DialogScene {
+	constructor(bg, dialogId, slightDelay, storyMode = false, forceArrow = false) {
+		this.next = this;
+		this.flags = '';
+		this.bg = bg;
+		this.storyMode = storyMode;
+		this.forceArrow = forceArrow;
+		player = bg.player;
+		if (player != null) {
+			player.moving = false;
+			player.lastDirection = 'left';
+		}
+		this.delayCounter = slightDelay ? 45 : 0;
+		this.stanzas = DIALOGS[dialogId];
+		this.stanzaIndex = 0;
+		this.textCursor = 0;
+		this.showLines = [];
+		this.blink = false;
+		this.id = dialogId;
+		
+		this.generalLoc = null;
+		if (dialogId.length == 2 && dialogId[0] == 'T')
+			this.generalLoc = [4 * 16, 6 * 16];
+	}
+	
+	function processInput(events, pressed) {
+		if (this.blink) {
+			for (event : events) {
+				if (event.down && (event.action == 'A' || event.action == 'B' || event.action == 'start')) {
+					this.stanzaIndex++;
+					this.textCursor = 0;
+				}
+			}
+		} else {
+			if (pressed['A'] || pressed['B'] || pressed['start']) {
+				if (this.delayCounter < 0) {
+					this.textCursor += 1.2;
+				}
+			}
+		}
+	}
+	
+	function update() {
+		if (this.bg.flags.contains('M')) {
+			this.bg.playMusic();
+		}
+		
+		this.delayCounter--;
+		
+		if (this.stanzaIndex >= this.stanzas.length) {
+			this.next = this.bg;
+			this.bg.next = this.bg;
+			
+			// Total hack...
+			//if (this.id == 'WaterDone')
+			//	this.next = new PlayScene('ship_1', 8, 9, this.bg.context);
+		} else {
+			this.activeStanza = this.stanzas[this.stanzaIndex];
+			rawLines = this.activeStanza.join('\n');
+			this.blink = false;
+			cursor = $floor(this.textCursor);
+			if (cursor >= rawLines.length)
+				this.blink = true ;
+			else
+				rawLines = rawLines[:cursor];
+			showLinesStr = rawLines.split('\n');
+			showLines = [];
+			for (line : showLinesStr) {
+				if (line.length > 0) {
+					showLines.add(line);
+				}
+			}
+			this.showLines = showLines;
+		}
+		
+		if (this.delayCounter < 0) {
+			this.textCursor += 0.3;
+		}
+	}
+	
+	function render(rc) {
+		this.bg.render(rc);
+		
+		if (this.delayCounter > 0) return;
+		
+		if (this.generalLoc != null) {
+			path = 'tiles/screen-static/screen' + ['', '1', '2', '3'][(rc / 4) & 3] + '.png';
+			$gfx_blit_image(IMAGES.get(path), this.generalLoc[0], this.generalLoc[1]);
+		}
+		
+		if (!this.storyMode) {
+			drawBox(16, 16, 28, 9);
+		}
+		x = 32;
+		y = 32;
+		space = 8;
+		if (this.storyMode) {
+			y += 16 * 7;
+			space = 16;
+		}
+		
+		startY = y;
+		for (line : this.showLines) {
+			drawText(255, 255, 255, line, x, y);
+			y += space;
+		}
+		
+		if (this.blink && ((rc / 7) & 1) == 0) {
+			pos = [256 - 40, startY + space * 4];
+			if (!this.forceArrow && this.stanzaIndex == this.stanzas.length - 1) {
+				$gfx_draw_rectangle(pos[0], pos[1], 8, 8, 255, 255, 255, 255);
+			} else {
+				drawText(255, 255, 255, '^', pos[0], pos[1]);
+			}
+		}
+		
+		if (!this.blink && rc % 5 == 0) {
+			playNoise('text_char');
+		}
+	}
+}

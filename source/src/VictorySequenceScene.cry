@@ -1,0 +1,49 @@
+class VictorySequenceScene {
+	constructor(bg) {
+		this.next = this;
+		this.bg = bg;
+		this.flags = '';
+	
+		this.images = [
+			IMAGES.get('slides/close1.png'),
+			IMAGES.get('slides/close2.png')];
+	
+		this.player = null;
+	
+		this.counter = 0;
+	}
+	
+	function processInput(events, pressed) { }
+	
+	function update() {
+		$music_stop();
+		this.counter++;
+	}
+	
+	function render(rc) {
+		$gfx_fill_screen(0, 0, 0);
+		
+		if (this.counter < 60) {
+			img = this.images[0];
+		} else if (this.counter > 120) {
+			img = this.images[1];
+		} else {
+			img = this.images[this.counter & 1];
+		}
+		
+		if (this.counter == 60) {
+			playNoise('screen_shaking');
+		}
+		
+		if (this.counter == 150) {
+			this.next = new DialogScene(this, 'CloseDialog', false, true, false);
+			this.counter++;
+		}
+		
+		if (this.counter == 160) {
+			this.next = new CreditsScene();
+		}
+		
+		$gfx_blit_image(img, 0, 16);
+	}
+}

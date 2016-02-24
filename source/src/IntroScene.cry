@@ -1,0 +1,102 @@
+// TODO: intro slide show
+
+class IntroScene {
+	constructor() {
+		this.flags = '';
+		this.next = this;
+		this.player = null; // lol, pyweek hack
+		
+		this.page = 0;
+		this.pages = [
+			IMAGES.get('slides/open1.png'),
+			IMAGES.get('slides/open2.png'),
+			IMAGES.get('slides/open3.png')
+			];
+		
+		this.counter = 0;
+	}
+	
+	function processInput(events, pressedKeys) { }
+	
+	function update() {
+		if (DEBUG_MODE) {
+			this.next = this.getStartScene();
+			return;
+		}
+		
+		JUKEBOX.ensureSong('intro');
+		
+		this.counter++;
+		
+		if (this.counter == 10)
+			this.next = new DialogScene(this, 'Open1', false, true, true);
+		else if (this.counter == 15)
+			this.page = 1;
+		else if (this.counter == 20)
+			this.next = new DialogScene(this, 'Open2', false, true, true);
+		else if (this.counter == 25)
+			this.page = 2;
+		else if (this.counter == 30)
+			this.next = new DialogScene(this, 'Open3', false, true, false);
+		else if (this.counter == 35)
+			this.next = this.getStartScene();
+	}
+	
+	function render(rc) {
+		$gfx_fill_screen(0, 0, 0);
+		$gfx_blit_image(this.pages[this.page], 0, 16);
+	}
+	
+	function getStartScene() {
+		/*
+		if os.path.exists('fast_start.txt'):
+			c = open('fast_start.txt', 'rt')
+			t = c.read().split('\n')
+			c.close()
+			i = 0
+			ignore = False
+			level = None
+			x = 2
+			y = 2
+			flags = []
+			for line in t:
+				line = trim(line.split('#')[0])
+				if len(line) > 0:
+					i += 1
+					if i == 1:
+						if line == 'IGNORE':
+							ignore = True
+							break
+						level = line
+					elif i == 2:
+						parts = line.split(',')
+						x = int(trim(parts[0]))
+						y = int(trim(parts[1]))
+					else:
+						flags.append(trim(line).lower())
+			
+			if not ignore:
+				c = Context()
+				for flag in flags:
+					if flag == 'gravity':
+						c.gravity = True
+					elif flag == 'volcano1':
+						c.volcanoA = True
+					elif flag == 'volcano2':
+						c.volcanoB = True
+					elif flag == 'volcano3':
+						c.volcanoC = True
+					elif flag == 'water1':
+						c.balloonA = True
+					elif flag == 'water2':
+						c.balloonB = True
+					elif flag == 'water3':
+						c.balloonC = True
+					elif flag == 'water4':
+						c.balloonD = True
+				
+				return PlayScene(level, x, y, c)
+		//*/
+		return new PlayScene('ship_1', 8, 9, new Context());
+	}
+}

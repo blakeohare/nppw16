@@ -1,0 +1,28 @@
+class ImageLibrary {
+	constructor() {
+		this.images = {};
+		this.flipped = {};
+	}
+	
+	function get(path) {
+		img = this.images.get(path, null);
+		if (img == null) {
+			$gfx_image_load_from_resource('t', 'images/' + path);
+			img = $gfx_image_get('t');
+			this.images[path] = img;
+		}
+		return img;
+	}
+	
+	function getBackwards(path) {
+		img = this.flipped.get(path, null);
+		if (img == null) {
+			img = this.get(path);
+			img = $gfx_flip_image(img, true, false);
+			this.flipped[path] = img;
+		}
+		return img;
+	}
+}
+
+IMAGES = new ImageLibrary();

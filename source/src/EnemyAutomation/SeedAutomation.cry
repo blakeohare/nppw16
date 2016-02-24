@@ -1,0 +1,19 @@
+class SeedAutomation {
+	constructor(sprite) {
+		this.counter = 0;
+		this.sprite = sprite;
+		this.used = false;
+	}
+		
+	function doStuff(scene) {
+		p = scene.player;
+		dx = p.x - this.sprite.x;
+		dy = p.y - this.sprite.y;
+		if (dx * dx + dy * dy < 10 ** 2 && !this.used) {
+			this.sprite.dead = true;
+			this.used = true;
+			scene.special[0].seedsLeft--;
+			playNoise('raise_health');
+		}
+	}
+}
