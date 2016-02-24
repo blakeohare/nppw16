@@ -40,7 +40,7 @@ class BirdAutomation {
 			}
 		}
 		
-		if (this.bikeLeve) {
+		if (this.bikeLevel) {
 			sprite.dx += BIKE_SPEED;
 		}
 	}

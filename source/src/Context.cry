@@ -64,7 +64,7 @@ class Context {
 		}
 		
 		if (count >= 3) {
-			value = this.balloonA + (this.balloonB ? 2 : 0) + (this.balloonC ? 4 : 0) + (this.balloonD ? 8 : 0);
+			value = (this.balloonA ? 1 : 0) + (this.balloonB ? 2 : 0) + (this.balloonC ? 4 : 0) + (this.balloonD ? 8 : 0);
 			letter = $chr($ord('A') + value - 1);
 			password += letter;
 		} else {
