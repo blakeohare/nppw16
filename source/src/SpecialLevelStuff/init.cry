@@ -1,9 +1,0 @@
-import 'src/SpecialLevelStuff/LevelSpecial.cry';
-
-import 'src/SpecialLevelStuff/BalloonPopping.cry';
-import 'src/SpecialLevelStuff/BikeLevelStuff.cry';
-import 'src/SpecialLevelStuff/BirdFeeder.cry';
-import 'src/SpecialLevelStuff/GravityAscent.cry';
-import 'src/SpecialLevelStuff/GravityCore.cry';
-import 'src/SpecialLevelStuff/ShipTransmission.cry';
-import 'src/SpecialLevelStuff/VolcanoCoreActivation.cry';

@@ -1,49 +1,49 @@
 
-TEXT_FILENAMES = {
-	';': 'sc',
-	'<': 'left',
-	'>': 'right',
-	'^': 'up',
-	'&': 'am',
-	'=': 'eq',
-	':': 'col',
-	'(': 'op',
-	')': 'cp',
-	'*': 'as',
-	'?': 'qu',
-	'.': 'pe',
-	'/': 'sl',
-	'\'': 'ap',
-	'"': 'qt',
-	'!': 'ex',
-	'`': 'q2',
-	'-': 'hy',
-	',': 'cm',
-};
-
 class TextRenderer {
-	constructor() {
-		this.lookup_by_color = {};
-	}
+	static field TEXT_FILENAMES = {
+		';': 'sc',
+		'<': 'left',
+		'>': 'right',
+		'^': 'up',
+		'&': 'am',
+		'=': 'eq',
+		':': 'col',
+		'(': 'op',
+		')': 'cp',
+		'*': 'as',
+		'?': 'qu',
+		'.': 'pe',
+		'/': 'sl',
+		'\'': 'ap',
+		'"': 'qt',
+		'!': 'ex',
+		'`': 'q2',
+		'-': 'hy',
+		',': 'cm',
+	};
+
+	static field lookup_by_color = {};
 	
-	function drawText(colorname, text, x, y) {
-		lookup = this.lookup_by_color.get(colorname, null);
+	constructor() { }
+	
+	static function drawText(colorname, text, x, y) {
+		lookup = TextRenderer.lookup_by_color.get(colorname, null);
 		if (lookup == null) {
 			lookup = {};
 			letters = ALPHABET;
 			for (i = 0; i < 10; ++i) {
 				letters += i;
 			}
-			for (key : TEXT_FILENAMES.keys()) {
+			for (key : TextRenderer.TEXT_FILENAMES.keys()) {
 				letters += key;
 			}
 			for (char : letters) {
 				c = char.lower();
-				img = IMAGES.get('text/' + colorname + '-' + TEXT_FILENAMES.get(c, c) + '.png');
+				img = ImageLibrary.get('text/' + colorname + '-' + TextRenderer.TEXT_FILENAMES.get(c, c) + '.png');
 				lookup[c] = img;
 				lookup[c.upper()] = img;
 			}
-			this.lookup_by_color[colorname] = lookup;
+			TextRenderer.lookup_by_color[colorname] = lookup;
 		}
 		
 		for (c : text) {
@@ -54,7 +54,7 @@ class TextRenderer {
 			}
 			
 			if (img != null) {
-				$gfx_blit_image(img, x, y);
+				img.draw(x, y);
 			}
 			
 			x += 8;
@@ -79,8 +79,6 @@ function drawText(r, g, b, text, x, y) {
 		}
 	}
 	
-	if (color == null) $assert(false, "Unknown color: " + r + ', ' + g + ', ' + b);
-	TEXT_RENDERER.drawText(color, text, x, y);
+	if (color == null) Core.assert(false, "Unknown color: " + r + ', ' + g + ', ' + b);
+	TextRenderer.drawText(color, text, x, y);
 }
-
-TEXT_RENDERER = new TextRenderer();

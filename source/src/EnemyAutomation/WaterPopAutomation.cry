@@ -1,6 +1,8 @@
 class WaterPopAutomation {
+	field counter = 0;
+	field sprite;
+
 	constructor(sprite) {
-		this.counter = 0;
 		this.sprite = sprite;
 	}
 		

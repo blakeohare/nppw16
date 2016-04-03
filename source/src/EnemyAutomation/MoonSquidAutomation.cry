@@ -1,10 +1,15 @@
-CHASE_DISTANCE_TILES = 6;
+import Math;
+import Random;
+
+const CHASE_DISTANCE_TILES = 6;
 
 class MoonSquidAutomation {
+	field sprite;
+	field counter = 0;
+	field goLeft = Random.randomBool();
+	
 	constructor(sprite) {
 		this.sprite = sprite;
-		this.counter = 0;
-		this.goLeft = $random() < .5;
 	}
 	
 	function doStuff(scene) {
@@ -14,7 +19,7 @@ class MoonSquidAutomation {
 		dx = player.x - sprite.x;
 		dy = player.y - sprite.y;
 		if (dx * dx + dy * dy < (16 * CHASE_DISTANCE_TILES) ** 2) {
-			v = ($sin(this.counter / 30.0 * 2 * 3.14159 / 2) + 1) / 1.5;
+			v = (Math.sin(this.counter / 30.0 * 2 * Math.PI / 2) + 1) / 1.5;
 			if (dx == 0 && dy == 0) {
 				// TODO: another one of these awkward inverted expressions for some reason.
 			} else {

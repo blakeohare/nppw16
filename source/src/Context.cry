@@ -1,28 +1,28 @@
-FULL_LIFE = 10;
-START_LIFE = 10;
-START_LIVES = 3;
+const FULL_LIFE = 10;
+const START_LIFE = 10;
+const START_LIVES = 3;
 
-ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 class Context {
+
+	field lifemeter = START_LIFE;
+	field lives = START_LIVES;
+	field volcanoA = false;
+	field volcanoB = false;
+	field volcanoC = false;
+	field balloonA = false;
+	field balloonB = false;
+	field balloonC = false;
+	field balloonD = false;
+	field gravity = false;
+	field transmission1 = false;
+	field transmission2 = false;
+	field transmission3 = false;
+	field transmission4 = false;
+	field powerupsTaken = {};
 	
-	constructor() {
-		this.lifemeter = START_LIFE;
-		this.lives = START_LIVES;
-		this.volcanoA = false;
-		this.volcanoB = false;
-		this.volcanoC = false;
-		this.balloonA = false;
-		this.balloonB = false;
-		this.balloonC = false;
-		this.balloonD = false;
-		this.gravity = false;
-		this.transmission1 = false;
-		this.transmission2 = false;
-		this.transmission3 = false;
-		this.transmission4 = false;
-		this.powerupsTaken = {};
-	}
+	constructor() { }
 	
 	function convertToPassword() {
 		
@@ -57,7 +57,7 @@ class Context {
 		
 		if (count >= 2) {
 			value = (this.volcanoA ? 1 : 0) + (this.volcanoB ? 2 : 0) + (this.volcanoC ? 4 : 0);
-			letter = $chr($ord('1') + value - 1);
+			letter = Core.chr(Core.ord('1') + value - 1);
 			password += letter;
 		} else {
 			password += this.randomChar('0123456789');
@@ -65,7 +65,7 @@ class Context {
 		
 		if (count >= 3) {
 			value = (this.balloonA ? 1 : 0) + (this.balloonB ? 2 : 0) + (this.balloonC ? 4 : 0) + (this.balloonD ? 8 : 0);
-			letter = $chr($ord('A') + value - 1);
+			letter = Core.chr(Core.ord('A') + value - 1);
 			password += letter;
 		} else {
 			password += this.randomChar(ALPHABET);
@@ -100,22 +100,22 @@ class Context {
 	*/
 	
 	function randomChar(characters) {
-		return characters[$floor($random() * characters.length)];
+		return characters[Random.randomInt(characters.length)];
 	}
 	
 	function enforceLetter(letter) {
 		letter = letter.upper();
-		if ($ord(letter) < $ord('A'))
+		if (Core.ord(letter) < Core.ord('A'))
 			return 'A';
-		if ($ord(letter) > $ord('Z'))
+		if (Core.ord(letter) > Core.ord('Z'))
 			return 'Z';
 		return letter;
 	}
 	
 	function enforceNumber(char) {
-		if ($ord(char) < $ord('0'))
+		if (Core.ord(char) < Core.ord('0'))
 			return '0';
-		if ($ord(char) > $ord('9'))
+		if (Core.ord(char) > Core.ord('9'))
 			return '9';
 		return char;
 	}
@@ -127,21 +127,21 @@ class Context {
 		p4 = this.enforceLetter(password[3]);
 		
 		if ('ABC'.contains(p1)) {
-			if ($ord(p2) <= $ord('M')) {
+			if (Core.ord(p2) <= Core.ord('M')) {
 				this.gravity = true;
 			}
 		}
 		
 		if ('BC'.contains(p1)) {
-			value = $ord(p3) - $ord('1') + 1;
-			$print(value + $ord(p3));
+			value = Core.ord(p3) - Core.ord('1') + 1;
+			// Core.print(value + Core.ord(p3));
 			this.volcanoA = (value & 1) != 0;
 			this.volcanoB = (value & 2) != 0;
 			this.volcanoC = (value & 4) != 0;
 		}
 		
 		if (p1 == 'C') {
-			value = $ord(p4) - $ord('A') + 1;
+			value = Core.ord(p4) - Core.ord('A') + 1;
 			this.balloonA = (value & 1) != 0;
 			this.balloonB = (value & 2) != 0;
 			this.balloonC = (value & 4) != 0;

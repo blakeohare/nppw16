@@ -1,69 +1,25 @@
-FPS = 30;
-WIDTH = $floor(256 * 3.4);
-HEIGHT = $floor(224 * 3);
+import Game;
+import Gamepad;
+import Math;
 
-GAME_WIDTH = 256;
-GAME_HEIGHT = 224;
+const FPS = 30;
+const WIDTH = 870;
+const HEIGHT = 672;
 
-DEBUG = { 'counter': 0 };
-BLACK = [0, 0, 0];
-
-class Object {
-	constructor() { }
-}
-
-DEBUG_MODE = false;
-JOYSTICKS_ENABLED = false;
-SOUND_ENABLED = true;
-
-import 'src/Util.cry';
-
-import 'src/EnemyAutomation/init.cry';
-import 'src/SpecialLevelStuff/init.cry';
-import 'src/SpriteRenderers/init.cry';
-
-import 'src/Backgrounds.cry';
-import 'src/Context.cry';
-import 'src/CreditsScene.cry';
-import 'src/DeathOverrideScene.cry';
-import 'src/DeathScene.cry';
-import 'src/Dialogs.cry';
-import 'src/DialogScene.cry';
-import 'src/GameOverScene.cry';
-import 'src/ImageLibrary.cry';
-import 'src/IntroScene.cry';
-import 'src/JoystickConfigScreen.cry';
-import 'src/JoystickMenuScene.cry';
-import 'src/JukeBox.cry';
-import 'src/MapParser.cry';
-import 'src/OpeningScene.cry';
-import 'src/PasswordScene.cry';
-import 'src/PauseScene.cry';
-import 'src/PlayScene.cry';
-import 'src/ReadyScene.cry';
-import 'src/Sound.cry';
-import 'src/Sprite.cry';
-import 'src/Text.cry';
-import 'src/TileStuff.cry';
-import 'src/TitleScene.cry';
-import 'src/VictorySequenceScene.cry';
-import 'src/VolcanoCompleteScene.cry';
-
+const GAME_WIDTH = 256;
+const GAME_HEIGHT = 224;
+const DEBUG_MODE = false;
+const JOYSTICKS_ENABLED = false;
+const SOUND_ENABLED = true;
 
 function main() {
-	$game_initialize(FPS);
-	
-	$game_initialize_screen_scaled(256, 224, WIDTH, HEIGHT);
-	$gamepad_enable_recent('active');
+	window = new Game.GameWindow('Space Squirrel', FPS, 256, 224, WIDTH, HEIGHT);
+	GamepadManager.refreshDevices();
+	GamepadManager.restoreSettingsFromUserData(['active']);
 	
 	activeScene = new OpeningScene();
 	renderCounter = 0;
 
-	$game_set_title("Space Squirrel");
-	//ico = getImage('sprites/space_overworld_right_2.png')
-	//ico = pygame.transform.scale2x(ico)
-	//pygame.display.set_icon(ico)
-	
 	pressedActions = {};
 	for (action : 'left up down right A B start'.split(' ')) {
 		pressedActions[action] = false;
@@ -74,7 +30,7 @@ function main() {
 		events.clear();
 		
 		quitAttempt = false;
-		raw_events = $game_pump_events();
+		raw_events = window.pumpEvents();
 		for (event : raw_events) {
 			if (event.is_quit) {
 				return;
@@ -105,7 +61,7 @@ function main() {
 				}
 				
 				if (action != null) {
-					ev = new Object();
+					ev = new Event();
 					ev.action = action;
 					ev.down = down;
 					ev.up = !down;
@@ -120,7 +76,7 @@ function main() {
 		activeScene.update();
 		activeScene.render(renderCounter++);
 		activeScene = activeScene.next;
-		$game_clock_tick();
+		
+		window.clockTick();
 	}
 }
-main();

@@ -2,7 +2,7 @@ function SPRITE_renderFireball(sprite, scene, offsetX, offsetY, arc) {
 	left = sprite.x - 8 + offsetX;
 	top = sprite.y - 8 + offsetY;
 	
-	img = IMAGES.get('sprites/lava_monster_projectile.png');
+	img = ImageLibrary.get('sprites/lava_monster_projectile.png');
 	
-	$gfx_blit_image(img, left, top);
+	img.draw(left, top);
 }

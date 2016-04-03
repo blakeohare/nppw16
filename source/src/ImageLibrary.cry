@@ -1,28 +1,27 @@
+import GFX;
+
 class ImageLibrary {
-	constructor() {
-		this.images = {};
-		this.flipped = {};
-	}
+	static field images = {};
+	static field flipped = {};
 	
-	function get(path) {
-		img = this.images.get(path, null);
+	constructor() { }
+	
+	static function get(path) {
+		img = ImageLibrary.images.get(path, null);
 		if (img == null) {
-			$gfx_image_load_from_resource('t', 'images/' + path);
-			img = $gfx_image_get('t');
-			this.images[path] = img;
+			img = ImageLoader.fromResource('images/' + path).getImage();
+			ImageLibrary.images[path] = img;
 		}
 		return img;
 	}
 	
-	function getBackwards(path) {
-		img = this.flipped.get(path, null);
+	static function getBackwards(path) {
+		img = ImageLibrary.flipped.get(path, null);
 		if (img == null) {
-			img = this.get(path);
-			img = $gfx_flip_image(img, true, false);
-			this.flipped[path] = img;
+			img = ImageLibrary.get(path);
+			img = img.flip(true, false);
+			ImageLibrary.flipped[path] = img;
 		}
 		return img;
 	}
 }
-
-IMAGES = new ImageLibrary();

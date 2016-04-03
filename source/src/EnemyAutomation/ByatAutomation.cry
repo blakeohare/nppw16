@@ -1,11 +1,17 @@
+import Math;
+import Random;
+
 class ByatAutomation {
+	field sprite;
+	field counter = 0;
+	field mode = 'perch'; // TODO: replace with enum.
+	field perched = true;
+	field dropHeight = 10;
+	field targetY;
+	field swoopLeft;
+
 	constructor(sprite) {
 		this.sprite = sprite;
-		this.perched = false;
-		this.counter = 0;
-		this.mode = 'perch';
-		this.perched = true;
-		this.dropHeight = 10;
 	}
 		
 	function doStuff(scene) {
@@ -19,7 +25,7 @@ class ByatAutomation {
 				this.counter = 0;
 				this.mode = 'down';
 				this.perched = false;
-				dropHeight = $floor($random() * 5 + 1) * 16;
+				dropHeight = Random.randomInt(1, 6) * 16;
 				this.targetY = sprite.y + dropHeight;
 				//this.originalY = sprite.y;
 			}
@@ -32,7 +38,7 @@ class ByatAutomation {
 			}
 		} else if (this.mode == 'swoop') {
 			swoopSpeed = 1.6;
-			sprite.dy = $sin(this.counter * 40 / (2 * 3.14159)) * 4;
+			sprite.dy = Math.sin(this.counter * 40 / (2 * 3.14159)) * 4;
 			sprite.dx = this.swoopLeft ? -swoopSpeed : swoopSpeed;
 			if (this.counter > 30 * 6) {
 				this.mode = 'up';

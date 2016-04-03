@@ -1,18 +1,22 @@
+import Math;
+
 class VolcanoCoreActivation : SpecialLevelStuff {
+	field id;
+	field spotX = 11;
+	field spotY = 9;
+	field sequenceCounter = -1;
+	field done = false;
+	field warpBack = false;
+	
 	constructor(scene, id) : base(scene) {
 		this.id = id;
 		this.scene = scene;
 		this.context = scene.context;
 		this.hasUpdate = true;
 		this.hasPostInit = true;
-		this.spotX = 11;
-		this.spotY = 9;
-		this.sequenceCounter = -1;
-		this.done = false;
 		this.lavaLevel = 0;
 		this.shakeScreen = false;
 		this.freeze = false;
-		this.warpBack = false;
 	}
 		
 	function update() {
@@ -20,7 +24,7 @@ class VolcanoCoreActivation : SpecialLevelStuff {
 		tx = player.x / 16;
 		ty = player.y / 16;
 		
-		if (tx == this.spotX && $abs(ty - this.spotY) < 2 && !this.done) {
+		if (tx == this.spotX && Math.abs(ty - this.spotY) < 2 && !this.done) {
 			this.doLavaSequence(false);
 		}
 		

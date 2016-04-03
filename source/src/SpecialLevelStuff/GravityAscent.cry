@@ -1,5 +1,6 @@
 
 class GravityAscentExit : SpecialLevelStuff {
+	
 	constructor(scene) : base(scene) {
 		this.hasDoorTrigger = true;
 	}

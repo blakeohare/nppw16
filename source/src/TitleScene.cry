@@ -1,14 +1,16 @@
+import GFX;
+
 class TitleScene {
-	constructor() {
-		this.next = this;
-		this.flags = '';
-		this.flash_counter = 0;
-		this.options = [
+	field next = this;
+	field flags = '';
+	field flash_counter = 0;
+	field options = [
 			['start', 'Start Game'],
 			['password', "Enter Password"],
 			['joystick', "Configure Game Pad"]];
-		this.index = 0;
-	}
+	field index = 0;
+	
+	constructor() { }
 	
 	function processInput(events, pressedKeys) {
 		for (event : events) {
@@ -54,16 +56,16 @@ class TitleScene {
 			else if (action == 'joystick')
 				this.next = new JoystickMenuScene();
 			else
-				$assert(false, "Unknown option");
+				Core.assert(false, "Unknown option");
 		}
 	}
 	
 	function render(renderCounter) {
-		JUKEBOX.ensureSong('title');
+		JukeBox.ensureSong('title');
 		
-		$gfx_fill_screen(0, 0, 0);
+		GFX.Draw.fill(0, 0, 0);
 		
-		$gfx_blit_image(IMAGES.get('slides/title.png'), 0, 0);
+		ImageLibrary.get('slides/title.png').draw(0, 0);
 		
 		showText = true; // (renderCounter // 10) % 3 != 0;
 		if ( this.flash_counter > 0)
@@ -89,10 +91,10 @@ class TitleScene {
 			active_joystick_text = "Active joystick:";
 			drawText(128, 128, 128, active_joystick_text, 8, y);
 			x = (active_joystick_text.length + 1) * 8;
-			if (_ACTIVE_JOYSTICK[0] == null) {
+			if (JoystickMenuScene.ACTIVE_JOYSTICK == null) {
 				drawText(255, 0, 0, "None", x, y);
 			} else {
-				drawText(255, 255, 255, _ACTIVE_JOYSTICK[0].name, x, y);
+				drawText(255, 255, 255, JoystickMenuScene.ACTIVE_JOYSTICK.name, x, y);
 			}
 		}
 	}

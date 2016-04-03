@@ -1,7 +1,52 @@
+
+class DoorParseUnit {
+	field target;
+	field sx;
+	field sy;
+	field tx;
+	field ty;
+	
+	constructor() { }
+}
+
+class PowerUpParseUnit {
+	field type;
+	field id;
+	field row;
+	field col;
+	
+	constructor() { }
+}
+
+class Map {
+	field width;
+	field height;
+	field side;
+	field upper;
+	field lower;
+	field doors;
+	field enemies;
+	field doorswaps;
+	field overlayTriggers;
+	field powerups;
+	
+	constructor() { }
+}
+
+class EnemiesParseUnit {
+	field id;
+	field col;
+	field row;
+
+	constructor() { }
+}
+
 class MapParser {
+	field values;
+	
 	constructor(file) {
 		path = 'maps/' + file;
-		t = $resource_read_text(path);
+		t = Resources.readText(path);
 		values = {};
 		for (line : t.split('\n')) {
 			parts = line.split(':');
@@ -18,9 +63,9 @@ class MapParser {
 	
 	function parse() {
 		// TODO: create a real Map definition.
-		m = new Object();
-		m.width = $parse_int(this.values['width']);
-		m.height = $parse_int(this.values['height']);
+		m = new Map();
+		m.width = Core.parseInt(this.values['width']);
+		m.height = Core.parseInt(this.values['height']);
 		m.side = this.values.get('view', 'side').lower() == 'side';
 		m.upper = this.getTiles(this.values['upper'], m.width, m.height);
 		m.lower = this.getTiles(this.values['lower'], m.width, m.height);
@@ -41,11 +86,11 @@ class MapParser {
 		output = [];
 		for (item : sv.split(',')) {
 			parts = item.split('|');
-			pu = new Object();
+			pu = new PowerUpParseUnit();
 			pu.type = parts[0];
 			pu.id = parts[1];
-			pu.col = $parse_int(parts[2]);
-			pu.row = $parse_int(parts[3]);
+			pu.col = Core.parseInt(parts[2]);
+			pu.row = Core.parseInt(parts[3]);
 			output.add(pu);
 		}
 		return output;
@@ -99,9 +144,9 @@ class MapParser {
 		for (value : enemyString.split(',')) {
 			parts = value.split('|');
 			id = parts[0];
-			col = $parse_int(parts[1]);
-			row = $parse_int(parts[2]);
-			e = new Object();
+			col = Core.parseInt(parts[1]);
+			row = Core.parseInt(parts[2]);
+			e = new EnemiesParseUnit();
 			e.id = id;
 			e.col = col;
 			e.row = row;
@@ -117,12 +162,12 @@ class MapParser {
 		doors = [];
 		for (door : doorString.split(',')) {
 			door = door.split('|');
-			d = new Object();
+			d = new DoorParseUnit();
 			d.target = door[0];
-			d.sx = $parse_int(door[1]);
-			d.sy = $parse_int(door[2]);
-			d.tx = $parse_int(door[3]);
-			d.ty = $parse_int(door[4]);
+			d.sx = Core.parseInt(door[1]);
+			d.sy = Core.parseInt(door[2]);
+			d.tx = Core.parseInt(door[3]);
+			d.ty = Core.parseInt(door[4]);
 			doors.add(d);
 		}
 		return doors;
@@ -135,7 +180,7 @@ class MapParser {
 			if (id == '') {
 				output.add(null);
 			} else {
-				output.add(getTile(id));
+				output.add(TileStore.getTile(id));
 			}
 		}
 		

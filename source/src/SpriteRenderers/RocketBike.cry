@@ -1,6 +1,6 @@
 function SPRITE_renderRocketBike(sprite, scene, offsetX, offsetY, arc) {
 	left = sprite.x + offsetX - 16;
 	top = sprite.y + offsetY - 24;
-	img = IMAGES.get('sprites/rocket_bike_squirrelless.png');
-	$gfx_blit_image(img, left, top);
+	img = ImageLibrary.get('sprites/rocket_bike_squirrelless.png');
+	img.draw(left, top);
 }

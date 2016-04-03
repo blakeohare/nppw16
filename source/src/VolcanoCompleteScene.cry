@@ -1,10 +1,15 @@
 class VolcanoCompleteScene {
+
+	field next = this;
+	field flags = '';
+	field bg;
+	field context;
+	field counter = 0;
+	field player;
+	
 	constructor(scene, context) {
-		this.next = this;
-		this.flags = '';
 		this.bg = scene;
 		this.context = context;
-		this.counter = 0;
 		this.player = scene.player;
 	}
 	

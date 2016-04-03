@@ -1,82 +1,67 @@
-NEIGHBOR_RANGE = [-1, 0, 1];
+import Math;
 
-JUMPING_VY = -14;
-RUN_JUMPING_VY = -16;
-WATER_JUMPING_VY = -5;
-
-SPRITE_HEIGHT = {
-	'player_side': 32,
-	'acorn': 16,
-	'acorntop': 16,
-	'gravity_device': 16,
-	'lazor': 16,
-	'lavamonster': 32,
-	'waterpop': 32,
-	'powerup': 16,
-	'poof_big': 32,
-	'poof_small': 16,
-	'byat': 16,
-	'moonsquid': 16,
-	'seed': 16,
-	'rocketbike': 32,
-};
-
-G = 0.7;
-STRONG_G = 1.55;
-WATER_G = 0.1;
+const JUMPING_VY = -14;
+const RUN_JUMPING_VY = -16;
+const WATER_JUMPING_VY = -5;
+const G = 0.7;
+const STRONG_G = 1.55;
+const WATER_G = 0.1;
 
 function getSpriteHeight(type) {
-	return SPRITE_HEIGHT.get(type, 16);
+	return Sprite.SPRITE_HEIGHT.get(type, 16);
 }
 
-XY_PAIRINGS = [
-	[0, 0],
-	[1, 0],
-	[2, 0],
-	[3, 0],
-	[4, 0],
-	[4, 1],
-	[4, 2],
-	[4, 3]
-];
-
-ENEMY_TYPES = [
-	'acorn',
-	'acorntop'
-];
-
 class Sprite {
+	field type;
+	field isEnemy = false;
+	field height;
+	field x;
+	field y;
+	field modelX;
+	field modelY;
+	field xs = [null] * 5;
+	field ys = [null] * 5;
+	field vy = 0;
+	field moving = false;
+	field lastDirection = 'left';
+	field onGround = false;
+	field neighbors = [null] * 36;
+	field spawns = null;
+	field dead = false;
+	field collidedWall = false;
+	field deleteWhenOffScreen = false;
+	field ghost = false;
+	field renderImpl = SPRITE_renderPlayerOver;
+	field automation = null;
+	field floats = false;
+	field deathState = null;
+	field sprinkle = false;
+	field isBullet;
+	field inBackground = false;
+	field bikemode = false;
+	field powerupInfo = null;
+	field acorntopdir;
+	field dx = 0;
+	field dy = 0;
+	field iceVX = 0;
+	field ddx = 0;
+	field damageDir = null;
+	field cling = false;
+	field ladderDY = 0;
+	field blinkCounter = -1;
+	field cameFromIce = false;
+	
 	constructor(type, px, py) {
 		this.type = type;
-		this.isEnemy = false;
 		this.height = getSpriteHeight(type);
 		this.x = px;
 		this.y = py;
 		this.modelX = px + 0.0;
 		this.modelY = py + 0.0;
-		this.xs = [null] * 5;
-		this.ys = [null] * 5;
-		this.vy = 0;
 		
-		this.moving = false;
-		this.lastDirection = 'left';
-		this.onGround = false;
-		this.neighbors = [null] * 36;
-		this.spawns = null;
-		this.dead = false;
-		this.collidedWall = false;
-		this.deleteWhenOffScreen = false;
-		this.ghost = false;
-		this.renderImpl = SPRITE_renderPlayerOver;
-		this.automation = null;
-		this.floats = false;
-		this.deathState = null;
-		this.sprinkle = false;
-		this.isEnemy = ENEMY_TYPES.contains(type);
+		this.isEnemy = Sprite.ENEMY_TYPES.contains(type);
 		this.isBullet = type == 'lazor';
-		this.inBackground = false;
-		this.bikemode = false;
-		this.powerupInfo = null;
+		
 		switch (type) {
 			case 'acorn':
 				this.renderImpl = SPRITE_renderAcorn;
@@ -160,18 +145,43 @@ class Sprite {
 			default:
 				break;
 		}
-		
-		this.dx = 0;
-		this.dy = 0;
-		this.iceVX = 0;
-		this.ddx = 0; // "damage dx", will stay set until you land on the ground or blink counter goes < 0
-		this.damageDir = null;
-		this.cling = false;
-		this.ladderDY = 0;
-		this.blinkCounter = -1;
-		this.cameFromIce = false;
 	}
-		
+	
+	static field NEIGHBOR_RANGE = [-1, 0, 1];
+
+	static field SPRITE_HEIGHT = {
+		'player_side': 32,
+		'acorn': 16,
+		'acorntop': 16,
+		'gravity_device': 16,
+		'lazor': 16,
+		'lavamonster': 32,
+		'waterpop': 32,
+		'powerup': 16,
+		'poof_big': 32,
+		'poof_small': 16,
+		'byat': 16,
+		'moonsquid': 16,
+		'seed': 16,
+		'rocketbike': 32,
+	};
+
+	static field XY_PAIRINGS = [
+		[0, 0],
+		[1, 0],
+		[2, 0],
+		[3, 0],
+		[4, 0],
+		[4, 1],
+		[4, 2],
+		[4, 3]
+	];
+
+	static field ENEMY_TYPES = [
+		'acorn',
+		'acorntop'
+	];
+
 	function checkNeighborCollision(scene, col, row, targetX, targetY) {
 		area_left = targetX - 5;
 		area_right = targetX + 5;
@@ -264,8 +274,8 @@ class Sprite {
 					this.dx = BIKE_SPEED;
 			}	
 			
-			tileBottomIceCheck = $floor(areaBottom / 16);
-			tileX = $floor(areaX / 16);
+			tileBottomIceCheck = floor(areaBottom / 16);
+			tileX = floor(areaX / 16);
 			inWater = false;
 			onIce = false;
 			if (tileX >= 0 && tileBottomIceCheck > 0 && tileX < scene.cols && tileBottomIceCheck < scene.rows) {
@@ -335,7 +345,7 @@ class Sprite {
 				// upon it at the end of the vertical adjustment phase.
 				if (this.ghost || !scene.isCollision(newX, areaTop, newX, areaBottom)) {
 					if (this.cling) {
-						if ($floor(newX / 16) != $floor(this.modelX / 16)) {
+						if (floor(newX / 16) != floor(this.modelX / 16)) {
 							newX = this.modelX;
 						}
 					}
@@ -352,8 +362,8 @@ class Sprite {
 				this.dx = 0;
 			}
 			
-			tileX = $floor(this.modelX / 16);
-			tileY = $floor(this.modelY / 16);
+			tileX = floor(this.modelX / 16);
+			tileY = floor(this.modelY / 16);
 			
 			offScreen = tileX < 0 || tileX >= scene.cols || tileY < 0 || tileY >= scene.rows;
 			onScreen = !offScreen;
@@ -381,7 +391,7 @@ class Sprite {
 			
 			rocketJump = false;
 			if (inWater && isPlayer && this.vy < 0) {
-				tileY = $floor(this.modelY / 16) - 1;
+				tileY = floor(this.modelY / 16) - 1;
 				if (tileY >= 0) {
 					if (!scene.tiles[tileX][tileY].isWater) {
 						// moving up, bottom half is in water, top half is not
@@ -437,7 +447,7 @@ class Sprite {
 						// TODO: do top transitions here.
 						no = true;
 					} else {
-						newTileTop = $floor(newTop / 16);
+						newTileTop = floor(newTop / 16);
 						
 						offScreen = tileX < 0 || tileX >= scene.cols || newTileTop < 0 || newTileTop >= scene.rows;
 						onScreen = !offScreen;
@@ -471,7 +481,7 @@ class Sprite {
 					// rather than stop the movement, you find where the top of the collided
 					// tile is and place the sprite there.
 					
-					newTileBottom = $floor(newBottom / 16);
+					newTileBottom = floor(newBottom / 16);
 					
 					// If the player fell off the bottom
 					if (isPlayer && newTileBottom >= height) {
@@ -488,7 +498,7 @@ class Sprite {
 							t = scene.tiles[tileX][newTileBottom];
 							topStop = false;
 							if (t.isTop) {
-								oldTileBottom = $floor(areaBottom / 16);
+								oldTileBottom = floor(areaBottom / 16);
 								if (newTileBottom > oldTileBottom) {
 									topStop = true;
 								} else if (newTileBottom == oldTileBottom && areaBottom == newBottom) {
@@ -517,12 +527,12 @@ class Sprite {
 				this.modelY = newBottom - 8;
 			}
 			
-			this.x = $floor(this.modelX);
-			this.y = $floor(this.modelY);
+			this.x = floor(this.modelX);
+			this.y = floor(this.modelY);
 			this.dy = 0; // TODO: isn't this supposed to be this.dx?
 			this.dy = 0;
 			
-			tileY = $floor(this.modelY / 16);
+			tileY = floor(this.modelY / 16);
 			
 			offScreen = tileX < 0 || tileX >= scene.cols || tileY < 0 || tileY >= scene.rows;
 			onScreen = !offScreen;
@@ -564,17 +574,17 @@ class Sprite {
 				ys[2] = this.modelY + this.dy / 2.0;
 				ys[3] = this.modelY + this.dy / 4.0;
 
-				for (pairing : XY_PAIRINGS) {
+				for (pairing : Sprite.XY_PAIRINGS) {
 					newx = xs[pairing[0]];
 					newy = ys[pairing[1]];
-					col = $floor(newx / 16);
-					row = $floor(newy / 16);
+					col = floor(newx / 16);
+					row = floor(newy / 16);
 
 					if (this.checkNeighborCollision(scene, col, row, newx, newy)) {
 						this.modelX = newx;
 						this.modelY = newy;
-						this.x = $floor(this.modelX);
-						this.y = $floor(this.modelY);
+						this.x = floor(this.modelX);
+						this.y = floor(this.modelY);
 						break;
 					}
 				}
@@ -614,7 +624,6 @@ class Sprite {
 	function hit(scene, amount) {
 		this.blinkCounter = 40;
 		scene.context.adjustHealth(scene, -amount);
-		this.blinkDirection = this.lastDirection;
 		
 		if (scene.id != 'bike_level') {
 			tiles = scene.tiles;

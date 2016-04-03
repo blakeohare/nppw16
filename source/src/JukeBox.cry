@@ -1,128 +1,146 @@
-SONG_LOOKUP = {
-	// name : [file, should loop?],
-	'title': ['tensebranches', true],
-	'intro': ['open_skies', true],
-	'overworld': ['open_skies', true],
-	'ship': ['spacemachine', true],
-	'credits': ['credits', true],
-	'password': ['fluffytales', true],
-	'volcano': ['lunacy', true],
-	'bike': ['nopressure', true],
-	'water': ['squirrels_can_swim', true],
-	'gravity': ['deadlyacorns', true],
-	'death': ['oopsdead', false],
-	'gameover': ['fluffytales', true],
-};
-
-SONG_BY_MAP = {
-	'ship_1': 'ship',
-	
-	'main': 'overworld',
-	'balloon_2_overland': 'overworld',
-	'balloon_3_overland': 'overworld',
-	'bird_overland': 'overworld',
-	'volcano_2_overland': 'overworld',
-	'volcano_3_overland': 'overworld',
-	
-	'bike_level': 'bike',
-	'bird_link': 'gravity',
-	
-	'exit_water_phase_locked': 'water',
-	'exit_water_phase_unlocked': 'water',
-	
-	'grav_ascent': 'gravity',
-	'grav_core': 'gravity',
-	'grav_descent': 'gravity',
-	'grav_descent_secret': 'gravity',
-	'grav_gate': 'gravity',
-	
-	'lava_gate_2': 'volcano',
-	'lava_gate_2_active': 'volcano',
-	'lava_gate_3': 'volcano',
-	'lava_gate_3_active': 'volcano',
-	'volcano_1_ascent': 'volcano',
-	'volcano_1_core': 'volcano',
-	'volcano_1_descent': 'volcano',
-	'volcano_2_core': 'volcano',
-	'volcano_2_lower_ascent': 'volcano',
-	'volcano_2_lower_descent': 'volcano',
-	'volcano_2_upper_ascent': 'volcano',
-	'volcano_2_upper_descent': 'volcano',
-	'volcano_2_upper_secret': 'volcano',
-	'volcano_3_bottom': 'volcano',
-	'volcano_3_core': 'volcano',
-	'volcano_3_middle': 'volcano',
-	'volcano_3_secret': 'volcano',
-	'volcano_3_top': 'volcano',
-	
-	'water_gate_1_locked': 'water',
-	'water_gate_1_unlocked': 'water',
-	
-	'rope_test': 'gravity',
-	
-	'birdfeeder': 'gravity',
-	
-	'section_3_gate': 'gravity',
-	'section_3_gate_active': 'gravity',
-	'wlink_A1': 'gravity',
-	'wlink_A2': 'gravity',
-	'wlink_A3': 'gravity',
-	'wlink_A4': 'gravity',
-	
-	'wlink_B_nowater': 'water',
-	'wlink_B_somewater': 'water',
-	'wlink_B_allwater': 'water',
-	
-	'wlink_D1_nowater': 'water',
-	'wlink_D1_water': 'water',
-	'wlink_D2_nowater': 'water',
-	'wlink_D2_water': 'water',
-	'wlink_D3_nowater': 'water',
-	'wlink_D3_water': 'water',
-	
-	'wlink_E1_nowater': 'water',
-	'wlink_E1_water': 'water',
-	'wlink_E2': 'water',
-	'wlink_E3': 'water',
-};
-
+import Audio;
 
 class JukeBox {
-	constructor() {
-		this.currentSong = null;
-		this.actuallyPlaying = false;
-	}
+	static field currentSong = null;
+	static field actuallyPlaying = false;
 	
-	function ensureSong(id) {
-		if (!SOUND_ENABLED)
-			return;
-		
-		if (this.currentSong != id) {
-			if (this.currentSong != null && this.actuallyPlaying) {
-				$music_stop();
+	constructor() { Core.assert(false); }
+	
+	static function ensureSong(id) {
+		if (SOUND_ENABLED) {
+			if (JukeBox.currentSong != id) {
+				song = JukeBox.SONG_LOOKUP.get(id, null);
+				if (song != null) {
+					file = song[0];
+					loop = song[1];
+					path = 'music/' + song[0] + '.ogg';
+					music = JukeBox.loadMusicFromResource(path);
+					JukeBox.actuallyPlaying = true;
+					music.play(loop);
+				} else {
+					JukeBox.actuallyPlaying = false;
+					Audio.Music.stop();
+				}
+				
+				JukeBox.currentSong = id;
 			}
-			song = SONG_LOOKUP.get(id, null);
-			if (song != null) {
-				file = song[0];
-				loop = song[1];
-				path = 'music/' + song[0] + '.ogg';
-				music = $music_load_from_resource(path);
-				$music_play(music, loop, 0, 0, 0);
-				this.actuallyPlaying = true;
-			} else {
-				this.actuallyPlaying = false;
-			}
-			
-			this.currentSong = id;
 		}
 	}
 	
-	function playSongForLevelMaybe(id) {
-		song = SONG_BY_MAP.get(id, null);
+	static function loadMusicFromResource(path) {
+		if (SOUND_ENABLED) {
+			music = JukeBox.MUSICS.get(path);
+			if (music == null) {
+				music = Audio.Music.loadFromResource(path);
+				JukeBox.MUSICS[path] = music;
+			}
+			return music;
+		}
+	}
+	
+	static field MUSICS = {};
+	
+	static function playSongForLevelMaybe(id) {
+		song = JukeBox.SONG_BY_MAP.get(id, null);
 		if (song != null) {
-			this.ensureSong(song);
+			JukeBox.ensureSong(song);
 		}
 	}
-}
+	
+	static function pause() {
+		// TODO: this
+	}
+	
+	static function resume() {
+		// TODO: this
+	}
+	
+	static field SONG_LOOKUP = {
+		// name : [file, should loop?],
+		'title': ['tensebranches', true],
+		'intro': ['open_skies', true],
+		'overworld': ['open_skies', true],
+		'ship': ['spacemachine', true],
+		'credits': ['credits', true],
+		'password': ['fluffytales', true],
+		'volcano': ['lunacy', true],
+		'bike': ['nopressure', true],
+		'water': ['squirrels_can_swim', true],
+		'gravity': ['deadlyacorns', true],
+		'death': ['oopsdead', false],
+		'gameover': ['fluffytales', true],
+	};
 
-JUKEBOX = new JukeBox();
+	static field SONG_BY_MAP = {
+		'ship_1': 'ship',
+		
+		'main': 'overworld',
+		'balloon_2_overland': 'overworld',
+		'balloon_3_overland': 'overworld',
+		'bird_overland': 'overworld',
+		'volcano_2_overland': 'overworld',
+		'volcano_3_overland': 'overworld',
+		
+		'bike_level': 'bike',
+		'bird_link': 'gravity',
+		
+		'exit_water_phase_locked': 'water',
+		'exit_water_phase_unlocked': 'water',
+		
+		'grav_ascent': 'gravity',
+		'grav_core': 'gravity',
+		'grav_descent': 'gravity',
+		'grav_descent_secret': 'gravity',
+		'grav_gate': 'gravity',
+		
+		'lava_gate_2': 'volcano',
+		'lava_gate_2_active': 'volcano',
+		'lava_gate_3': 'volcano',
+		'lava_gate_3_active': 'volcano',
+		'volcano_1_ascent': 'volcano',
+		'volcano_1_core': 'volcano',
+		'volcano_1_descent': 'volcano',
+		'volcano_2_core': 'volcano',
+		'volcano_2_lower_ascent': 'volcano',
+		'volcano_2_lower_descent': 'volcano',
+		'volcano_2_upper_ascent': 'volcano',
+		'volcano_2_upper_descent': 'volcano',
+		'volcano_2_upper_secret': 'volcano',
+		'volcano_3_bottom': 'volcano',
+		'volcano_3_core': 'volcano',
+		'volcano_3_middle': 'volcano',
+		'volcano_3_secret': 'volcano',
+		'volcano_3_top': 'volcano',
+		
+		'water_gate_1_locked': 'water',
+		'water_gate_1_unlocked': 'water',
+		
+		'rope_test': 'gravity',
+		
+		'birdfeeder': 'gravity',
+		
+		'section_3_gate': 'gravity',
+		'section_3_gate_active': 'gravity',
+		'wlink_A1': 'gravity',
+		'wlink_A2': 'gravity',
+		'wlink_A3': 'gravity',
+		'wlink_A4': 'gravity',
+		
+		'wlink_B_nowater': 'water',
+		'wlink_B_somewater': 'water',
+		'wlink_B_allwater': 'water',
+		
+		'wlink_D1_nowater': 'water',
+		'wlink_D1_water': 'water',
+		'wlink_D2_nowater': 'water',
+		'wlink_D2_water': 'water',
+		'wlink_D3_nowater': 'water',
+		'wlink_D3_water': 'water',
+		
+		'wlink_E1_nowater': 'water',
+		'wlink_E1_water': 'water',
+		'wlink_E2': 'water',
+		'wlink_E3': 'water',
+	};
+
+}

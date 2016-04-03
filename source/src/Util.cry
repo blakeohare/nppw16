@@ -11,22 +11,20 @@ function drawBox(x, y, cols, rows) {
 	top = y;
 	bottom = y + (rows - 1) * 8;
 	right = x + (cols - 1) * 8;
-	$gfx_blit_image(IMAGES.get('misc/border_nw.png'), left, top);
-	$gfx_blit_image(IMAGES.get('misc/border_ne.png'), right, top);
-	$gfx_blit_image(IMAGES.get('misc/border_se.png'), right, bottom);
-	$gfx_blit_image(IMAGES.get('misc/border_sw.png'), left, bottom);
+	ImageLibrary.get('misc/border_nw.png').draw(left, top);
+	ImageLibrary.get('misc/border_ne.png').draw(right, top);
+	ImageLibrary.get('misc/border_se.png').draw(right, bottom);
+	ImageLibrary.get('misc/border_sw.png').draw(left, bottom);
 	for (x = left + 8; x < right; x += 8) {
-		$gfx_blit_image(IMAGES.get('misc/border_n.png'), x, top);
-		$gfx_blit_image(IMAGES.get('misc/border_s.png'), x, bottom);
+		ImageLibrary.get('misc/border_n.png').draw(x, top);
+		ImageLibrary.get('misc/border_s.png').draw(x, bottom);
 	}
 	for (y = top + 8; y < bottom; y += 8) {
-		$gfx_blit_image(IMAGES.get('misc/border_w.png'), left, y);
-		$gfx_blit_image(IMAGES.get('misc/border_e.png'), right, y);
+		ImageLibrary.get('misc/border_w.png').draw(left, y);
+		ImageLibrary.get('misc/border_e.png').draw(right, y);
 	}
-	
-	$gfx_draw_rectangle(left + 8, top + 8, right - left - 8, bottom - top - 8, 0, 0, 0, 255);
+	GFX.Draw.rectangle(left + 8, top + 8, right - left - 8, bottom - top - 8, 0, 0, 0);
 }
-
 
 function min(a, b) {
 	return a < b ? a : b;

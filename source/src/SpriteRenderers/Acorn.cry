@@ -19,9 +19,9 @@ function SPRITE_renderAcorn(sprite, scene, offsetX, offsetY, arc) {
 	path = 'sprites/' + path + '.png';
 	reverse = sprite.lastDirection == 'left';
 	if (reverse) {
-		img = IMAGES.getBackwards(path);
+		img = ImageLibrary.getBackwards(path);
 	} else {
-		img = IMAGES.get(path);
+		img = ImageLibrary.get(path);
 	}
-	$gfx_blit_image(img, left, top);
+	img.draw(left, top);
 }

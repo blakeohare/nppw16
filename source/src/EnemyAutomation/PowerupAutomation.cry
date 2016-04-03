@@ -1,8 +1,10 @@
 class PowerupAutomation {
+	field sprite;
+	field counter = 0;
+	field visible = true;
+
 	constructor(sprite) {
 		this.sprite = sprite;
-		this.counter = 0;
-		this.visible = true;
 	}
 		
 	function doStuff(scene) {

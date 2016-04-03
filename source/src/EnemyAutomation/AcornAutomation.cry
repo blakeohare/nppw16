@@ -1,13 +1,20 @@
-ACORN_SPEED = 1.5;
-ACORN_DELAY_FOR_TOP_THROWING = 5 * 30;
+import Math;
+import Random;
+
+const ACORN_SPEED = 1.5;
+const ACORN_DELAY_FOR_TOP_THROWING = 5 * 30;
 
 class AcornAutomation {
+	field sprite;
+	field countdown;
+	// TODO: replace with enum
+	field mode = 'patrolling'; // patrolling | throwing | baldpatrolling
+	field top = null;
+	field walkingLeft = true;
+	
 	constructor(sprite) {
 		this.sprite = sprite;
-		this.countdown = $floor($random() * ACORN_DELAY_FOR_TOP_THROWING);
-		this.mode = 'patrolling'; // patrolling | throwing | baldpatrolling
-		this.top = null;
-		this.walkingLeft = true;
+		this.countdown = Random.randomInt(ACORN_DELAY_FOR_TOP_THROWING);
 	}
 	
 	function doStuff(scene) {
@@ -50,10 +57,10 @@ class AcornAutomation {
 			cols = scene.cols;
 			rows = scene.rows;
 			dx = this.walkingLeft ? ACORN_SPEED : -ACORN_SPEED; // TODO: isn't this backwards?
-			oldTileX = $floor(this.sprite.modelX / 16);
+			oldTileX = Math.floor(this.sprite.modelX / 16);
 			newX = this.sprite.modelX + dx;
-			oldTileY = $floor(this.sprite.modelY / 16);
-			newTileX = $floor(newX / 16);
+			oldTileY = Math.floor(this.sprite.modelY / 16);
+			newTileX = Math.floor(newX / 16);
 			if (newTileX < 0 || newTileX >= cols) {
 				this.walkingLeft = !this.walkingLeft;
 				return;

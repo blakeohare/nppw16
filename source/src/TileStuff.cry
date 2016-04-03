@@ -1,46 +1,59 @@
-_tileStore = {};
-function getTile(id) {
-	if (_tileStore.length == 0) {
-		initTileStore();
-	}
-	
-	return _tileStore.get(id, null);
-}
+import Resources;
 
-function initTileStore() {
-	t = $resource_read_text('images/tiles/manifest.txt');
+class TileStore {
+
+	static field _tileStore = null;
 	
-	for (line : t.split('\n')) {
-		parts = line.split('#')[0].trim().split('\t');
-		if (parts.length == 3) {
-			id = parts[0].trim();
-			flags = parts[1].trim();
-			imagePaths = parts[2].trim().split(',');
-			
-			tile = new TileTemplate(id, flags, imagePaths);
-			_tileStore[id] = tile;
+	static function getTile(id) {
+		if (TileStore._tileStore == null) {
+			TileStore.initTileStore();
+		}
+		
+		return TileStore._tileStore.get(id, null);
+	}
+
+	static function initTileStore() {
+		t = Resources.readText('images/tiles/manifest.txt');
+		TileStore._tileStore = {};
+		
+		for (line : t.split('\n')) {
+			parts = line.split('#')[0].trim().split('\t');
+			if (parts.length == 3) {
+				id = parts[0].trim();
+				flags = parts[1].trim();
+				imagePaths = parts[2].trim().split(',');
+				
+				tile = new TileTemplate(id, flags, imagePaths);
+				TileStore._tileStore[id] = tile;
+			}
 		}
 	}
 }
 
 class TileTemplate {
+	field id;
+	field solid = false;
+	field coveredA = false;
+	field coveredB = false;
+	field coveredC = false;
+	field coveredD = false;
+	field isDoor = false;
+	field isLadder = false;
+	field isTop = false;
+	field isSpike = false;
+	field isLava = false;
+	field isIce = false;
+	field isBalloon = false;
+	field isWater;
+	field primaryBalloonOffset = null; // Location of top-middle balloon tile relative to this
+	field images = [];
+	field staticImage = null;
+	field imageCount;
+	
 	constructor(id, flags, imagePaths) {
 		this.id = id;
-		this.solid = false;
-		this.coveredA = false;
-		this.coveredB = false;
-		this.coveredC = false;
-		this.coveredD = false;
-		this.isDoor = false;
-		this.isLadder = false;
-		this.isTop = false;
-		this.isWater = id == 'water' || id == 'watertop';
-		this.isSpike = false;
-		this.isLava = false;
-		this.isIce = false;
-		this.isBalloon = false;
-		this.primaryBalloonOffset = null; // Location of top-middle balloon tile relative to this
 
+		this.isWater = id == 'water' || id == 'watertop';
 		for (flag : flags) {
 			switch (flag) {
 				case 'x':
@@ -79,7 +92,7 @@ class TileTemplate {
 					break;
 				case 'o':
 					this.isBalloon = true;
-					bid = $parse_int(id[-1]);
+					bid = Core.parseInt(id[-1]);
 					pOffset = [0, 0];
 					if (bid == 1) {
 						pOffset = [1, 0];
@@ -98,12 +111,9 @@ class TileTemplate {
 					break;
 			}
 		}
-					
-		this.images = [];
 		for (path : imagePaths) {
-			this.images.add(IMAGES.get('tiles/' + path));
+			this.images.add(ImageLibrary.get('tiles/' + path));
 		}
-		this.staticImage = null;
 		if (this.images.length == 1) {
 			this.staticImage = this.images[0];
 		}
@@ -132,21 +142,27 @@ function makeTile(lower, upper, col, row) {
 }
 
 class Tile {
+	field originalTemplates;
+	field col;
+	field row;
+	field templates = [];
+	field isDoor = false;
+	field isLadder = false;
+	field isTop = false;
+	field isLava = false;
+	field isWater = false;
+	field isIce = false;
+	field door = null;
+	field isSpike = false;
+	field isBalloon = false;
+	field primaryBalloonOffset = null;
+	field collisions = [];
+	field solid = false;
+		
 	constructor(templates, col, row) {
+		this.originalTemplates = templates;
 		this.col = col;
 		this.row = row;
-		this.originalTemplates = templates;
-		this.templates = [];
-		this.isDoor = false;
-		this.isLadder = false;
-		this.isTop = false;
-		this.isLava = false;
-		this.isWater = false;
-		this.isIce = false;
-		this.door = null;
-		this.isSpike = false;
-		this.isBalloon = false;
-		this.primaryBalloonOffset = null;
 		
 		for (tile : templates) {
 			if (tile != null) {
@@ -164,9 +180,6 @@ class Tile {
 				}
 			}
 		}
-		
-		this.collisions = [];
-		this.solid = false;
 		
 		coveredA = false;
 		coveredB = false;

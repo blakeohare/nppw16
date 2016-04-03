@@ -1,12 +1,14 @@
-RISE_SPEED = 1;
-WAIT_INTERVAL = FPS * 4;
+const RISE_SPEED = 1;
+const WAIT_INTERVAL = FPS * 4;
 
 class LavaMonsterAutomation {
+	field sprite;
+	field counter = 0;
+	field mode ='wait'; // { wait | rise | shoot | fall }
+	field mouthOpen = false;
+	
 	constructor(sprite) {
 		this.sprite = sprite;
-		this.counter = 0;
-		this.mode = 'wait'; // { wait | rise | shoot | fall }
-		this.mouthOpen = false;
 	}
 	
 	function doStuff(scene) {

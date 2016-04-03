@@ -16,10 +16,10 @@ function SPRITE_renderPoof(sprite, scene, offsetX, offsetY, arc) {
 	
 	if (isBig) {
 		top -= 16;
-		img = IMAGES.get('sprites/large_poof_' + num + '.png');
+		img = ImageLibrary.get('sprites/large_poof_' + num + '.png');
 	} else {
-		img = IMAGES.get('sprites/small_poof_' + num + '.png');
+		img = ImageLibrary.get('sprites/small_poof_' + num + '.png');
 	}
 	
-	$gfx_blit_image(img, left, top);
+	img.draw(left, top);
 }

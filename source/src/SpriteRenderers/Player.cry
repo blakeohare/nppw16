@@ -12,9 +12,9 @@ function SPRITE_renderPlayerOver(sprite, scene, offsetX, offsetY, arc) {
 	
 	if (sprite.bikemode) {
 		if ((arc & 1) == 0) {
-			img = IMAGES.get('sprites/rocket_bike_1.png');
+			img = ImageLibrary.get('sprites/rocket_bike_1.png');
 		} else {
-			img = IMAGES.get('sprites/rocket_bike_2.png');
+			img = ImageLibrary.get('sprites/rocket_bike_2.png');
 		}
 	} else if (scene.side) {
 		if (sprite.damageDir != null) {
@@ -61,25 +61,25 @@ function SPRITE_renderPlayerOver(sprite, scene, offsetX, offsetY, arc) {
 		y = top;
 		if (sprite.deathState != null && sprite.deathState != 'fall') {
 			if (sprite.deathState == 'collapse') {
-				img = IMAGES.get('sprites/' + b + '_death.png');
+				img = ImageLibrary.get('sprites/' + b + '_death.png');
 				top += 16;
 				left -= 8;
 			} else if (sprite.deathState == 'lava') {
 				if (reverse) {
-					img = IMAGES.getBackwards('sprites/roasted.png');
+					img = ImageLibrary.getBackwards('sprites/roasted.png');
 				} else {
-					img = IMAGES.get('sprites/roasted.png');
+					img = ImageLibrary.get('sprites/roasted.png');
 					left = left + 16 - img.width;
 				}
 			}
 		} else {
 			if (sprite.sprinkle) {
-				img = IMAGES.get('sprites/space_sprinkle.png');
+				img = ImageLibrary.get('sprites/space_sprinkle.png');
 				left = left + 16 - img.width;
 			} else if (reverse) {
-				img = IMAGES.getBackwards('sprites/' + path +'.png');
+				img = ImageLibrary.getBackwards('sprites/' + path +'.png');
 			} else {
-				img = IMAGES.get('sprites/' + path +'.png');
+				img = ImageLibrary.get('sprites/' + path +'.png');
 				left = left + 16 - img.width;
 			}
 		}
@@ -97,8 +97,8 @@ function SPRITE_renderPlayerOver(sprite, scene, offsetX, offsetY, arc) {
 			b = 'cave';
 		}
 		path = 'sprites/' + b + '_overworld_' + dir + '_' + counter + '.png';
-		img = reverse ? IMAGES.getBackwards(path) : IMAGES.get(path);
+		img = reverse ? ImageLibrary.getBackwards(path) : ImageLibrary.get(path);
 	}
 	
-	$gfx_blit_image(img, left, top);
+	img.draw(left, top);
 }
