@@ -12,6 +12,6 @@ function SPRITE_renderPowerup(sprite, scene, offsetX, offsetY, arc) {
 			path = 'sprites/life_big.png';
 		}
 		
-		$gfx_blit_image(IMAGES.get(path), left, top);
+		ImageLibrary.get(path).draw(left, top);
 	}
 }

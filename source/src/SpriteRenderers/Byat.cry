@@ -12,10 +12,10 @@ function SPRITE_renderByat(sprite, scene, offsetX, offsetY, arc) {
 	}
 	
 	if (sprite.lastDirection == 'left') {
-		img = IMAGES.getBackwards(path);
+		img = ImageLibrary.getBackwards(path);
 	} else {
-		img = IMAGES.get(path);
+		img = ImageLibrary.get(path);
 	}
 	
-	$gfx_blit_image(img, left, top);
+	img.draw(left, top);
 }

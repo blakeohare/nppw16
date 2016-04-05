@@ -1,5 +1,7 @@
 
 class LazorAutomation {
+	field sprite;
+
 	constructor(sprite) {
 		this.sprite = sprite;
 	}

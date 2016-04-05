@@ -1,10 +1,20 @@
+import GFX;
+import Math;
+
+class Point {
+	field x;
+	field y;
+	field vx;
+	field vy;
+	
+	constructor() { }
+}
+
 class BikeLevelStuff : SpecialLevelStuff {
-	constructor(scene) : base(scene) {
-		this.hasUpdate = true;
-		this.hasRender = true;
-		this.particles = [];
-		this.counter = 0;
-	}
+	field particles = [];
+	field counter = 0;
+	
+	constructor(scene) : base(scene) { }
 		
 	function update() {
 		if (this.counter == 0) {
@@ -20,11 +30,11 @@ class BikeLevelStuff : SpecialLevelStuff {
 		}
 		
 		if (this.counter % 2 == 0) {
-			pt = new Object();
+			pt = new Point();
 			pt.x = player.x;
 			pt.y = player.y;
-			pt.vx = $random() * 16 - 8;
-			pt.vy = $random() * 6 - 5;
+			pt.vx = Random.randomFloat() * 16 - 8;
+			pt.vy = Random.randomFloat() * 6 - 5;
 			this.particles.add(pt);
 		}
 		
@@ -38,7 +48,7 @@ class BikeLevelStuff : SpecialLevelStuff {
 	function render(rc, offsetX, offsetY) {
 		p = this.scene.player;
 		for (pt : this.particles) {
-			$gfx_draw_rectangle($floor(pt.x + offsetX), $floor(pt.y + offsetY), 3, 3, 255, 255, 128, 255);
+			GFX.Draw.rectangle(floor(pt.x + offsetX), floor(pt.y + offsetY), 3, 3, 255, 255, 128);
 		}
 		
 		if (this.particles.length > 40) {

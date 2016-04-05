@@ -1,58 +1,69 @@
-ACORN_TOP_SPEED = 4.5;
-
-TRAIL = [];
-
-// this is the best I can come up with off the top of my head. I'm sure there's a faster way to create a parametric function of the acorn top path
-
-ball = [0, 0];
-
-waypoints = [
-	[-1, 0],
-	[-6, 0],
-	[-6.6, -0.4],
-	[-7, -1],
-	[-6.6, -1.6],
-	[-6, -2],
-	[-1, -2],
-	[-0.4, -1.6],
-	[0, -1],
-	[0, -.5]];
-
-v = ACORN_TOP_SPEED + 0.0;
-
-// TODO: use foreach loop?
-for (i = 0; i < waypoints.length; ++i) {
-	target = waypoints[i];
-	tx = target[0] * 16.0;
-	ty = target[1] * 16.0;
-	
-	done = false;
-	while (!done) {
-		dx = tx - ball[0];
-		dy = ty - ball[1];
-		distance = (dx ** 2 + dy ** 2) ** .5;
-		if (distance <= v) {
-			done = true;
-			TRAIL.add([tx, ty]);
-			ball = [tx, ty];
-		} else {
-			dx *= v / distance;
-			dy *= v / distance;
-			ball[0] += dx;
-			ball[1] += dy;
-			TRAIL.add([$floor(10 * ball[0]) / 10.0, $floor(10 * ball[1]) / 10.0]);
-		}
-	}
-}
+const ACORN_TOP_SPEED = 4.5;
 
 class AcornTopAutomation {
+
+	static field TRAIL = [];
+
+	static constructor() {
+		// this is the best I can come up with off the top of my head. I'm sure there's a faster way to create a parametric function of the acorn top path
+
+		ball = [0, 0];
+
+		waypoints = [
+			[-1, 0],
+			[-6, 0],
+			[-6.6, -0.4],
+			[-7, -1],
+			[-6.6, -1.6],
+			[-6, -2],
+			[-1, -2],
+			[-0.4, -1.6],
+			[0, -1],
+			[0, -.5]];
+
+		v = ACORN_TOP_SPEED + 0.0;
+
+		// TODO: use foreach loop?
+		for (i = 0; i < waypoints.length; ++i) {
+			target = waypoints[i];
+			tx = target[0] * 16.0;
+			ty = target[1] * 16.0;
+			
+			done = false;
+			while (!done) {
+				dx = tx - ball[0];
+				dy = ty - ball[1];
+				distance = (dx ** 2 + dy ** 2) ** .5;
+				if (distance <= v) {
+					done = true;
+					AcornTopAutomation.TRAIL.add([tx, ty]);
+					ball = [tx, ty];
+				} else {
+					dx *= v / distance;
+					dy *= v / distance;
+					ball[0] += dx;
+					ball[1] += dy;
+					AcornTopAutomation.TRAIL.add([Math.floor(10 * ball[0]) / 10.0, Math.floor(10 * ball[1]) / 10.0]);
+				}
+			}
+		}
+	}
+
+	field sprite;
+	field trail;
+	field trailIndex = 0;
+	field startX;
+	field startY;
+	field completed = false;
+	field goLeft = true;
+	field xSign = 1;
+	field ySign = 1;
+	
 	constructor(sprite) {
 		this.sprite = sprite;
-		this.trail = TRAIL.clone();
-		this.trailIndex = 0;
+		this.trail = AcornTopAutomation.TRAIL.clone();
 		this.startX = sprite.modelX;
 		this.startY = sprite.modelY;
-		this.completed = false;
 	}
 	
 	function setGoLeft(goLeft) {

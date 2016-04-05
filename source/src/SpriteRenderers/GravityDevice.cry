@@ -2,5 +2,5 @@ function SPRITE_renderGravityDevice(sprite, scene, offsetX, offsetY, arc) {
 	left = sprite.x + offsetX - 8;
 	top = sprite.y + offsetY - 8;
 	i = (arc % 3) + 1;
-	$gfx_blit_image(IMAGES.get('sprites/gravity_device_' + i + '.png'), left, top);
+	ImageLibrary.get('sprites/gravity_device_' + i + '.png').draw(left, top);
 }

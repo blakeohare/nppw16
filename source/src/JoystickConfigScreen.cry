@@ -1,46 +1,38 @@
+import Gamepad;
+
 class JoystickConfigScreen {
+	field bg;
+	field next = this;
+	field flags = '';
+	field buttons = 'left right up down A B start'.split(' ');
+	field phase = 0;
+	field gamepad;
+	field configs_taken = {};
+	field config = {};
+	field _omghax_raw_events = [];
+	
 	constructor(gamepad, bg) {
 		this.bg = bg;
 		this.bg.next = this.bg;
 		this.gamepad = gamepad;
-		this.next = this;
-		this.flags = '';
-		this.buttons = 'left right up down A B start'.split(' ');
-		this.phase = 0;
-		this.configs_taken = {};
-		this.config = {};
-		this._omghax_raw_events = [];
-		$gamepad_clear_bindings(gamepad);
+		
+		gamepad.pushEmptyConfig();
+		gamepad.clearBindings();
 	}
 	
 	function processInput(events, pressed) { }
 	
 	function update() {
 		if (this.phase < this.buttons.length) {
-			if (this.do_poll()) {
+			if (this.gamepad.bindDigitalButton(this.buttons[this.phase])) {
 				this.phase++;
 			}
 		}
 		
 		if (this.phase == this.buttons.length) {
-			$gamepad_save_config();
+			GamepadManager.saveSettingsToUserData();
 			this.next = new TitleScene();
 		}
-	}
-	
-	function do_poll() {
-		for (raw_event : this._omghax_raw_events) {
-			if (raw_event.is_hardware && 
-				raw_event.device.id == this.gamepad.id && 
-				raw_event.is_significant // filters out analog axis noise
-			) {
-				alias = this.buttons[this.phase];
-				if ($gamepad_bind_digital(this.gamepad, raw_event.descriptor, alias)) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 	
 	function render(rc) {
@@ -53,7 +45,7 @@ class JoystickConfigScreen {
 			img_name = button.lower();
 			if (((rc / 6) % 2) == 0)
 				img_name = 'none';
-			$gfx_blit_image(IMAGES.get('misc/nes_' + img_name + '.png'), 40 + 16, 64 + 32);
+			ImageLibrary.get('misc/nes_' + img_name + '.png').draw(40 + 16, 64 + 32);
 		}
 	}
 }

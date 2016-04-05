@@ -1,8 +1,11 @@
 class BirdFeeder : SpecialLevelStuff {
+	field counter = 0;
+	field seedsLeft;
+	field closingShown = false;
+	
 	constructor(scene) : base(scene) {
 		this.hasPostInit = true;
 		this.hasUpdate = true;
-		this.counter = 0;
 		seeds = [[4,36],
 			[11,30],
 			[4,24],
@@ -17,8 +20,6 @@ class BirdFeeder : SpecialLevelStuff {
 		bike = new Sprite('rocketbike', 12 * 16 + 8, 39 * 16 + 8);
 		bike.floats = true;
 		scene.sprites.add(bike);
-		
-		this.closingShown = false;
 	}
 		
 	function update() {

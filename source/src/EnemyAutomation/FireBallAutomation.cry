@@ -1,14 +1,22 @@
-FIREBALL_VELOCITY = 1.5;
+import Math;
+
+const FIREBALL_VELOCITY = 1.5;
 
 class FireBallAutomation {
+	field sprite;
+	field counter = 0;
+	field startX;
+	field startY;
+	field goLeft;
+	field vx = -FIREBALL_VELOCITY;
+	field vy = 0;
+	field predictedX;
+	
 	constructor (sprite) {
 		this.sprite = sprite;
-		this.counter = 0;
 		this.startX = sprite.x;
 		this.startY = sprite.y;
 		this.goLeft = sprite.lastDirection == 'left';
-		this.vx = -FIREBALL_VELOCITY;
-		this.vy = 0;
 	}
 	
 	function doStuff(scene) {
@@ -26,9 +34,9 @@ class FireBallAutomation {
 			} else if (m < -1.0) {
 				m = -1.0;
 			}
-			ang = $arctan(m);
-			this.vx = FIREBALL_VELOCITY * $cos(ang);
-			this.vy = -FIREBALL_VELOCITY * $sin(ang);
+			ang = Math.arctan(m);
+			this.vx = FIREBALL_VELOCITY * Math.cos(ang);
+			this.vy = -FIREBALL_VELOCITY * Math.sin(ang);
 			if (this.goLeft) {
 				this.vx *= -1;
 			}
@@ -42,7 +50,7 @@ class FireBallAutomation {
 		this.sprite.dx += this.vx;
 		this.sprite.dy += this.vy;
 		
-		this.predictedX = $floor(this.sprite.dx + this.sprite.modelX);
+		this.predictedX = Math.floor(this.sprite.dx + this.sprite.modelX);
 		
 		if (this.sprite.collidedWall) {
 			this.sprite.dead = true;

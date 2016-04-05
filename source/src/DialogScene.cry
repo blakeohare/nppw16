@@ -1,8 +1,23 @@
+import GFX;
+import Math;
 
 class DialogScene {
+	field next = this;
+	field flags = '';
+	field bg;
+	field storyMode;
+	field forceArrow;
+	field delayCounter;
+	field activeStanza;
+	field stanzas;
+	field stanzaIndex = 0;
+	field textCursor = 0;
+	field showLines = [];
+	field blink = false;
+	field id;
+	field generalLoc = null;
+	
 	constructor(bg, dialogId, slightDelay, storyMode = false, forceArrow = false) {
-		this.next = this;
-		this.flags = '';
 		this.bg = bg;
 		this.storyMode = storyMode;
 		this.forceArrow = forceArrow;
@@ -12,11 +27,7 @@ class DialogScene {
 			player.lastDirection = 'left';
 		}
 		this.delayCounter = slightDelay ? 45 : 0;
-		this.stanzas = DIALOGS[dialogId];
-		this.stanzaIndex = 0;
-		this.textCursor = 0;
-		this.showLines = [];
-		this.blink = false;
+		this.stanzas = Dialogs.DIALOGS[dialogId];
 		this.id = dialogId;
 		
 		this.generalLoc = null;
@@ -59,7 +70,7 @@ class DialogScene {
 			this.activeStanza = this.stanzas[this.stanzaIndex];
 			rawLines = this.activeStanza.join('\n');
 			this.blink = false;
-			cursor = $floor(this.textCursor);
+			cursor = Math.floor(this.textCursor);
 			if (cursor >= rawLines.length)
 				this.blink = true ;
 			else
@@ -86,7 +97,7 @@ class DialogScene {
 		
 		if (this.generalLoc != null) {
 			path = 'tiles/screen-static/screen' + ['', '1', '2', '3'][(rc / 4) & 3] + '.png';
-			$gfx_blit_image(IMAGES.get(path), this.generalLoc[0], this.generalLoc[1]);
+			ImageLibrary.get(path).draw(this.generalLoc[0], this.generalLoc[1]);
 		}
 		
 		if (!this.storyMode) {
@@ -109,7 +120,7 @@ class DialogScene {
 		if (this.blink && ((rc / 7) & 1) == 0) {
 			pos = [256 - 40, startY + space * 4];
 			if (!this.forceArrow && this.stanzaIndex == this.stanzas.length - 1) {
-				$gfx_draw_rectangle(pos[0], pos[1], 8, 8, 255, 255, 255, 255);
+				GFX.Draw.rectangle(pos[0], pos[1], 8, 8, 255, 255, 255);
 			} else {
 				drawText(255, 255, 255, '^', pos[0], pos[1]);
 			}

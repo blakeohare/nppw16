@@ -1,5 +1,9 @@
 
 class BalloonPopping : SpecialLevelStuff {
+	field id;
+	field done = false;
+	field balloonCoords = {};
+	
 	// ID's: water1, water2, water3, water4, lava1, lava2, lava3
 	constructor(scene, id) : base(scene) {
 		this.id = id;
@@ -7,9 +11,6 @@ class BalloonPopping : SpecialLevelStuff {
 		this.context = scene.context;
 		this.hasUpdate = true;
 		this.hasPostInit = true;
-		this.done = false;
-		
-		this.balloonCoords = {};
 		
 		if (id.startsWith('water')) {
 			rows = scene.rows;

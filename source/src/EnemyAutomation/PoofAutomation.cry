@@ -1,8 +1,11 @@
 
 class PoofAutomation {
+	field sprite;
+	field counter = 0;
+	field isBig;
+	
 	constructor(sprite, isBig) {
 		this.sprite = sprite;
-		this.counter = 0;
 		this.isBig = isBig;
 	}	
 	

@@ -1,15 +1,21 @@
 class DeathOverrideScene {
-	// type = "lava", "collapse", "fall"
+	
+	field bg;
+	field context;
+	field flags = '';
+	field next = this;
+	field type;
+	field counter = 0;
+	field vy = -10;
+	
+	// types = "lava", "collapse", "fall"
+	// TODO: replace with enum
 	constructor(bg, type) {
 		this.bg = bg;
 		this.context = bg.context;
 		this.context.lifemeter = 0;
-		this.flags = '';
-		this.next = this;
 		this.type = type;
-		this.counter = 0;
 		this.bg.player.deathState = type;
-		this.vy = -10;
 		if (type == 'fall') {
 			this.vy = bg.player.vy;
 		} else if (type == 'lava') {
@@ -23,7 +29,7 @@ class DeathOverrideScene {
 	
 	function update() {
 		if (this.counter == 0) {
-			JUKEBOX.ensureSong('death');
+			JukeBox.ensureSong('death');
 		}
 			
 		this.counter++;
@@ -31,7 +37,7 @@ class DeathOverrideScene {
 		
 		if (this.type == 'lava' || this.type == 'fall') {
 			this.bg.player.modelY += this.vy;
-			this.bg.player.y = $floor(this.bg.player.modelY);
+			this.bg.player.y = Math.floor(this.bg.player.modelY);
 		}
 			
 		if (this.counter > 100) {
@@ -51,5 +57,3 @@ class DeathOverrideScene {
 		this.bg.render(rc);
 	}
 }
-
-	

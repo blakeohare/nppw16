@@ -1,5 +1,7 @@
+import GFX;
+
 function SPRITE_renderLazor(sprite, scene, offsetX, offsetY, arc) {
 	x = offsetX + sprite.x - 8;
 	y = offsetY + sprite.y - 2;
-	$gfx_draw_rectangle(x, y, 16, 4, 255, 255, 0, 255);
+	GFX.Draw.rectangle(x, y, 16, 4, 255, 255, 0);
 }

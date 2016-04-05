@@ -1,8 +1,12 @@
 class BirdAutomation {
+	field counter = 0;
+	// TODO: replace with enum.
+	field mode = 'stalk'; // 'right' | 'left'
+	field sprite;
+	field bikeLevel;
+
 	constructor(sprite, onBikeLevel) {
 		sprite.isEnemy = true;
-		this.counter = 0;
-		this.mode = 'stalk'; // 'right' | 'left'
 		this.sprite = sprite;
 		this.bikeLevel = onBikeLevel;
 	}
@@ -14,7 +18,7 @@ class BirdAutomation {
 		if (this.mode == 'stalk') {
 			dy = p.y - this.sprite.y;
 			
-			if ($abs(dy) < 6) {
+			if (Math.abs(dy) < 6) {
 				this.mode = 'right';
 			} else if (dy > 0) {
 				this.sprite.dy += 3;

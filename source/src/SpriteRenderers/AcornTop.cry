@@ -6,6 +6,6 @@ function SPRITE_renderAcornTop(sprite, scene, offsetX, offsetY, arc) {
 	height = 16;
 	path = 'acorn_projectile_1';
 	path = 'sprites/' + path + '.png';
-	img = IMAGES.get(path);
-	$gfx_blit_image(img, left, top);
+	img = ImageLibrary.get(path);
+	img.draw(left, top);
 }

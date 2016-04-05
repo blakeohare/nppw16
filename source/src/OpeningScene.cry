@@ -1,3 +1,4 @@
+import GFX;
 
 enum OpeningSceneMode {
 	START,
@@ -6,27 +7,25 @@ enum OpeningSceneMode {
 }
 
 class OpeningScene {
-	constructor() {
-		this.next = this;
-		this.mode = OpeningSceneMode.START;
-		this.mode_counter = 0;
-	}
+	field next = this;
+	field mode = OpeningSceneMode.START;
+	field mode_counter = 0;
+	field loader;
 	
+	constructor() { }
 	
-	function processInput(events, pressedActions) {
-		
-	}
+	function processInput(events, pressedActions) { }
 	
 	function update() {
 		switch (this.mode) {
 			case OpeningSceneMode.START:
-				$gfx_image_sheet_load('all');
+				this.loader = ImageSheetLoader.fromIds('all');
 				this.mode = OpeningSceneMode.LOADING;
 				this.mode_counter = 0;
 				break;
 				
 			case OpeningSceneMode.LOADING:
-				if ($gfx_image_sheet_loaded('all')) {
+				if (this.loader.isDone()) {
 					this.mode = OpeningSceneMode.GO;
 					this.mode_counter = 0;
 				} else {
@@ -41,7 +40,7 @@ class OpeningScene {
 				break;
 				
 			default:
-				$assert(false, "Unknown mode");
+				Core.assert(false, "Unknown mode");
 				break;
 		}
 		
@@ -59,17 +58,16 @@ class OpeningScene {
 				
 			case OpeningSceneMode.GO:
 				if (this.mode_counter < 10) {
-					$gfx_fill_screen(255, 80, 255);
+					GFX.Draw.fill(255, 80, 255);
 				} else {
-					$gfx_fill_screen(200, 200, 200);
+					GFX.Draw.fill(200, 200, 200);
 				}
 				break;
 				
 			default:
-				$assert(false, "Unknown mode");
+				Core.assert(false, "Unknown mode");
 				break;
 		}
-		
 	}
 	
 	// TODO: port this using an image of static and then rectangle draws

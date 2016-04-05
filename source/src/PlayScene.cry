@@ -1,19 +1,54 @@
+import GFX;
+import Math;
+import Random;
 
-GOOD_HEALTH_COLOR = [255, 255, 255];
-POOR_HEALTH_COLOR = [255, 128, 128];
+class PowerupDrop {
+	field id = null;
+	field type;
+	
+	constructor(type) { 
+		this.type = type;
+	}
+}
 
-BIKE_SPEED = 6;
+const BIKE_SPEED = 6;
 
 class PlayScene {
+	static field GOOD_HEALTH_COLOR = [255, 255, 255];
+	static field POOR_HEALTH_COLOR = [255, 128, 128];
+	
+	field startArgs;
+	field updateCounter = 0;
+	field context;
+	field flags = 'M';
+	field next = this;
+	field id;
+	field hasAtmosphere;
+	field bg;
+	field stars;
+	field runCounter;
+	field runCounterValidFor;
+	field cols;
+	field rows;
+	field upper;
+	field lower;
+	field side;
+	field lazor_cooldown = 0;
+	field tiles;
+	field doorSwaps;
+	field cameraX = 0;
+	field cameraY = 0;
+	field player;
+	field sprites;
+	field overlayTriggers;
+	field special;
+	field shooting;
+	
 	constructor(map, startCol, startRow, context) {
 		this.startArgs = [map, startCol, startRow];
-		this.updateCounter = 0;
+		
 		this.context = context;
-		this.next = this;
-		this.flags = 'M';
 		levelname = map.split('.')[0];
-		if (DEBUG_MODE)
-			$print("Active map: " + levelname);
 		this.id = levelname;
 		if (!map.endsWith('.map'))
 			map += '.map';
@@ -25,7 +60,7 @@ class PlayScene {
 		this.bg = getBackground(levelname);
 		stars = [];
 		for (i = 1; i <= 5; ++i) {
-			stars.add(IMAGES.get('tiles/background/stars' + i + '.png'));
+			stars.add(ImageLibrary.get('tiles/background/stars' + i + '.png'));
 		}
 		stars.concat([null] * 10);
 		stars *= 3;
@@ -139,8 +174,8 @@ class PlayScene {
 	function playersTile(offsetX = 0, offsetY = 0) {
 		if (this.player == null) return null;
 		p = this.player;
-		tx = $floor(p.modelX / 16) + offsetX;
-		ty = $floor(p.modelY / 16) + offsetY;
+		tx = Math.floor(p.modelX / 16) + offsetX;
+		ty = Math.floor(p.modelY / 16) + offsetY;
 		if (tx >= 0 && ty >= 0 && tx < this.cols && ty < this.rows) {
 			return this.tiles[tx][ty];
 		}
@@ -323,7 +358,7 @@ class PlayScene {
 	}
 	
 	function playMusic() {
-		JUKEBOX.playSongForLevelMaybe(this.id);
+		JukeBox.playSongForLevelMaybe(this.id);
 	}
 	
 	function update() {
@@ -391,7 +426,7 @@ class PlayScene {
 								case 'byat':
 								case 'moonsquid':
 								case 'lavamonster':
-									dropN = $floor($random() * 200);
+									dropN = Random.randomInt(200);
 									drop = null;
 									if (dropN == 0) {
 										drop = '1up';
@@ -404,9 +439,7 @@ class PlayScene {
 									if (drop != null) {
 										// Can't do spawns since it'll get filtered out before then.
 										powerup = new Sprite('powerup', sprite.x, sprite.y - 1);
-										info = new Object();
-										info.id = null;
-										info.type = drop;
+										info = new PowerupDrop(drop);
 										powerup.powerupInfo = info;
 										new_sprites.add(powerup);
 									}
@@ -434,8 +467,8 @@ class PlayScene {
 		}
 		this.sprites = new_sprites;
 		
-		player_tx = $floor(this.player.modelX / 16);
-		player_ty = $floor(this.player.modelY / 16);
+		player_tx = Math.floor(this.player.modelX / 16);
+		player_ty = Math.floor(this.player.modelY / 16);
 		activeTile = this.tiles[player_tx][player_ty];
 		if (activeTile.door != null) {
 			door = activeTile.door;
@@ -499,13 +532,13 @@ class PlayScene {
 	function isCollision(pLeft, pTop, pRight, pBottom) {
 		if (pLeft < 0) return true;
 		if (pTop < 0) return true;
-		tLeft = $floor(pLeft / 16);
-		tRight = (pRight == pLeft) ? tLeft : $floor(pRight / 16);
-		tTop = $floor(pTop / 16);
+		tLeft = Math.floor(pLeft / 16);
+		tRight = (pRight == pLeft) ? tLeft : Math.floor(pRight / 16);
+		tTop = Math.floor(pTop / 16);
 		
 		// potentially a bug
 		// bottom row of sprite is technically top row of ground below. This intersection should be ignored.
-		tBottom = $floor((pBottom - 3) / 16);
+		tBottom = Math.floor((pBottom - 3) / 16);
 		
 		if (tLeft < 0) return true;
 		if (tTop < 0) return true;
@@ -524,8 +557,8 @@ class PlayScene {
 	}
 	
 	function renderOverlay() {
-		$gfx_draw_rectangle(0, 0, 256, 8, 0, 0, 0, 255);
-		$gfx_blit_image(IMAGES.get('misc/lives.png'), 0, 0);
+		GFX.Draw.rectangle(0, 0, 256, 8, 0, 0, 0);
+		ImageLibrary.get('misc/lives.png').draw(0, 0);
 		drawText(255, 255, 255, 'x' + this.context.lives, 8, 0);
 		
 		x = 112;
@@ -534,16 +567,16 @@ class PlayScene {
 		x += 'HEALTH'.length * 8 + 8;
 		
 		health = this.context.lifemeter;
-		color = GOOD_HEALTH_COLOR;
+		color = PlayScene.GOOD_HEALTH_COLOR;
 		if (health < 4) {
-			color = POOR_HEALTH_COLOR;
+			color = PlayScene.POOR_HEALTH_COLOR;
 		}
 		for (i = 0; i < 5; ++i) {
-			$gfx_draw_rectangle(x, 0, 16, 8, 128, 128, 128, 255);
+			GFX.Draw.rectangle(x, 0, 16, 8, 128, 128, 128);
 			if (health >= ((i + 1) * 2)) {
-				$gfx_draw_rectangle(x + 1, 1, 14, 6, color[0], color[1], color[2], 255);
+				GFX.Draw.rectangle(x + 1, 1, 14, 6, color[0], color[1], color[2]);
 			} else if (health == 2 * i + 1) {
-				$gfx_draw_rectangle(x + 1, 1, 7, 6, color[0], color[1], color[2], 255);
+				GFX.Draw.rectangle(x + 1, 1, 7, 6, color[0], color[1], color[2]);
 			}
 			x += 16;
 		}
@@ -553,25 +586,25 @@ class PlayScene {
 			cnt = cat[1];
 			
 			if (cat[0] == 'W') {
-				img = IMAGES.get('misc/water_icon.png');
+				img = ImageLibrary.get('misc/water_icon.png');
 				total = 4;
 			} else {
-				img = IMAGES.get('misc/volcano_icon.png');
+				img = ImageLibrary.get('misc/volcano_icon.png');
 				total = 3;
 			}
 							
-			$gfx_blit_image(img, 48, 0);
+			img.draw(48, 0);
 			drawText(255, 255, 255, cnt + '/' + total, 56, 0);
 		}
 	}
 	
 	function render(rc) {
 		if (this.bg == 'stars') {
-			$gfx_fill_screen(0, 0, 0);
+			GFX.Draw.fill(0, 0, 0);
 		} else if (this.bg == 'cave') {
 		} else if (this.bg == 'volcano') {
 		} else {
-			$gfx_fill_screen(0, 0, 40); // sky
+			GFX.Draw.fill(0, 0, 40); // sky
 		}
 		
 		colStart = 0;
@@ -601,13 +634,13 @@ class PlayScene {
 		if (this.rows * 16 < 224)
 			offsetY = (224 - this.rows * 16) / 2;
 		
-		cave = IMAGES.get('tiles/background/cave.png');
-		volcano_bg = IMAGES.get('tiles/background/volcano.png');
+		cave = ImageLibrary.get('tiles/background/cave.png');
+		volcano_bg = ImageLibrary.get('tiles/background/volcano.png');
 		starlen = this.stars.length;
 		stars = this.stars;
 		counter = 0;
 		
-		idealColStart = -$floor(offsetX / 16) - 1;
+		idealColStart = -floor(offsetX / 16) - 1;
 		if (idealColStart > colStart)
 			colStart = idealColStart;
 		
@@ -615,7 +648,7 @@ class PlayScene {
 		if (idealColEnd < colEnd)
 			colEnd = idealColEnd;
 		
-		idealRowStart = -$floor(offsetY / 16) - 1;
+		idealRowStart = -Math.floor(offsetY / 16) - 1;
 		if (idealRowStart > rowStart)
 			rowStart = idealRowStart;
 		
@@ -640,11 +673,11 @@ class PlayScene {
 			if (lavaLevel > 0) {
 				if (fromBottom == lavaLevel) {
 					lavaRowType = 'upper';
-					lc = $floor((rc / 4) % 4) + 1;
-					lu = IMAGES.get('tiles/fluids/lava' + lc + '.png');
+					lc = Math.floor((rc / 4) % 4) + 1;
+					lu = ImageLibrary.get('tiles/fluids/lava' + lc + '.png');
 				} else if (fromBottom < lavaLevel) {
 					lavaRowType = 'inner' ;
-					lu = IMAGES.get('tiles/fluids/lava.png');
+					lu = ImageLibrary.get('tiles/fluids/lava.png');
 				}
 			}
 			
@@ -653,21 +686,21 @@ class PlayScene {
 				x = col * 16 + offsetX;
 				y = row * 16 + offsetY;
 				if (this.bg == 'cave') {
-					$gfx_blit_image(cave, x, y);
+					cave.draw(x, y);
 				} else if (this.bg == 'volcano') {
-					$gfx_blit_image(volcano_bg, x, y);
+					volcano_bg.draw(x, y);
 					if (lavaRowType != null) {
-						$gfx_blit_image(lu, x, y);
+						lu.draw(x, y);
 					}
 				} else if (this.bg == 'stars') {
 					bgimg = stars[(col + this.rows * row + row * row) % starlen];
 					if (bgimg != null) {
-						$gfx_blit_image(bgimg, x, y);
+						bgimg.draw(x, y);
 					}
 				}
 				
 				for (template : this.tiles[col][row].templates) {
-					$gfx_blit_image(template.getImage(rc), x, y);
+					template.getImage(rc).draw(x, y);
 				}
 			}
 		}
@@ -694,7 +727,7 @@ class PlayScene {
 				x = col * 16 + offsetX;
 				y = row * 16 + offsetY;
 				for (template : this.tiles[col][row].templates) {
-					$gfx_blit_image(template.getImage(rc), x, y);
+					template.getImage(rc).draw(x, y);
 				}
 			}
 		}

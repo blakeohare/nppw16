@@ -1,19 +1,19 @@
 // TODO: intro slide show
 
 class IntroScene {
+	field flags = '';
+	field next = this;
+	field player = null; // lol, pyweek hack
+	field page = 0;
+	field pages;
+	field counter = 0;
+	
 	constructor() {
-		this.flags = '';
-		this.next = this;
-		this.player = null; // lol, pyweek hack
-		
-		this.page = 0;
 		this.pages = [
-			IMAGES.get('slides/open1.png'),
-			IMAGES.get('slides/open2.png'),
-			IMAGES.get('slides/open3.png')
+			ImageLibrary.get('slides/open1.png'),
+			ImageLibrary.get('slides/open2.png'),
+			ImageLibrary.get('slides/open3.png')
 			];
-		
-		this.counter = 0;
 	}
 	
 	function processInput(events, pressedKeys) { }
@@ -24,7 +24,7 @@ class IntroScene {
 			return;
 		}
 		
-		JUKEBOX.ensureSong('intro');
+		JukeBox.ensureSong('intro');
 		
 		this.counter++;
 		
@@ -43,8 +43,8 @@ class IntroScene {
 	}
 	
 	function render(rc) {
-		$gfx_fill_screen(0, 0, 0);
-		$gfx_blit_image(this.pages[this.page], 0, 16);
+		GFX.Draw.fill(0, 0, 0);
+		this.pages[this.page].draw(0, 16);
 	}
 	
 	function getStartScene() {

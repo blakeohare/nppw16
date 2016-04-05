@@ -1,18 +1,21 @@
+import Math;
+
 class GravityCorePlacement : SpecialLevelStuff {
+	field col = 11;
+	field row = 9;
+	field done = false;
+
 	constructor(scene) : base(scene) {
 		this.hasPostInit = true;
 		this.hasUpdate = true;
-		this.col = 11;
-		this.row = 9;
-		this.done = false;
 	}
 	
 	function update() {
 		player = this.scene.player;
-		tx = $floor(player.x / 16);
-		ty = $floor(player.y / 16);
+		tx = Math.floor(player.x / 16);
+		ty = Math.floor(player.y / 16);
 	
-		if (tx == this.col && $abs(ty - this.row) < 2 && !this.done) {
+		if (tx == this.col && Math.abs(ty - this.row) < 2 && !this.done) {
 			this.addGDevice(true);
 		}
 	}
