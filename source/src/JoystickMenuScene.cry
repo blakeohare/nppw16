@@ -15,7 +15,7 @@ class JoystickMenuScene {
 		for (i = 0; i < GamepadManager.getDeviceCount(); ++i) {
 			gamepad = GamepadManager.getDeviceByIndex(i);
 			this.gamepads.add(gamepad);
-			if (gamepad.id == 'active') {
+			if (gamepad.getId() == 'active') {
 				this.index = i + 1;
 			}
 		}
@@ -65,7 +65,7 @@ class JoystickMenuScene {
 	function update() {
 		this.blink_counter--;
 		if (this.blink_counter == 1) {
-			gamepad = JoystickMenuScene.ACTIVE_JOYSTICK[0];
+			gamepad = JoystickMenuScene.ACTIVE_JOYSTICK;
 			if (gamepad == null) {
 				this.next = new TitleScene();
 			} else {
@@ -93,7 +93,7 @@ class JoystickMenuScene {
 			}
 			
 			if (!selected || this.blink_counter <= 0 || rc % 4 < 2) {
-				drawText(255, 255, 255, gamepad == null ? "None" : gamepad.name, left + 16, y);
+				drawText(255, 255, 255, gamepad == null ? "None" : gamepad.getName(), left + 16, y);
 			}
 			index++;
 			y += 16;
