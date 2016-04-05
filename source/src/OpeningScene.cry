@@ -25,7 +25,7 @@ class OpeningScene {
 				break;
 				
 			case OpeningSceneMode.LOADING:
-				if (this.loader.isLoaded()) {
+				if (this.loader.isDone()) {
 					this.mode = OpeningSceneMode.GO;
 					this.mode_counter = 0;
 				} else {

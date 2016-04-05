@@ -3,5 +3,10 @@ class MyEvent {
 	field action;
 	field up;
 	field down;
-	constructor()  { }
+
+	constructor(action, down)  {
+		this.action = action;
+		this.down = down;
+		this.up = !down;
+	}
 }

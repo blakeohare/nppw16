@@ -32,42 +32,39 @@ function main() {
 		quitAttempt = false;
 		raw_events = window.pumpEvents();
 		for (event : raw_events) {
-			if (event.is_quit) {
-				return;
-			} else {
-				down = false;
-				action = null;
-				if (event.is_gamepad) {
-					action = event.name;
-					down = event.value;
+			down = false;
+			action = null;
+			switch (event.type) {
+				case EventType.QUIT:
+					return;
+				
+				case EventType.GAMEPAD:
+					action = event.buttonId;
+					down = event.value == true;
+					break;
 					
-				} else if (event.is_key) {
+				case EventType.KEY_DOWN:
+				case EventType.KEY_UP:
 					down = event.down;
-					action = null;
 					switch (event.key) {
-						case 'enter': action = 'start'; break;
-						case 'a': action = 'A'; break;
-						case 'b': action = 'B'; break;
-						
-						case 'left':
-						case 'right':
-						case 'up':
-						case 'down':
-							action = event.key;
+						case Game.KeyboardKey.ENTER:
+						case Game.KeyboardKey.SPACE:
+							action = 'start';
 							break;
-							
+						case KeyboardKey.A: action = 'A'; break;
+						case KeyboardKey.B: action = 'B'; break;
+						case KeyboardKey.LEFT: action = 'left'; break;
+						case KeyboardKey.RIGHT: action = 'right'; break;
+						case KeyboardKey.UP: action = 'up'; break;
+						case KeyboardKey.DOWN: action = 'down'; break;
 						default: break;
 					}
-				}
+					break;
+			}
 				
-				if (action != null) {
-					ev = new Event();
-					ev.action = action;
-					ev.down = down;
-					ev.up = !down;
-					events.add(ev);
-					pressedActions[action] = down;
-				}
+			if (action != null) {
+				events.add(new MyEvent(action, down));
+				pressedActions[action] = down;
 			}
 		}
 		
