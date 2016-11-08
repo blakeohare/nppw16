@@ -1,4 +1,4 @@
-import GFX;
+import Graphics2D;
 import Gamepad;
 
 class JoystickMenuScene {
@@ -76,7 +76,7 @@ class JoystickMenuScene {
 	}
 	
 	function render(rc) {
-		GFX.Draw.fill(0, 0, 0);
+		Graphics2D.Draw.fill(0, 0, 0);
 		
 		left = 32;
 		drawBox(left - 16, 16, 30, (this.gamepads.length + 1) * 2 + 3);

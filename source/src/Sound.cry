@@ -1,3 +1,5 @@
+import Audio;
+
 // This maps sound IDs used in the code to actual file names.
 // If entry is null, no sound will be played when that event is triggered
 // Otherwise, entry is a tuple of the filename (without extension, sfx/ is assumed) followed by a normalization ratio.

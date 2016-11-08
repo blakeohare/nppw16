@@ -1,3 +1,5 @@
+import Graphics2D;
+
 // TODO: intro slide show
 
 class IntroScene {
@@ -43,7 +45,7 @@ class IntroScene {
 	}
 	
 	function render(rc) {
-		GFX.Draw.fill(0, 0, 0);
+		Graphics2D.Draw.fill(0, 0, 0);
 		this.pages[this.page].draw(0, 16);
 	}
 	

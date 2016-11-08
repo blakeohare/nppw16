@@ -1,4 +1,4 @@
-import GFX;
+import Graphics2D;
 import Math;
 import Random;
 
@@ -557,7 +557,7 @@ class PlayScene {
 	}
 	
 	function renderOverlay() {
-		GFX.Draw.rectangle(0, 0, 256, 8, 0, 0, 0);
+		Graphics2D.Draw.rectangle(0, 0, 256, 8, 0, 0, 0);
 		ImageLibrary.get('misc/lives.png').draw(0, 0);
 		drawText(255, 255, 255, 'x' + this.context.lives, 8, 0);
 		
@@ -572,11 +572,11 @@ class PlayScene {
 			color = PlayScene.POOR_HEALTH_COLOR;
 		}
 		for (i = 0; i < 5; ++i) {
-			GFX.Draw.rectangle(x, 0, 16, 8, 128, 128, 128);
+			Graphics2D.Draw.rectangle(x, 0, 16, 8, 128, 128, 128);
 			if (health >= ((i + 1) * 2)) {
-				GFX.Draw.rectangle(x + 1, 1, 14, 6, color[0], color[1], color[2]);
+				Graphics2D.Draw.rectangle(x + 1, 1, 14, 6, color[0], color[1], color[2]);
 			} else if (health == 2 * i + 1) {
-				GFX.Draw.rectangle(x + 1, 1, 7, 6, color[0], color[1], color[2]);
+				Graphics2D.Draw.rectangle(x + 1, 1, 7, 6, color[0], color[1], color[2]);
 			}
 			x += 16;
 		}
@@ -600,11 +600,11 @@ class PlayScene {
 	
 	function render(rc) {
 		if (this.bg == 'stars') {
-			GFX.Draw.fill(0, 0, 0);
+			Graphics2D.Draw.fill(0, 0, 0);
 		} else if (this.bg == 'cave') {
 		} else if (this.bg == 'volcano') {
 		} else {
-			GFX.Draw.fill(0, 0, 40); // sky
+			Graphics2D.Draw.fill(0, 0, 40); // sky
 		}
 		
 		colStart = 0;

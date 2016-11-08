@@ -1,4 +1,4 @@
-import GFX;
+import Graphics2D;
 import Math;
 
 const cred_BO = "BLAKE O'HARE";
@@ -63,7 +63,7 @@ class CreditsScene {
 	}
 	
 	function render(rc) {
-		GFX.Draw.fill(0, 0, 0);
+		Graphics2D.Draw.fill(0, 0, 0);
 		
 		counter = Math.min(this.counter, 892);
 		

@@ -1,5 +1,6 @@
-import GFX;
+import Graphics2D;
 import Math;
+import Random;
 
 class Point {
 	field x;
@@ -48,7 +49,7 @@ class BikeLevelStuff : SpecialLevelStuff {
 	function render(rc, offsetX, offsetY) {
 		p = this.scene.player;
 		for (pt : this.particles) {
-			GFX.Draw.rectangle(floor(pt.x + offsetX), floor(pt.y + offsetY), 3, 3, 255, 255, 128);
+			Graphics2D.Draw.rectangle(floor(pt.x + offsetX), floor(pt.y + offsetY), 3, 3, 255, 255, 128);
 		}
 		
 		if (this.particles.length > 40) {

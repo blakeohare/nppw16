@@ -1,3 +1,5 @@
+import Math;
+
 const ACORN_TOP_SPEED = 4.5;
 
 class AcornTopAutomation {

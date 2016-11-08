@@ -1,4 +1,4 @@
-import GFX;
+import Graphics2D;
 
 class GameOverScene {
 	field next = this;
@@ -69,7 +69,7 @@ class GameOverScene {
 	}
 	
 	function render(rc) {
-		GFX.Draw.fill(0, 0, 0);
+		Graphics2D.Draw.fill(0, 0, 0);
 		
 		show_selected = this.mode == 'prompt' || (rc % 2) == 0;
 		

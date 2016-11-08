@@ -1,3 +1,5 @@
+import Math;
+
 class BirdAutomation {
 	field counter = 0;
 	// TODO: replace with enum.

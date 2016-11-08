@@ -1,15 +1,17 @@
-import GFX;
+import Graphics2D;
 
 class ImageLibrary {
 	static field images = {};
 	static field flipped = {};
+	static field sheet;
 	
 	constructor() { }
 	
 	static function get(path) {
 		img = ImageLibrary.images.get(path, null);
 		if (img == null) {
-			img = ImageLoader.fromResource('images/' + path).getImage();
+			rawImg = ImageLibrary.sheet.getImage('images/' + path);
+			img = Graphics2D.GraphicsTexture.load(rawImg);
 			ImageLibrary.images[path] = img;
 		}
 		return img;

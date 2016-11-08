@@ -1,3 +1,5 @@
+import Random;
+
 const FULL_LIFE = 10;
 const START_LIFE = 10;
 const START_LIVES = 3;

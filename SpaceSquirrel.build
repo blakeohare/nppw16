@@ -3,32 +3,53 @@
 	<source>source/</source>
 	<output>output/%TARGET_NAME%</output>
 	
-	<!-- Sprite sheets -->
-	<spritesheets>
+	<guidseed>com.noisyprotozoa.spacesquirrel,v2.0,%TARGET_NAME%</guidseed>
+	
+	<!-- Image sheets -->
+	<imagesheets>
 		<sheet id="all">
 			<prefix>images/</prefix>
 		</sheet>
-	</spritesheets>
+	</imagesheets>
+	
+	<var type="boolean">
+		<id>sound_enabled</id>
+		<value>true</value>
+	</var>
 	
 	<!-- Targets -->
-	<target name="js_local">
-		<platform>js</platform>
-	</target>
-	
-	<target name="js_remote">
-		<platform>js</platform>
+	<target name="javascript_crayonlang">
+		<platform>game-javascript</platform>
 		<jsfileprefix>/demos/spacesquirrel/</jsfileprefix>
 	</target>
 	
+	<target name="javascript_noisyprotozoa">
+		<platform>game-javascript</platform>
+		<jsfileprefix>/games/spacesquirrel/</jsfileprefix>
+	</target>
+	
 	<target name="windows">
-		<platform>csopengl</platform>
+		<platform>game-csharp-opentk</platform>
 	</target>
 	
 	<target name="javaawt">
-		<platform>java</platform>
+		<platform>game-java-awt</platform>
+		<var type="boolean">
+			<id>sound_enabled</id>
+			<value>false</value>
+		</var>
 	</target>
 	
 	<target name="python">
-		<platform>python</platform>
+		<platform>game-python-pygame</platform>
+	</target>
+	
+	<target name="android">
+		<platform>game-csharp-android</platform>
+		<orientation>landscape</orientation>
+		<var type="boolean">
+			<id>sound_enabled</id>
+			<value>false</value>
+		</var>
 	</target>
 </build>

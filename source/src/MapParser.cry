@@ -1,3 +1,4 @@
+import Resources;
 
 class DoorParseUnit {
 	field target;

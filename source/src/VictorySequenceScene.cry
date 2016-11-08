@@ -1,4 +1,5 @@
 import Audio;
+import Graphics2D;
 
 class VictorySequenceScene {
 	field next = this;
@@ -24,7 +25,7 @@ class VictorySequenceScene {
 	}
 	
 	function render(rc) {
-		GFX.Draw.fill(0, 0, 0);
+		Graphics2D.Draw.fill(0, 0, 0);
 		
 		if (this.counter < 60) {
 			img = this.images[0];

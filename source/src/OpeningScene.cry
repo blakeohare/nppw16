@@ -1,4 +1,5 @@
-import GFX;
+import Graphics2D;
+import ImageResources;
 
 enum OpeningSceneMode {
 	START,
@@ -19,7 +20,8 @@ class OpeningScene {
 	function update() {
 		switch (this.mode) {
 			case OpeningSceneMode.START:
-				this.loader = ImageSheetLoader.fromIds('all');
+				this.loader = ImageSheet.loadFromResources('all');
+				ImageLibrary.sheet = this.loader;
 				this.mode = OpeningSceneMode.LOADING;
 				this.mode_counter = 0;
 				break;
@@ -58,9 +60,9 @@ class OpeningScene {
 				
 			case OpeningSceneMode.GO:
 				if (this.mode_counter < 10) {
-					GFX.Draw.fill(255, 80, 255);
+					Graphics2D.Draw.fill(255, 80, 255);
 				} else {
-					GFX.Draw.fill(200, 200, 200);
+					Graphics2D.Draw.fill(200, 200, 200);
 				}
 				break;
 				

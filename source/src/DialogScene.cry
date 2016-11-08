@@ -1,4 +1,4 @@
-import GFX;
+import Graphics2D;
 import Math;
 
 class DialogScene {
@@ -120,7 +120,7 @@ class DialogScene {
 		if (this.blink && ((rc / 7) & 1) == 0) {
 			pos = [256 - 40, startY + space * 4];
 			if (!this.forceArrow && this.stanzaIndex == this.stanzas.length - 1) {
-				GFX.Draw.rectangle(pos[0], pos[1], 8, 8, 255, 255, 255);
+				Graphics2D.Draw.rectangle(pos[0], pos[1], 8, 8, 255, 255, 255);
 			} else {
 				drawText(255, 255, 255, '^', pos[0], pos[1]);
 			}

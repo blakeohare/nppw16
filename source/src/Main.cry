@@ -8,9 +8,11 @@ const HEIGHT = 672;
 
 const GAME_WIDTH = 256;
 const GAME_HEIGHT = 224;
-const DEBUG_MODE = false;
 const JOYSTICKS_ENABLED = false;
-const SOUND_ENABLED = true;
+const SOUND_ENABLED = true && $var['sound_enabled'];
+
+// Skips intro cutscene
+const DEBUG_MODE = true;
 
 function main() {
 	window = new Game.GameWindow('Space Squirrel', FPS, 256, 224, WIDTH, HEIGHT);

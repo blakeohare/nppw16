@@ -1,4 +1,4 @@
-import GFX;
+import Graphics2D;
 
 class ReadyScene {
 	field next = this;
@@ -26,7 +26,7 @@ class ReadyScene {
 	
 	function render(rc) {
 		if (this.counter < 21) {
-			GFX.Draw.fill(0, 0, 0);
+			Graphics2D.Draw.fill(0, 0, 0);
 		} else {
 			this.playscene.render(0);
 			if (rc % 8 < 4) {

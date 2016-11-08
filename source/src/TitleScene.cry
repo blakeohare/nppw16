@@ -1,4 +1,4 @@
-import GFX;
+import Graphics2D;
 
 class TitleScene {
 	field next = this;
@@ -63,7 +63,7 @@ class TitleScene {
 	function render(renderCounter) {
 		JukeBox.ensureSong('title');
 		
-		GFX.Draw.fill(0, 0, 0);
+		Graphics2D.Draw.fill(0, 0, 0);
 		
 		ImageLibrary.get('slides/title.png').draw(0, 0);
 		
