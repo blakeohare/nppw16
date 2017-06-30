@@ -19,21 +19,26 @@
 	
 	<!-- Targets -->
 	<target name="javascript_crayonlang">
-		<platform>game-javascript</platform>
+		<platform>javascript-app-gl</platform>
 		<jsfileprefix>/demos/spacesquirrel/</jsfileprefix>
 	</target>
 	
 	<target name="javascript_noisyprotozoa">
-		<platform>game-javascript</platform>
+		<platform>javascript-app-gl</platform>
 		<jsfileprefix>/games/spacesquirrel/</jsfileprefix>
 	</target>
 	
-	<target name="windows">
-		<platform>game-csharp-opentk</platform>
+	<target name="games_browser">
+		<platform>javascript-app-gl</platform>
+		<jsfileprefix>/games/spacesquirrel/</jsfileprefix>
 	</target>
 	
-	<target name="javaawt">
-		<platform>game-java-awt</platform>
+	<target name="csharp">
+		<platform>csharp-app</platform>
+	</target>
+	
+	<target name="java">
+		<platform>java-app</platform>
 		<var type="boolean">
 			<id>sound_enabled</id>
 			<value>false</value>
@@ -41,11 +46,11 @@
 	</target>
 	
 	<target name="python">
-		<platform>game-python-pygame</platform>
+		<platform>python-app</platform>
 	</target>
 	
 	<target name="android">
-		<platform>game-csharp-android</platform>
+		<platform>java-app-android</platform>
 		<orientation>landscape</orientation>
 		<var type="boolean">
 			<id>sound_enabled</id>

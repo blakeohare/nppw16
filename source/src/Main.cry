@@ -12,7 +12,7 @@ const JOYSTICKS_ENABLED = false;
 const SOUND_ENABLED = true && $var['sound_enabled'];
 
 // Skips intro cutscene
-const DEBUG_MODE = true;
+const DEBUG_MODE = false;
 
 function main() {
 	window = new Game.GameWindow('Space Squirrel', FPS, 256, 224, WIDTH, HEIGHT);
