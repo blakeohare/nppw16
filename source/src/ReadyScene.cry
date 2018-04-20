@@ -1,6 +1,6 @@
 import Graphics2D;
 
-class ReadyScene {
+class ReadyScene : AbstractScene {
 	field next = this;
 	field flags = '';
 	field context;
@@ -8,7 +8,7 @@ class ReadyScene {
 	field counter = 0;
 	field playscene;
 	
-	constructor(previousScene, context) {
+	constructor(previousScene, context) : base() {
 		this.context = context;
 		this.startArgs = previousScene.startArgs;
 		this.playscene = new PlayScene(this.startArgs[0], this.startArgs[1], this.startArgs[2], this.context);

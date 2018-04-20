@@ -1,12 +1,12 @@
 import Graphics2D;
 
-class PauseScene {
+class PauseScene : AbstractScene {
 	field bg;
 	field next = this;
 	field flags = '';
 	field counter = 0;
 	
-	constructor(bg) {
+	constructor(bg) : base() {
 		this.bg = bg;
 	}
 	

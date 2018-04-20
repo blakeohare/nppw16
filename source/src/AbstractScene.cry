@@ -1,0 +1,6 @@
+class AbstractScene {
+	
+	field _omghax_raw_events = [];
+	
+	constructor() { }
+}

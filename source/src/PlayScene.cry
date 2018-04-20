@@ -13,7 +13,7 @@ class PowerupDrop {
 
 const BIKE_SPEED = 6;
 
-class PlayScene {
+class PlayScene : AbstractScene {
 	static field GOOD_HEALTH_COLOR = [255, 255, 255];
 	static field POOR_HEALTH_COLOR = [255, 128, 128];
 	
@@ -44,7 +44,7 @@ class PlayScene {
 	field special;
 	field shooting;
 	
-	constructor(map, startCol, startRow, context) {
+	constructor(map, startCol, startRow, context) : base() {
 		this.startArgs = [map, startCol, startRow];
 		
 		this.context = context;

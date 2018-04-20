@@ -1,6 +1,6 @@
 import Math;
 
-class DeathOverrideScene {
+class DeathOverrideScene : AbstractScene {
 	
 	field bg;
 	field context;
@@ -12,7 +12,7 @@ class DeathOverrideScene {
 	
 	// types = "lava", "collapse", "fall"
 	// TODO: replace with enum
-	constructor(bg, type) {
+	constructor(bg, type) : base() {
 		this.bg = bg;
 		this.context = bg.context;
 		this.context.lifemeter = 0;

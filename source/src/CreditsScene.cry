@@ -9,7 +9,7 @@ const cred_CS = "CHRISTINE SANDQUIST";
 const cred_AM = "ANGEL MCLAUGHLIN";
 const cred_AC = "ADRIAN CLINE";
 
-class CreditsScene {
+class CreditsScene : AbstractScene {
 
 	static field CREDITS = [
 		['TEAM NERD PARADISE', []],
@@ -28,7 +28,7 @@ class CreditsScene {
 	field counter = 0;
 	field images;
 	
-	constructor() {
+	constructor() : base() {
 		images = [];
 		y = 0;
 		for (i = 0; i < CreditsScene.CREDITS.length; ++i) {

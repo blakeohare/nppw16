@@ -7,13 +7,13 @@ enum OpeningSceneMode {
 	GO,
 }
 
-class OpeningScene {
+class OpeningScene : AbstractScene {
 	field next = this;
 	field mode = OpeningSceneMode.START;
 	field mode_counter = 0;
 	field loader;
 	
-	constructor() { }
+	constructor() : base() { }
 	
 	function processInput(events, pressedActions) { }
 	

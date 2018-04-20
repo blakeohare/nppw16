@@ -1,7 +1,7 @@
 import Graphics2D;
 import Math;
 
-class DialogScene {
+class DialogScene : AbstractScene {
 	field next = this;
 	field flags = '';
 	field bg;
@@ -17,7 +17,7 @@ class DialogScene {
 	field id;
 	field generalLoc = null;
 	
-	constructor(bg, dialogId, slightDelay, storyMode = false, forceArrow = false) {
+	constructor(bg, dialogId, slightDelay, storyMode = false, forceArrow = false) : base() {
 		this.bg = bg;
 		this.storyMode = storyMode;
 		this.forceArrow = forceArrow;

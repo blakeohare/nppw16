@@ -1,6 +1,6 @@
 import Graphics2D;
 
-class GameOverScene {
+class GameOverScene : AbstractScene {
 	field next = this;
 	field flags = '';
 	field context;
@@ -9,7 +9,7 @@ class GameOverScene {
 	field mode = 'prompt';
 	field password;
 	
-	constructor(context) {
+	constructor(context) : base() {
 		this.context = context;
 		this.password = context.convertToPassword();
 		context.powerupsTaken = {};

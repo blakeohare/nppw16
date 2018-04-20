@@ -1,6 +1,6 @@
 import Graphics2D;
 
-class TitleScene {
+class TitleScene : AbstractScene {
 	field next = this;
 	field flags = '';
 	field flash_counter = 0;
@@ -10,7 +10,7 @@ class TitleScene {
 			['joystick', "Configure Game Pad"]];
 	field index = 0;
 	
-	constructor() { }
+	constructor() : base() { }
 	
 	function processInput(events, pressedKeys) {
 		for (event : events) {

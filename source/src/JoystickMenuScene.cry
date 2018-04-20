@@ -1,7 +1,7 @@
 import Graphics2D;
 import Gamepad;
 
-class JoystickMenuScene {
+class JoystickMenuScene : AbstractScene {
 	static field ACTIVE_JOYSTICK = null;
 	
 	field next = this;
@@ -10,7 +10,7 @@ class JoystickMenuScene {
 	field index = 0;
 	field blink_counter = 0;
 	
-	constructor() {
+	constructor() : base() {
 		GamepadManager.refreshDevices();
 		for (i = 0; i < GamepadManager.getDeviceCount(); ++i) {
 			gamepad = GamepadManager.getDeviceByIndex(i);

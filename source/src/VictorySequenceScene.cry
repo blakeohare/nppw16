@@ -1,7 +1,7 @@
 import Audio;
 import Graphics2D;
 
-class VictorySequenceScene {
+class VictorySequenceScene : AbstractScene {
 	field next = this;
 	field flags = '';
 	field bg;
@@ -9,7 +9,7 @@ class VictorySequenceScene {
 	field player = null;
 	field counter = 0;
 	
-	constructor(bg) {
+	constructor(bg) : base() {
 		this.bg = bg;
 		this.images = [
 			ImageLibrary.get('slides/close1.png'),

@@ -2,7 +2,7 @@ import Graphics2D;
 
 // TODO: intro slide show
 
-class IntroScene {
+class IntroScene : AbstractScene {
 	field flags = '';
 	field next = this;
 	field player = null; // lol, pyweek hack
@@ -10,7 +10,7 @@ class IntroScene {
 	field pages;
 	field counter = 0;
 	
-	constructor() {
+	constructor() : base() {
 		this.pages = [
 			ImageLibrary.get('slides/open1.png'),
 			ImageLibrary.get('slides/open2.png'),

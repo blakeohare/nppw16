@@ -1,6 +1,6 @@
 import Gamepad;
 
-class JoystickConfigScreen {
+class JoystickConfigScreen : AbstractScene {
 	field bg;
 	field next = this;
 	field flags = '';
@@ -9,9 +9,8 @@ class JoystickConfigScreen {
 	field gamepad;
 	field configs_taken = {};
 	field config = {};
-	field _omghax_raw_events = [];
 	
-	constructor(gamepad, bg) {
+	constructor(gamepad, bg) : base() {
 		this.bg = bg;
 		this.bg.next = this.bg;
 		this.gamepad = gamepad;

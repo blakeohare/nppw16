@@ -1,4 +1,4 @@
-class VolcanoCompleteScene {
+class VolcanoCompleteScene : AbstractScene {
 
 	field next = this;
 	field flags = '';
@@ -7,7 +7,7 @@ class VolcanoCompleteScene {
 	field counter = 0;
 	field player;
 	
-	constructor(scene, context) {
+	constructor(scene, context) : base() {
 		this.bg = scene;
 		this.context = context;
 		this.player = scene.player;
