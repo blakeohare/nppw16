@@ -44,6 +44,15 @@
 		<value>true</value>
 	</var>
 	
+	<var type="int">
+		<id>game_width</id>
+		<value>256</value>
+	</var>
+	<var type="int">
+		<id>game_height</id>
+		<value>224</value>
+	</var>
+	
 	<!-- Targets -->
 	<target name="javascript_crayonlang">
 		<platform>javascript-app-gl</platform>
