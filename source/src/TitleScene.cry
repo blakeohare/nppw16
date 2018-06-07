@@ -5,9 +5,9 @@ class TitleScene : AbstractScene {
 	field flags = '';
 	field flash_counter = 0;
 	field options = [
-			['start', 'Start Game'],
-			['password', "Enter Password"],
-			['joystick', "Configure Game Pad"]];
+		['start', 'Start Game'],
+		['password', "Enter Password"],
+	];
 	field index = 0;
 	
 	constructor() : base() { }
@@ -53,8 +53,6 @@ class TitleScene : AbstractScene {
 				this.next = new IntroScene();
 			else if (action == 'password')
 				this.next = new PasswordScene();
-			else if (action == 'joystick')
-				this.next = new JoystickMenuScene();
 			else
 				Core.assert(false, "Unknown option");
 		}
@@ -75,7 +73,7 @@ class TitleScene : AbstractScene {
 		y = 136;
 		left = 64;
 		
-		drawBox(left - 32, y - 16, 24, 9);
+		drawBox(left - 32, y - 16, 24, 7);
 		for (option : this.options) {
 			if (index == this.index) {
 				drawText(255, 255, 255, ">", left - 16, y);
@@ -84,18 +82,6 @@ class TitleScene : AbstractScene {
 				drawText(255, 255, 255, option[1], left, y);
 			index++;
 			y += 16;
-		}
-		
-		if (JOYSTICKS_ENABLED) {
-			y += 32;
-			active_joystick_text = "Active joystick:";
-			drawText(128, 128, 128, active_joystick_text, 8, y);
-			x = (active_joystick_text.length + 1) * 8;
-			if (JoystickMenuScene.ACTIVE_JOYSTICK == null) {
-				drawText(255, 0, 0, "None", x, y);
-			} else {
-				drawText(255, 255, 255, JoystickMenuScene.ACTIVE_JOYSTICK.name, x, y);
-			}
 		}
 	}
 }

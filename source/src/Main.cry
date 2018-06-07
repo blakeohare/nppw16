@@ -8,8 +8,7 @@ const HEIGHT = 672;
 
 const GAME_WIDTH = 256;
 const GAME_HEIGHT = 224;
-const JOYSTICKS_ENABLED = false;
-const SOUND_ENABLED = true && $var['sound_enabled'];
+const SOUND_ENABLED = false && $var['sound_enabled'];
 
 // Skips intro cutscene
 const DEBUG_MODE = false;
