@@ -1,7 +1,7 @@
 import Graphics2D;
 import Math;
 
-class DialogScene : AbstractScene {
+class DialogScene : LegacyAbstractScene {
 	field next = this;
 	field flags = '';
 	field bg;

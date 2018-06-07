@@ -51,6 +51,7 @@ class Sprite {
 	field blinkCounter = -1;
 	field cameFromIce = false;
 	field bvx;
+	field goLeft;
 	
 	constructor(type, px, py) {
 		this.type = type;

@@ -1,28 +1,25 @@
-import Graphics2D;
+import TwoCansAlpha3;
 
 class ImageLibrary {
 	static field images = {};
 	static field flipped = {};
-	static field sheet;
 	
 	constructor() { }
 	
 	static function get(path) {
 		img = ImageLibrary.images.get(path, null);
 		if (img == null) {
-			rawImg = ImageLibrary.sheet.getImage('images/' + path);
-			img = Graphics2D.GraphicsTexture.load(rawImg);
+			img = Images.get('images/' + path);
 			ImageLibrary.images[path] = img;
 		}
 		return img;
 	}
 	
 	static function getBackwards(path) {
-		img = ImageLibrary.flipped.get(path, null);
+		img = ImageLibrary.images.get(path, null);
 		if (img == null) {
-			img = ImageLibrary.get(path);
-			img = img.flip(true, false);
-			ImageLibrary.flipped[path] = img;
+			img = Images.get('images/' + path, ImageOptions.FLIP_X);
+			ImageLibrary.images[path] = img;
 		}
 		return img;
 	}

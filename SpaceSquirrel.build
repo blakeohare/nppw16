@@ -1,16 +1,43 @@
 <build>
 	<projectname>SpaceSquirrel</projectname>
+	<title>Space Squirrel</title>
 	<source>source/</source>
 	<output>output/%TARGET_NAME%</output>
+	<description>A squirrel terraforms the moon</description>
+	<crayonpath>C:\Things\TwoCans\api</crayonpath>
+	<icon>assets/icon32.png,assets/icon256.png</icon>
 	
-	<guidseed>com.noisyprotozoa.spacesquirrel,v2.0,%TARGET_NAME%</guidseed>
-	
-	<!-- Image sheets -->
 	<imagesheets>
-		<sheet id="all">
-			<prefix>images/</prefix>
+		<sheet id="twocans_everything">
+			<prefix>*</prefix>
 		</sheet>
 	</imagesheets>
+	
+	<guidseed>com.noisyprotozoa.variousvegetables,v2.0,%TARGET_NAME%</guidseed>
+	
+	<!-- Set your game title here. -->
+    <var type="string">
+      <id>game_title</id>
+      <value>Space Squirrel</value>
+    </var>
+    
+	<!-- The class name of your starting scene. -->
+    <var type="string">
+      <id>initial_scene</id>
+      <value>AdapterScene</value>
+    </var>
+    
+	<!-- Set this value to true to run at 60 fps. Default is 30 fps. -->
+    <var type="boolean">
+      <id>use_60_fps</id>
+      <value>false</value>
+    </var>
+	
+	<!-- Set this to true to alias the WASD keys to arrow keys -->
+    <var type="boolean">
+      <id>enable_wasd</id>
+      <value>false</value>
+    </var>
 	
 	<var type="boolean">
 		<id>sound_enabled</id>

@@ -1,6 +1,6 @@
 import Graphics2D;
 
-class GameOverScene : AbstractScene {
+class GameOverScene : LegacyAbstractScene {
 	field next = this;
 	field flags = '';
 	field context;

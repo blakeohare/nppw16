@@ -1,6 +1,6 @@
 import Graphics2D;
 
-class PauseScene : AbstractScene {
+class PauseScene : LegacyAbstractScene {
 	field bg;
 	field next = this;
 	field flags = '';

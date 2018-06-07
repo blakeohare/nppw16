@@ -1,6 +1,6 @@
 import Math;
 
-class DeathOverrideScene : AbstractScene {
+class DeathOverrideScene : LegacyAbstractScene {
 	
 	field bg;
 	field context;

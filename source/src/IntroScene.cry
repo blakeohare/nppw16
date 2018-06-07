@@ -2,7 +2,7 @@ import Graphics2D;
 
 // TODO: intro slide show
 
-class IntroScene : AbstractScene {
+class IntroScene : LegacyAbstractScene {
 	field flags = '';
 	field next = this;
 	field player = null; // lol, pyweek hack

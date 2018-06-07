@@ -7,14 +7,14 @@ enum OpeningSceneMode {
 	GO,
 }
 
-class OpeningScene : AbstractScene {
+class OpeningScene : LegacyAbstractScene {
 	field next = this;
 	field mode = OpeningSceneMode.START;
 	field mode_counter = 0;
 	field loader;
 	
 	constructor() : base() { }
-	
+	/*
 	function processInput(events, pressedActions) { }
 	
 	function update() {
@@ -71,6 +71,8 @@ class OpeningScene : AbstractScene {
 				break;
 		}
 	}
+	
+	//*/
 	
 	// TODO: port this using an image of static and then rectangle draws
 	/*

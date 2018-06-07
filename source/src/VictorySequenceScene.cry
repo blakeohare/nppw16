@@ -1,7 +1,7 @@
 import Audio;
 import Graphics2D;
 
-class VictorySequenceScene : AbstractScene {
+class VictorySequenceScene : LegacyAbstractScene {
 	field next = this;
 	field flags = '';
 	field bg;

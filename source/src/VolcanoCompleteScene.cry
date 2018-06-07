@@ -1,4 +1,4 @@
-class VolcanoCompleteScene : AbstractScene {
+class VolcanoCompleteScene : LegacyAbstractScene {
 
 	field next = this;
 	field flags = '';
