@@ -16,10 +16,10 @@ class ImageLibrary {
 	}
 	
 	static function getBackwards(path) {
-		img = ImageLibrary.images.get(path, null);
+		img = ImageLibrary.flipped.get(path, null);
 		if (img == null) {
 			img = Images.get('images/' + path, ImageOptions.FLIP_X);
-			ImageLibrary.images[path] = img;
+			ImageLibrary.flipped[path] = img;
 		}
 		return img;
 	}
