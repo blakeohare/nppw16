@@ -46,7 +46,7 @@ class DialogScene : LegacyAbstractScene {
 		} else {
 			if (pressed['A'] || pressed['B'] || pressed['start']) {
 				if (this.delayCounter < 0) {
-					this.textCursor += 1.2;
+					this.textCursor += 2.2;
 				}
 			}
 		}

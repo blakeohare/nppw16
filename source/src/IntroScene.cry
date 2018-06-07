@@ -9,8 +9,11 @@ class IntroScene : LegacyAbstractScene {
 	field page = 0;
 	field pages;
 	field counter = 0;
+	field quickEnabled;
 	
-	constructor() : base() {
+	constructor(quickEnabled) : base() {
+		this.quickEnabled = quickEnabled;
+		
 		this.pages = [
 			ImageLibrary.get('slides/open1.png'),
 			ImageLibrary.get('slides/open2.png'),
@@ -21,7 +24,7 @@ class IntroScene : LegacyAbstractScene {
 	function processInput(events, pressedKeys) { }
 	
 	function update() {
-		if (DEBUG_MODE) {
+		if (DEBUG_MODE || this.quickEnabled) {
 			this.next = this.getStartScene();
 			return;
 		}
