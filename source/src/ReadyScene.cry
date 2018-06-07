@@ -1,6 +1,6 @@
 import Graphics2D;
 
-class ReadyScene : AbstractScene {
+class ReadyScene : LegacyAbstractScene {
 	field next = this;
 	field flags = '';
 	field context;

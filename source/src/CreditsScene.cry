@@ -9,7 +9,7 @@ const cred_CS = "CHRISTINE SANDQUIST";
 const cred_AM = "ANGEL MCLAUGHLIN";
 const cred_AC = "ADRIAN CLINE";
 
-class CreditsScene : AbstractScene {
+class CreditsScene : LegacyAbstractScene {
 
 	static field CREDITS = [
 		['TEAM NERD PARADISE', []],

@@ -1,6 +1,6 @@
 import Graphics2D;
 
-class TitleScene : AbstractScene {
+class TitleScene : LegacyAbstractScene {
 	field next = this;
 	field flags = '';
 	field flash_counter = 0;
