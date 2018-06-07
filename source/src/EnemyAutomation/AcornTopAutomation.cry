@@ -60,6 +60,7 @@ class AcornTopAutomation {
 	field goLeft = true;
 	field xSign = 1;
 	field ySign = 1;
+	field body;
 	
 	constructor(sprite) {
 		this.sprite = sprite;

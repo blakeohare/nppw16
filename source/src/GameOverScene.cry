@@ -62,7 +62,7 @@ class GameOverScene : LegacyAbstractScene {
 					this.next = new TitleScene();
 				} else {
 					// what?
-					this.next = new OpeningScene();
+					this.next = new TitleScene();
 				}
 			}
 		}

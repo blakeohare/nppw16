@@ -6,6 +6,7 @@ class TitleScene : LegacyAbstractScene {
 	field flash_counter = 0;
 	field options = [
 		['start', 'Start Game'],
+		['quickstart', "Quick Start"], // TODO: play intro vs play
 		['password', "Enter Password"],
 	];
 	field index = 0;
@@ -50,7 +51,9 @@ class TitleScene : LegacyAbstractScene {
 		if (this.flash_counter == 1) {
 			action = this.options[this.index][0];
 			if (action == 'start')
-				this.next = new IntroScene();
+				this.next = new IntroScene(false);
+			else if (action =='quickstart')
+				this.next = new IntroScene(true);
 			else if (action == 'password')
 				this.next = new PasswordScene();
 			else
@@ -73,7 +76,7 @@ class TitleScene : LegacyAbstractScene {
 		y = 136;
 		left = 64;
 		
-		drawBox(left - 32, y - 16, 24, 7);
+		drawBox(left - 32, y - 16, 24, 9);
 		for (option : this.options) {
 			if (index == this.index) {
 				drawText(255, 255, 255, ">", left - 16, y);
