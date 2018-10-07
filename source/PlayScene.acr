@@ -79,7 +79,7 @@ class PlayScene : LegacyAbstractScene {
 		
 		this.tiles = makeGrid(this.cols, this.rows);
 		
-		this.doorSwaps = map.doorswaps;
+		//this.doorSwaps = map.doorswaps;
 		
 		doorTiles = [];
 		ladderTiles = {};

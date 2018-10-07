@@ -1,23 +1,22 @@
 import Graphics2D;
 
-class GameOverScene : LegacyAbstractScene {
-	field next = this;
-	field flags = '';
-	field context;
-	field counter = 0;
-	field index = 0;
-	field mode = 'prompt';
-	field password;
+public class GameOverScene : LegacyAbstractScene {
+	private string flags = '';
+	private Context context;
+	private int counter = 0;
+	private int index = 0;
+	private string mode = 'prompt';
+	private string password;
 	
-	constructor(context) : base() {
+	public constructor(Context context) : base() {
 		this.context = context;
 		this.password = context.convertToPassword();
-		context.powerupsTaken = {};
+		context.powerupsTaken = new Dictionary<string, bool>();
 	}
-		
-	function processInput(events, pressed) {
+	
+	public override void processInput(List<MyEvent> events, Dictionary<string, bool> pressed) {
 		if (this.mode == 'prompt') {
-			for (event : events) {
+			for (MyEvent event : events) {
 				if (event.down) {
 					switch (event.action) {
 						case 'up':
@@ -49,7 +48,7 @@ class GameOverScene : LegacyAbstractScene {
 		}
 	}
 	
-	function update() {
+	public override void update() {
 		JukeBox.ensureSong('gameover');
 		
 		this.counter++;
@@ -68,16 +67,16 @@ class GameOverScene : LegacyAbstractScene {
 		}
 	}
 	
-	function render(rc) {
+	public override render(int rc) {
 		Graphics2D.Draw.fill(0, 0, 0);
 		
-		show_selected = this.mode == 'prompt' || (rc % 2) == 0;
+		bool show_selected = this.mode == 'prompt' || (rc % 2) == 0;
 		
-		left = 80;
-		top = 96;
+		int left = 80;
+		int top = 96;
 		
-		x = left;
-		y = top;
+		int x = left;
+		int y = top;
 		drawText(255, 255, 255, "GAME OVER", left, top);
 		
 		y += 16;

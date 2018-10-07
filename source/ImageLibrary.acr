@@ -1,24 +1,25 @@
+import Graphics2D;
 import TwoCansAlpha3;
 
-class ImageLibrary {
-	static field images = {};
-	static field flipped = {};
+public class ImageLibrary {
+	private static Dictionary<string, GraphicsTexture> images = new Dictionary<string, GraphicsTexture>();
+	private static Dictionary<string, GraphicsTexture> flipped = new Dictionary<string, GraphicsTexture>();
 	
-	constructor() { }
+	public constructor() { }
 	
-	static function get(path) {
-		img = ImageLibrary.images.get(path, null);
+	public static GraphicsTexture get(string path) {
+		GraphicsTexture img = ImageLibrary.images.get(path, null);
 		if (img == null) {
-			img = Images.get('images/' + path);
+			img = (GraphicsTexture) Images.get('images/' + path);
 			ImageLibrary.images[path] = img;
 		}
 		return img;
 	}
 	
-	static function getBackwards(path) {
+	public static GraphicsTexture function getBackwards(string path) {
 		img = ImageLibrary.flipped.get(path, null);
 		if (img == null) {
-			img = Images.get('images/' + path, ImageOptions.FLIP_X);
+			img = (GraphicsTexture) Images.get('images/' + path, ImageOptions.FLIP_X);
 			ImageLibrary.flipped[path] = img;
 		}
 		return img;

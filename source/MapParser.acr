@@ -1,112 +1,110 @@
 import Resources;
 
-class DoorParseUnit {
-	field target;
-	field sx;
-	field sy;
-	field tx;
-	field ty;
+public class DoorParseUnit {
+	public string target;
+	public int sx;
+	public int sy;
+	public int tx;
+	public int ty;
 	
 	constructor() { }
 }
 
-class PowerUpParseUnit {
-	field type;
-	field id;
-	field row;
-	field col;
+public class PowerUpParseUnit {
+	public string type;
+	public string id;
+	public int row;
+	public int col;
 	
 	constructor() { }
 }
 
-class Map {
-	field width;
-	field height;
-	field side;
-	field upper;
-	field lower;
-	field doors;
-	field enemies;
-	field doorswaps;
-	field overlayTriggers;
-	field powerups;
+public class Map {
+	public int width;
+	public int height;
+	public bool side;
+	public List<List<Tile>> upper;
+	public List<List<Tile>> lower;
+	public List<DoorParseUnit> doors;
+	public List<EnemiesParseUnit> enemies;
+	//field doorswaps;
+	public Dictionary<string, string> overlayTriggers;
+	public List<PowerUpParseUnit> powerups;
 	
 	constructor() { }
 }
 
-class EnemiesParseUnit {
-	field id;
-	field col;
-	field row;
+public class EnemiesParseUnit {
+	public string id;
+	public int col;
+	public int row;
 
 	constructor() { }
 }
 
-class MapParser {
-	field values;
+public class MapParser {
+	private Dictionary<strig, string> values = new Dictionary<string, string>();
 	
-	constructor(file) {
-		path = 'maps/' + file;
-		t = Resources.readText(path);
-		values = {};
-		for (line : t.split('\n')) {
-			parts = line.split(':');
+	constructor(string file) {
+		string path = 'maps/' + file;
+		string t = (string) Resources.readText(path);
+		for (string line : t.split('\n')) {
+			List<string> parts = line.split(':');
 			if (parts.length < 2)
 				continue;
 			
-			key = parts[0][1:].trim();
-			value = parts[1:].join(':').trim();
-			values[key] = value.trim();
+			string key = parts[0][1:].trim();
+			string value = parts[1:].join(':').trim();
+			this.values[key] = value.trim();
 		}
-		
-		this.values = values;
 	}
 	
-	function parse() {
+	public Map parse() {
 		// TODO: create a real Map definition.
-		m = new Map();
-		m.width = Core.parseInt(this.values['width']);
-		m.height = Core.parseInt(this.values['height']);
+		Map m = new Map();
+		m.width = (int) Core.parseInt(this.values['width']);
+		m.height = (int) Core.parseInt(this.values['height']);
 		m.side = this.values.get('view', 'side').lower() == 'side';
 		m.upper = this.getTiles(this.values['upper'], m.width, m.height);
 		m.lower = this.getTiles(this.values['lower'], m.width, m.height);
 		m.doors = this.getDoors(this.values.get('doors', ''));
 		m.enemies = this.getEnemies(this.values.get('enemies', ''));
-		m.doorswaps = this.getDoorswaps(this.values.get('doorswaps', ''));
+		//m.doorswaps = this.getDoorswaps(this.values.get('doorswaps', ''));
 		m.overlayTriggers = this.getOverlayTriggers(this.values.get('overlay', ''));
 		m.powerups = this.getPowerups(this.values.get('powerups', ''));
 		return m;
 	}
 	
-	function getPowerups(sv) {
+	public List<PowerUpParseUnit> getPowerups(string sv) {
 		sv = sv.trim();
+		Lsit<PowerUpParseUnit> output = new List<PowerUpParseUnit>();
 		if (sv.length == 0) {
-			return [];
+			return output;
 		}
 
-		output = [];
-		for (item : sv.split(',')) {
-			parts = item.split('|');
-			pu = new PowerUpParseUnit();
+		for (string item : sv.split(',')) {
+			List<string> parts = item.split('|');
+			PowerUpParseUnit pu = new PowerUpParseUnit();
 			pu.type = parts[0];
 			pu.id = parts[1];
-			pu.col = Core.parseInt(parts[2]);
-			pu.row = Core.parseInt(parts[3]);
+			pu.col = (int) Core.parseInt(parts[2]);
+			pu.row = (int) Core.parseInt(parts[3]);
 			output.add(pu);
 		}
+		
 		return output;
 	}
-		
-	function getOverlayTriggers(strValue) {
+	
+	public Dictionary<string, string> getOverlayTriggers(string strValue) {
 		strValue = strValue.trim();
+		Dictionary<string, string> output = new Dictionary<string, string>();
 		if (strValue.length == 0) {
-			return {};
+			return output;
 		}
 		
-		output = {};
-		items = strValue.split(',');
-		for (item : items) {
-			parts = item.split('|');
+		List<string> items = strValue.split(',');
+		for (string item : items) {
+			List<string> parts = item.split('|');
 		
 			if (parts.length == 2) {
 				output[parts[0].trim()] = parts[1].trim();
@@ -118,7 +116,7 @@ class MapParser {
 	
 	// door swap output format:
 	// { original ID => List[ Pair<trigger, swapped ID> ] }
-	function getDoorswaps(strValue) {
+	/*public  getDoorswaps(strValue) {
 		strValue = strValue.trim();
 		if (strValue.length == 0) {
 			return {};
@@ -134,49 +132,49 @@ class MapParser {
 			swaps[original].add([trigger, swapped]);
 		}
 		return swaps;
-	}
+	}//*/
 	
-	function getEnemies(enemyString) {
+	public List<EnemiesParseUnit> getEnemies(string enemyString) {
 		enemyString = enemyString.trim();
-		if (enemyString.length == 0) {
-			return [];
+		List<EnemiesParseUnit> enemies = new List<EnemiesParseUnit>();
+		if (enemyString.length > 0) {
+			for (string value : enemyString.split(',')) {
+				List<string> parts = value.split('|');
+				string id = parts[0];
+				int col = Core.parseInt(parts[1]);
+				int row = Core.parseInt(parts[2]);
+				EnemiesParseUnit e = new EnemiesParseUnit();
+				e.id = id;
+				e.col = col;
+				e.row = row;
+				enemies.add(e);
+			}
 		}
-		enemies = [];
-		for (value : enemyString.split(',')) {
-			parts = value.split('|');
-			id = parts[0];
-			col = Core.parseInt(parts[1]);
-			row = Core.parseInt(parts[2]);
-			e = new EnemiesParseUnit();
-			e.id = id;
-			e.col = col;
-			e.row = row;
-			enemies.add(e);
-		}
+		
 		return enemies;
 	}
 	
-	function getDoors(doorString) {
+	public List<DoorParseUnit> getDoors(string doorString) {
 		doorString = doorString.trim();
-		if (doorString.length == 0)
-			return [];
-		doors = [];
-		for (door : doorString.split(',')) {
-			door = door.split('|');
-			d = new DoorParseUnit();
-			d.target = door[0];
-			d.sx = Core.parseInt(door[1]);
-			d.sy = Core.parseInt(door[2]);
-			d.tx = Core.parseInt(door[3]);
-			d.ty = Core.parseInt(door[4]);
-			doors.add(d);
+		List<DoorParseUnit> doors = new List<DoorParseUnit>();
+		if (doorString.length > 0) {
+			for (string doorStr : doorString.split(',')) {
+				List<string> door = doorStr.split('|');
+				DoorParseUnit d = new DoorParseUnit();
+				d.target = door[0];
+				d.sx = (int) Core.parseInt(door[1]);
+				d.sy = (int) Core.parseInt(door[2]);
+				d.tx = (int) Core.parseInt(door[3]);
+				d.ty = (int) Core.parseInt(door[4]);
+				doors.add(d);
+			}
 		}
 		return doors;
 	}
-		
-	function getTiles(ids, width, height) {
-		output = [];
-		for (id : ids.split(',')) {
+	
+	public List<List<Tile>> getTiles(List<string> ids, int width, int height) {
+		List<Tile> output = new List<Tile>();
+		for (string id : ids.split(',')) {
 			id = id.trim();
 			if (id == '') {
 				output.add(null);
@@ -185,13 +183,14 @@ class MapParser {
 			}
 		}
 		
-		grid = makeGrid(width, height);
-		index = 0;
-		for (y = 0; y < height; ++y) {
-			for (x = 0; x < width; ++x) {
+		List<List<Tile>> grid = makeGrid(width, height);
+		int index = 0;
+		for (int y = 0; y < height; ++y) {
+			for (int x = 0; x < width; ++x) {
 				grid[x][y] = output[index++];
 			}
 		}
+		
 		return grid;
 	}
 }

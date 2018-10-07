@@ -2,28 +2,27 @@ import Graphics2D;
 
 // TODO: intro slide show
 
-class IntroScene : LegacyAbstractScene {
-	field flags = '';
-	field next = this;
-	field player = null; // lol, pyweek hack
-	field page = 0;
-	field pages;
-	field counter = 0;
-	field quickEnabled;
+public class IntroScene : LegacyAbstractScene {
+	private string flags = '';
+	private Sprite player = null; // lol, pyweek hack
+	private int page = 0;
+	private GraphicsTexture pages;
+	private int counter = 0;
+	private bool quickEnabled;
 	
 	constructor(quickEnabled) : base() {
 		this.quickEnabled = quickEnabled;
 		
-		this.pages = [
+		this.pages = new List<GraphicsTexture>() {
 			ImageLibrary.get('slides/open1.png'),
 			ImageLibrary.get('slides/open2.png'),
 			ImageLibrary.get('slides/open3.png')
-			];
+		};
 	}
 	
-	function processInput(events, pressedKeys) { }
+	public override void processInput(List<MyEvent> events, Dictionary<strig, bool> pressedKeys) { }
 	
-	function update() {
+	public override void update() {
 		if (DEBUG_MODE || this.quickEnabled) {
 			this.next = this.getStartScene();
 			return;
@@ -47,12 +46,12 @@ class IntroScene : LegacyAbstractScene {
 			this.next = this.getStartScene();
 	}
 	
-	function render(rc) {
+	public void render(int rc) {
 		Graphics2D.Draw.fill(0, 0, 0);
 		this.pages[this.page].draw(0, 16);
 	}
 	
-	function getStartScene() {
+	public AbstractLegacyScene getStartScene() {
 		/*
 		if os.path.exists('fast_start.txt'):
 			c = open('fast_start.txt', 'rt')

@@ -1,77 +1,27 @@
 import Audio;
 
-class JukeBox {
-	static field currentSong = null;
-	static field actuallyPlaying = false;
+public static class JukeBox {
+	private static string currentSong = null;
+	private static bool actuallyPlaying = false;
 	
-	constructor() { Core.assert(false); }
+	private static Dictionary<string, Audio.Music> musicResourceCache = new Dictionary<string, Audio.Music>();
 	
-	static function ensureSong(id) {
-		if (SOUND_ENABLED) {
-			if (JukeBox.currentSong != id) {
-				song = JukeBox.SONG_LOOKUP.get(id, null);
-				if (song != null) {
-					file = song[0];
-					loop = song[1];
-					path = 'music/' + song[0] + '.ogg';
-					music = JukeBox.loadMusicFromResource(path);
-					JukeBox.actuallyPlaying = true;
-					music.play(loop);
-				} else {
-					JukeBox.actuallyPlaying = false;
-					Audio.Music.stop();
-				}
-				
-				JukeBox.currentSong = id;
-			}
-		}
-	}
-	
-	static function loadMusicFromResource(path) {
-		if (SOUND_ENABLED) {
-			music = JukeBox.MUSICS.get(path);
-			if (music == null) {
-				music = Audio.Music.loadFromResource(path);
-				JukeBox.MUSICS[path] = music;
-			}
-			return music;
-		}
-	}
-	
-	static field MUSICS = {};
-	
-	static function playSongForLevelMaybe(id) {
-		song = JukeBox.SONG_BY_MAP.get(id, null);
-		if (song != null) {
-			JukeBox.ensureSong(song);
-		}
-	}
-	
-	static function pause() {
-		// TODO: this
-	}
-	
-	static function resume() {
-		// TODO: this
-	}
-	
-	static field SONG_LOOKUP = {
-		// name : [file, should loop?],
-		'title': ['tensebranches', true],
-		'intro': ['open_skies', true],
-		'overworld': ['open_skies', true],
-		'ship': ['spacemachine', true],
-		'credits': ['credits', true],
-		'password': ['fluffytales', true],
-		'volcano': ['lunacy', true],
-		'bike': ['nopressure', true],
-		'water': ['squirrels_can_swim', true],
-		'gravity': ['deadlyacorns', true],
-		'death': ['oopsdead', false],
-		'gameover': ['fluffytales', true],
+	private static Dictionary<string, string> SONG_FILENAME_LOOKUP = new Dictionary<string, string>() {
+		'title': 'tensebranches',
+		'intro': 'open_skies',
+		'overworld': 'open_skies',
+		'ship': 'spacemachine',
+		'credits': 'credits',
+		'password': 'fluffytales',
+		'volcano': 'lunacy',
+		'bike': 'nopressure',
+		'water': 'squirrels_can_swim',
+		'gravity': 'deadlyacorns',
+		'death': 'oopsdead',
+		'gameover': 'fluffytales',
 	};
 
-	static field SONG_BY_MAP = {
+	private static Dictionary<string, string> SONG_BY_MAP = {
 		'ship_1': 'ship',
 		
 		'main': 'overworld',
@@ -143,4 +93,49 @@ class JukeBox {
 		'wlink_E3': 'water',
 	};
 
+	public static void ensureSong(string id) {
+		if (SOUND_ENABLED) {
+			if (JukeBox.currentSong != id) {
+				string file = JukeBox.SONG_FILENAME_LOOKUP.get(id, null);
+				if (file != null) {
+					bool loop = id == 'death';
+					string path = 'music/' + file + '.ogg';
+					Audio.Music music = JukeBox.loadMusicFromResource(path);
+					JukeBox.actuallyPlaying = true;
+					music.play(loop);
+				} else {
+					JukeBox.actuallyPlaying = false;
+					Audio.Music.stop();
+				}
+				
+				JukeBox.currentSong = id;
+			}
+		}
+	}
+	
+	public static Audio.Music loadMusicFromResource(string path) {
+		if (SOUND_ENABLED) {
+			Audio.Music music = JukeBox.musicResourceCache.get(path);
+			if (music == null) {
+				music = Audio.Music.loadFromResource(path);
+				JukeBox.musicResourceCache[path] = music;
+			}
+			return music;
+		}
+	}
+	
+	public static void playSongForLevelMaybe(string id) {
+		Audio.Music song = JukeBox.SONG_BY_MAP.get(id, null);
+		if (song != null) {
+			JukeBox.ensureSong(song);
+		}
+	}
+	
+	public static void pause() {
+		// TODO: this
+	}
+	
+	public static void resume() {
+		// TODO: this
+	}
 }

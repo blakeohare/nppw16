@@ -1,18 +1,17 @@
 import Math;
 
-class DeathOverrideScene : LegacyAbstractScene {
+public class DeathOverrideScene : LegacyAbstractScene {
 	
-	field bg;
-	field context;
-	field flags = '';
-	field next = this;
-	field type;
-	field counter = 0;
-	field vy = -10;
+	private string bg;
+	private PlayScene context;
+	private string flags = '';
+	private string type;
+	private int counter = 0;
+	private int vy = -10;
 	
 	// types = "lava", "collapse", "fall"
 	// TODO: replace with enum
-	constructor(bg, type) : base() {
+	constructor(PlayScene bg, string type) : base() {
 		this.bg = bg;
 		this.context = bg.context;
 		this.context.lifemeter = 0;
@@ -23,13 +22,13 @@ class DeathOverrideScene : LegacyAbstractScene {
 		} else if (type == 'lava') {
 			playNoise('lava_roast');
 		}
-	}	
+	}
 		
-	function processInput(events, pressed) {
+	public override void processInput(List<MyEvent> events, Dictionary<string, bool> pressed) {
 		// There is nothing you can do
 	}
 	
-	function update() {
+	public override void update() {
 		if (this.counter == 0) {
 			JukeBox.ensureSong('death');
 		}
@@ -41,7 +40,7 @@ class DeathOverrideScene : LegacyAbstractScene {
 			this.bg.player.modelY += this.vy;
 			this.bg.player.y = Math.floor(this.bg.player.modelY);
 		}
-			
+		
 		if (this.counter > 100) {
 			this.context.lifemeter = 10;
 			this.context.lives--;
@@ -55,7 +54,7 @@ class DeathOverrideScene : LegacyAbstractScene {
 		}
 	}
 	
-	function render(rc) {
+	public override void render(int rc) {
 		this.bg.render(rc);
 	}
 }

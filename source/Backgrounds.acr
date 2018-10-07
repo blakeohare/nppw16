@@ -1,11 +1,10 @@
 // Add maps to this list to alter what background they'll have
 class Backgrounds {
 
-	static field _bg;
+	public static Dictionary<string, string> _bg = new Dictionary<string, string>();
 
 	static constructor() {
-		Backgrounds._bg = {};
-		CAVE_BG = [
+		List<string> CAVE_BG = new List<string>() {
 			'grav_ascent',
 			'grav_core',
 			'grav_descent',
@@ -35,9 +34,9 @@ class Backgrounds {
 			'wlink_E2',
 			'wlink_E3',
 			'bird_link',
-		];
+		};
 
-		VOLCANO_BG = [
+		List<string> VOLCANO_BG = new List<string>() {
 			'volcano_1_ascent',
 			'volcano_1_core',
 			'volcano_1_core_active',
@@ -57,26 +56,26 @@ class Backgrounds {
 			'volcano_3_middle',
 			'volcano_3_bottom',
 			'volcano_3_secret',
-		];
+		};
 
-		STARS_BG = [
+		List<string> STARS_BG = new List<string>() {
 			'rope_test',
 			'ship_1',
-		];
+		};
 
-		for (cbg : CAVE_BG) {
+		for (string cbg : CAVE_BG) {
 			Backgrounds._bg[cbg] = 'cave';
 		}
-		for (vbg : VOLCANO_BG) {
+		for (string vbg : VOLCANO_BG) {
 			Backgrounds._bg[vbg] = 'volcano';
 		}
-		for (sbg : STARS_BG) {
+		for (string sbg : STARS_BG) {
 			Backgrounds._bg[sbg] = 'stars';
 		}
 	}
 }
 
-function getBackground(level) {
+public string getBackground(string level) {
 	level = level.split('.')[0];
 	return Backgrounds._bg.get(level, 'sky');
 }

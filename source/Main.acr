@@ -1,44 +1,43 @@
 import Math;
 import TwoCansAlpha3;
 
-const FPS = 30;
-const WIDTH = 800;
-const HEIGHT = 600;
+const int FPS = 30;
+const int WIDTH = 800;
+const int HEIGHT = 600;
 
-const GAME_WIDTH = 256;
-const GAME_HEIGHT = 224;
-const SOUND_ENABLED = false && $var['sound_enabled'];
+const int GAME_WIDTH = 256;
+const int GAME_HEIGHT = 224;
+const bool SOUND_ENABLED = false && $var['sound_enabled'];
 
 // Skips intro cutscene
-const DEBUG_MODE = false;
+const bool DEBUG_MODE = false;
 
 class AdapterScene : AbstractScene {
 	
-	field renderCounter = 0;
-	field pressedActions = {};
-	field events = [];
-	field activeScene;
+	private int renderCounter = 0;
+	private Dictionary<string, bool> pressedActions = new Dictionary<string, bool>();
+	private List<MyEvent> events = new List<MyEvent>();
+	private LegacyAbstractScene activeScene;
 	
-	constructor() : base() {
+	public constructor() : base() {
 		this.activeScene = new TitleScene();
 		
-		for (action : 'left up down right A B start'.split(' ')) {
+		for (string action : 'left up down right A B start'.split(' ')) {
 			this.pressedActions[action] = false;
 		}
-		
 	}
 	
-	function update(inputManager, events) {
+	public override update(object inputManager, object events) {
 		this.events.clear();
-		for (event : events) {
-			down = false;
-			action = null;
+		for (Event event : (List<Event>) events) {
+			bool down = false;
+			string action = null;
 			
-			switch (event.type) {
+			switch ((int) event.type) {
 				
 				case EventType.KEY:
 					down = event.down;
-					switch (event.key) {
+					switch ((int) event.key) {
 						case KeyboardKey.ENTER:
 						case KeyboardKey.SPACE:
 							action = 'start';
@@ -62,7 +61,6 @@ class AdapterScene : AbstractScene {
 		
 		this.activeScene.processInput(this.events, this.pressedActions);
 		this.activeScene.update();
-		
 	}
 	
 	function render() {
@@ -71,6 +69,6 @@ class AdapterScene : AbstractScene {
 	}
 }
 
-function main(args) {
+public void main(List<string> args) {
 	TwoCansAlpha3.startGame();
 }

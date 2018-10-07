@@ -1,186 +1,216 @@
+class DialogDatabaseBuilder {
+	public Dictionary<string, List<List<string>>> database = new Dictionary<string, List<List<string>>>();
+	private List<List<string>> activeBuilder = null;
+	public DialogDatabaseBuilder newDialog(string name) {
+		if (!this.database.contains(name)) {
+			this.database[name] = new List<List<string>>();
+		}
+		
+		this.activeBuilder = this.database[name];
+	}
+	
+	public DialogDatabaseBuilder addPage1(string a) {
+		this.activeBuilder.add(new List<string>() { a });
+		return this;
+	}
+	public DialogDatabaseBuilder addPage2(string a, string b) {
+		this.activeBuilder.add(new List<string>() { a, b });
+		return this;
+	}
+	public DialogDatabaseBuilder addPage3(string a, string b, string c) {
+		this.activeBuilder.add(new List<string>() { a, b, c });
+		return this;
+	}
+	public DialogDatabaseBuilder addPage4(string a, string b, string c, string d) {
+		this.activeBuilder.add(new List<string>() { a, b, c, d});
+		return this;
+	}
+}
+
 class Dialogs {
-	static field DIALOGS = {
-
-		'Feeder1': [
-			["Quick, collect seeds",
-			 "before anyone notices!"]
-		],
-		
-		"Feeder2": [
-			["Uh-oh, your covert",
-			 "attempt has failed!",
-			 "Quick, make a getaway!"]
-		],
-
-		'WaterDone': [
-			["That's the last of the",
-			 "reservoirs. Receiving",
-			 "Transmission from the",
-			 "General..."],
+	public static Dictionary<string, List<List<string>>> DIALOGS = 
+		new DialogDatabaseBuilder()
+			.newDialog('Feeder1')
+				.addPage2(
+					"Quick, collect seeds",
+					"before anyone notices!")
 			
-			["We have a small hiccup;",
-			"the seeds intended to",
-			"provide vegetation were",
-			"accidentally left here."],
-
-			["Fortunately, a vanguard",
-			"of our sworn enemies is",
-			"north of your location",
-			"bearing their own seeds."],
-
-			["You can simultaneously",
-			"stop their invasion and",
-			"steal their seeds for",
-			"our own purposes."],
-
-			["It's a case of killing",
-			"two birds with one",
-			"stone! Or anything else",
-			"you might prefer."]
-		],
+			.newDialog('Feeder2')
+				.addPage3(
+					"Uh-oh, your covert",
+					"attempt has failed!", 
+					"Quick, make a getaway!")
 		
-		'GravityDone': [
-			["The gravity emitter is",
-			 "now taking effect."],
+			.newDialog('WaterDone')
+				.addPage4(
+					"That's the last of the",
+					"reservoirs. Receiving",
+					"Transmission from the",
+					"General...")
+				.addPage4(
+					"We have a small hiccup;",
+					"the seeds intended to",
+					"provide vegetation were",
+					"accidentally left here.")
+
+				.addPage4(
+					"Fortunately, a vanguard",
+					"of our sworn enemies is",
+					"north of your location",
+					"bearing their own seeds.")
+
+				.addPage4(
+					"You can simultaneously",
+					"stop their invasion and",
+					"steal their seeds for",
+					"our own purposes.")
+
+				.addPage4(
+					"It's a case of killing",
+					"two birds with one",
+					"stone! Or anything else",
+					"you might prefer.")
 			
-			["You can now hold B to",
-			 "run and jump."],
+			.newDialog('GravityDone')
+				.addPage2(
+					"The gravity emitter is",
+					"now taking effect.")
+				.addPage2(
+					"You can now hold B to",
+					"run and jump.")
+				.addPage2(
+					"Running jumps reach",
+					"higher spots.")
+				.addPage3(
+					"Head back to the ship",
+					"for further instructions",
+					"from the General.")
+
+			.newDialog('Open1')
+				.addPage4(
+					"An intrepid explorer",
+					"left home in search of",
+					"a better life for all",
+					"squirrelkind.")
+				.addPage4(
+					"Bearing the hopes and",
+					"dreams of her people,",
+					"the squirrel set course",
+					"for a nearby moon.")
+			.newDialog('Open2')
+				.addPage4(
+					"Her vessel reaches the",
+					"moon laden with large",
+					"supply stores as well as",
+					"terraforming equipment")
+				.addPage3(
+					"...including the very",
+					"latest in hydration",
+					"technology:")
+				.addPage1(
+					"Giant water balloons.")
+			.newDialog('Open3')
+				.addPage4(
+					"As she gazes upon the",
+					"barren waste of the",
+					"desolate moon, she",
+					"says to herself:")
+				.addPage2(
+					"`I've got a lot of",
+					"work to do.\"")
+
+			.newDialog('Volcano')
+				.addPage2(
+					"That's the last of the",
+					"volcanoes.")
+				.addPage4(
+					"Now that the magnetic",
+					"field is back, the",
+					"atmosphere will",
+					"re-accumulate.")
+					
+			.newDialog('T1')
+				.addPage3(
+					"Hello explorer! We trust",
+					"your journey was a",
+					"pleasant one.")
+				.addPage3(
+					"Your first task is to",
+					"normalize the gravity on",
+					"the moon.")
+				.addPage3(
+					"Place the gravity",
+					"emitter within the",
+					"moon's core.")
+				.addPage4(
+					"Remember we're relying",
+					"on you; don't forget the",
+					'`gravity" of our',
+					"situation!")
 			
-			["Running jumps reach",
-			 "higher spots."],
+			.newDialog('T2')
+				.addPage4(
+					"Now in order to restore",
+					"the moon's magnetic",
+					"field, you'll need some",
+					"specialized equipment.")
+				.addPage4(
+					"Take your packet of",
+					"Acme Instant Lava and",
+					"sprinkle a little into",
+					"inactive volcanoes.")
+				.addPage3(
+					"Presto, lava! And as",
+					"everyone knows, lava",
+					"creates magnetic fields.")
+				.addPage1(
+					"SCIENCE!")
 			
-			["Head back to the ship",
-			 "for further instructions",
-			 "from the General."]
-		],
-
-		'Open1': [
-			["An intrepid explorer",
-			 "left home in search of",
-			 "a better life for all",
-			 "squirrelkind."],
+			.newDialog('T3')
+				.addPage3(
+					"When you landed, your",
+					"H2O reservoirs should",
+					"have been released.")
+				.addPage4(
+					"You will need to break",
+					"the rubber coating on",
+					"the reservoirs to",
+					"release the water.")
 			
-			["Bearing the hopes and",
-			 "dreams of her people,",
-			 "the squirrel set course",
-			 "for a nearby moon."],
-		],
-		
-		'Open2': [
-			["Her vessel reaches the",
-			 "moon laden with large",
-			 "supply stores as well as",
-			 "terraforming equipment"],
+			.newDialog('T4')
+				.addPage4(
+					"We have a small hiccup;",
+					"the seeds intended to",
+					"provide vegetation were",
+					"accidentally left here.")
+				.addPage4(
+					"Fortunately, a vanguard",
+					"of our sworn enemies is",
+					"heading to your location",
+					"bearing their own seeds.")
+				.addPage4(
+					"You can simultaneously",
+					"stop their invasion and",
+					"steal their seeds for",
+					"our own purposes.")
+				.addPage4(
+					"It's a case of killing",
+					"two birds with one",
+					"stone! Or anything else",
+					"you might prefer.")
 			
-			["...including the very",
-			 "latest in hydration",
-			 "technology:"],
+			.newDialog('CloseDialog')
+				.addPage4(
+					"Congratulations!",
+					"The Space Squirrel has",
+					"managed to bring life",
+					"to this once dead moon.")
+				.addPage3(
+					"Now her people have a",
+					"beautiful new home, and",
+					"it's all thanks to you!")
 			
-			["Giant water balloons."],
-		],
-		
-		'Open3': [
-			["As she gazes upon the",
-			 "barren waste of the",
-			 "desolate moon, she",
-			 "says to herself:"],
-			
-			["`I've got a lot of",
-			 "work to do.\""]
-		],
-
-		'Volcano': [
-			["That's the last of the",
-			 "volcanoes."],
-			 
-			["Now that the magnetic",
-			 "field is back, the",
-			 "atmosphere will",
-			 "re-accumulate."]
-		],
-		
-		'T1': [
-			["Hello explorer! We trust",
-			"your journey was a",
-			"pleasant one."],
-
-			["Your first task is to",
-			"normalize the gravity on",
-			"the moon."],
-		
-			["Place the gravity",
-			"emitter within the",
-			"moon's core."],
-		
-			["Remember we're relying",
-			"on you; don't forget the",
-			'`gravity" of our',
-			"situation!"]
-		],
-		
-		
-		'T2': [
-			["Now in order to restore",
-			"the moon's magnetic",
-			"field, you'll need some",
-			"specialized equipment."],
-
-			["Take your packet of",
-			"Acme Instant Lava and",
-			"sprinkle a little into",
-			"inactive volcanoes."],
-			
-			["Presto, lava! And as",
-			"everyone knows, lava",
-			"creates magnetic fields."],
-
-			["SCIENCE!"]
-		],
-
-		'T3': [
-			["When you landed, your",
-			"H2O reservoirs should",
-			"have been released."],
-			
-			["You will need to break",
-			"the rubber coating on",
-			"the reservoirs to",
-			"release the water."]
-		],
-		
-		'T4': [
-			["We have a small hiccup;",
-			"the seeds intended to",
-			"provide vegetation were",
-			"accidentally left here."],
-
-			["Fortunately, a vanguard",
-			"of our sworn enemies is",
-			"heading to your location",
-			"bearing their own seeds."],
-
-			["You can simultaneously",
-			"stop their invasion and",
-			"steal their seeds for",
-			"our own purposes."],
-
-			["It's a case of killing",
-			"two birds with one",
-			"stone! Or anything else",
-			"you might prefer."]
-		],
-		
-		'CloseDialog': [
-			["Congratulations!",
-			 "The Space Squirrel has",
-			 "managed to bring life",
-			 "to this once dead moon."],
-			 
-			["Now her people have a",
-			 "beautiful new home, and",
-			 "it's all thanks to you!"]
-		],
-	};
+			.database;
 
 	constructor() { }
 }

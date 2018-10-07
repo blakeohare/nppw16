@@ -1,53 +1,55 @@
 import Graphics2D;
 import Math;
+import TwoCansAlpha3;
 
-const cred_BO = "BLAKE O'HARE";
-const cred_TB = "TED BURTON";
-const cred_SC = "STEVE CRAWFORD";
-const cred_LF = "LAURA FREER";
-const cred_CS = "CHRISTINE SANDQUIST";
-const cred_AM = "ANGEL MCLAUGHLIN";
-const cred_AC = "ADRIAN CLINE";
+const string cred_BO = "BLAKE O'HARE";
+const string cred_TB = "TED BURTON";
+const string cred_SC = "STEVE CRAWFORD";
+const string cred_LF = "LAURA FREER";
+const string cred_CS = "CHRISTINE SANDQUIST";
+const string cred_AM = "ANGEL MCLAUGHLIN";
+const string cred_AC = "ADRIAN CLINE";
 
 class CreditsScene : LegacyAbstractScene {
 
-	static field CREDITS = [
-		['TEAM NERD PARADISE', []],
-		['PROGRAMMING', [cred_BO]],
-		['LEVEL DESIGN', [cred_TB, cred_SC, cred_LF]],
-		['CHARACTER ART', [cred_CS]],
-		['LEVEL ART', [cred_AM]],
-		['MUSIC AND SFX', [cred_AC]],
-		['DIALOG', [cred_LF]],
-		['AND YOU!', ['FOR PLAYING', 'OR SOMETHING LIKE THAT']],
-		['', ['THE END']]
-	];
+	private static List<object> CREDITS = new List<object>() {
+		new List<object>() { 'TEAM NERD PARADISE', new List<string>() },
+		new List<object>() { 'PROGRAMMING', new List<string>() { cred_BO } },
+		new List<object>() { 'LEVEL DESIGN', new List<string>() { cred_TB, cred_SC, cred_LF } },
+		new List<object>() { 'CHARACTER ART', new List<string>() { cred_CS } },
+		new List<object>() { 'LEVEL ART', new List<string>() { cred_AM } },
+		new List<object>() { 'MUSIC AND SFX', new List<string>() { cred_AC } },
+		new List<object>() { 'DIALOG', new List<string>() { cred_LF } },
+		new List<object>() { 'AND YOU!', new List<string>() { 'FOR PLAYING', 'OR SOMETHING LIKE THAT' } },
+		new List<object>() { '', new List<string>() { 'THE END' } },
+	};
 
-	field next = this;
-	field flags = 'M';
-	field counter = 0;
-	field images;
+	public LegacyAbstractScene next = this;
+	private string flags = 'M';
+	private int counter = 0;
+	private List<string> images = new List<string>();
+	private List<int> imageYs = new List<int>();
 	
-	constructor() : base() {
-		images = [];
-		y = 0;
-		for (i = 0; i < CreditsScene.CREDITS.length; ++i) {
-			images.add([CreditsScene.CREDITS[i][0], y]);
+	public constructor() : base() {
+		int y = 0;
+		for (int i = 0; i < CreditsScene.CREDITS.length; ++i) {
+			this.images.add((string) CreditsScene.CREDITS[i][0]);
+			this.imageYs.add(y);
 			
 			y += 16;
-			for (person : CreditsScene.CREDITS[i][1]) {
-				images.add([person, y]);
+			for (string person : (List<string>) CreditsScene.CREDITS[i][1]) {
+				this.images.add(person);
+				this.imageYs.add(y);
 				y += 8;
 			}
 			
 			y += 64;
 		}
-		this.images = images;
 	}
 	
-	function processInput(events, pressed) {
+	public override void processInput(List<MyEvent> events, Dictionary<string, bool> pressed) {
 		if (this.counter > 900) {
-			for (event : events) {
+			for (MyEvent event : events) {
 				if (event.down) {
 					if (event.action == 'start' || event.action == 'A' || event.action == 'B') {
 						this.next = new TitleScene();
@@ -57,22 +59,24 @@ class CreditsScene : LegacyAbstractScene {
 		}
 	}
 	
-	function update() {
+	public override void update() {
 		this.playMusic();
 		this.counter++;
 	}
 	
-	function render(rc) {
+	public void render(int rc) {
 		Graphics2D.Draw.fill(0, 0, 0);
 		
-		counter = Math.min(this.counter, 892);
+		int counter = Math.min(this.counter, 892);
 		
-		for (image : this.images) {
-			drawText(255, 255, 255, image[0], 64, image[1] - counter + 224);
+		int imagesLength = this.images.length;
+		for (int i = 0; i < imagesLength; ++i) {
+			
+			drawText(255, 255, 255, this.images[i], 64, this.imageYs[i] - counter + 224);
 		}
 	}
 	
-	function playMusic() {
+	public void playMusic() {
 		JukeBox.ensureSong('credits');
 	}
 }

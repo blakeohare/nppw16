@@ -1,43 +1,42 @@
 import Random;
 
-const FULL_LIFE = 10;
-const START_LIFE = 10;
-const START_LIVES = 3;
+const int FULL_LIFE = 10;
+const int START_LIFE = 10;
+const int START_LIVES = 3;
 
-const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const string ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 class Context {
 
-	field lifemeter = START_LIFE;
-	field lives = START_LIVES;
-	field volcanoA = false;
-	field volcanoB = false;
-	field volcanoC = false;
-	field balloonA = false;
-	field balloonB = false;
-	field balloonC = false;
-	field balloonD = false;
-	field gravity = false;
-	field transmission1 = false;
-	field transmission2 = false;
-	field transmission3 = false;
-	field transmission4 = false;
-	field powerupsTaken = {};
+	public int lifemeter = START_LIFE;
+	public int lives = START_LIVES;
+	public bool volcanoA = false;
+	public bool volcanoB = false;
+	public bool volcanoC = false;
+	public bool balloonA = false;
+	public bool balloonB = false;
+	public bool balloonC = false;
+	public bool balloonD = false;
+	public bool gravity = false;
+	public bool transmission1 = false;
+	public bool transmission2 = false;
+	public bool transmission3 = false;
+	public bool transmission4 = false;
+	public Dictionary<string, bool> powerupsTaken = new Dictionary<string, bool>();
 	
 	constructor() { }
 	
-	function convertToPassword() {
+	public string convertToPassword() {
 		
+		int count = 0;
 		if (this.balloonA || this.balloonB || this.balloonC || this.balloonD)
 			count = 3;
 		else if (this.volcanoA || this.volcanoB || this.volcanoC)
 			count = 2;
 		else if (this.gravity)
 			count = 1;
-		else
-			count = 0;
 		
-		password = '';
+		string password = '';
 		
 		if (count == 1)
 			password = 'A';
@@ -58,16 +57,16 @@ class Context {
 		}
 		
 		if (count >= 2) {
-			value = (this.volcanoA ? 1 : 0) + (this.volcanoB ? 2 : 0) + (this.volcanoC ? 4 : 0);
-			letter = Core.chr(Core.ord('1') + value - 1);
+			int value = (this.volcanoA ? 1 : 0) + (this.volcanoB ? 2 : 0) + (this.volcanoC ? 4 : 0);
+			string letter = Core.chr(Core.ord('1') + value - 1);
 			password += letter;
 		} else {
 			password += this.randomChar('0123456789');
 		}
 		
 		if (count >= 3) {
-			value = (this.balloonA ? 1 : 0) + (this.balloonB ? 2 : 0) + (this.balloonC ? 4 : 0) + (this.balloonD ? 8 : 0);
-			letter = Core.chr(Core.ord('A') + value - 1);
+			int value = (this.balloonA ? 1 : 0) + (this.balloonB ? 2 : 0) + (this.balloonC ? 4 : 0) + (this.balloonD ? 8 : 0);
+			string letter = Core.chr(Core.ord('A') + value - 1);
 			password += letter;
 		} else {
 			password += this.randomChar(ALPHABET);
@@ -101,11 +100,11 @@ class Context {
 	same pattern for volcanos, but for water, also uses letters instead of numbers
 	*/
 	
-	function randomChar(characters) {
+	private string randomChar(string characters) {
 		return characters[Random.randomInt(characters.length)];
 	}
 	
-	function enforceLetter(letter) {
+	private string enforceLetter(letter) {
 		letter = letter.upper();
 		if (Core.ord(letter) < Core.ord('A'))
 			return 'A';
@@ -114,15 +113,15 @@ class Context {
 		return letter;
 	}
 	
-	function enforceNumber(char) {
-		if (Core.ord(char) < Core.ord('0'))
+	private string enforceNumber(c) {
+		if (Core.ord(c) < Core.ord('0'))
 			return '0';
-		if (Core.ord(char) > Core.ord('9'))
+		if (Core.ord(c) > Core.ord('9'))
 			return '9';
-		return char;
+		return c;
 	}
 	
-	function convertFromPassword(password) {
+	void convertFromPassword(string password) {
 		p1 = this.enforceLetter(password[0]);
 		p2 = this.enforceLetter(password[1]);
 		p3 = this.enforceNumber(password[2]);
@@ -135,15 +134,14 @@ class Context {
 		}
 		
 		if ('BC'.contains(p1)) {
-			value = Core.ord(p3) - Core.ord('1') + 1;
-			// Core.print(value + Core.ord(p3));
+			int value = Core.ord(p3) - Core.ord('1') + 1;
 			this.volcanoA = (value & 1) != 0;
 			this.volcanoB = (value & 2) != 0;
 			this.volcanoC = (value & 4) != 0;
 		}
 		
 		if (p1 == 'C') {
-			value = Core.ord(p4) - Core.ord('A') + 1;
+			int value = Core.ord(p4) - Core.ord('A') + 1;
 			this.balloonA = (value & 1) != 0;
 			this.balloonB = (value & 2) != 0;
 			this.balloonC = (value & 4) != 0;
@@ -154,22 +152,22 @@ class Context {
 		this.lives = START_LIVES;
 	}
 	
-	function getCurrentCountAndType() {
-		vcount = bool2Num(this.volcanoA) + bool2Num(this.volcanoB) + bool2Num(this.volcanoC);
-		wcount = bool2Num(this.balloonA) + bool2Num(this.balloonB) + bool2Num(this.balloonC) + bool2Num(this.balloonD);
+	List<object> getCurrentCountAndType() {
+		int vcount = bool2Num(this.volcanoA) + bool2Num(this.volcanoB) + bool2Num(this.volcanoC);
+		int wcount = bool2Num(this.balloonA) + bool2Num(this.balloonB) + bool2Num(this.balloonC) + bool2Num(this.balloonD);
 		if (this.gravity) {
 			if (vcount == 3) {
 				if (wcount == 4) {
 					return null; // bird seed
 				}
-				return ['W', wcount];
+				return new List<object>() { 'W', wcount };
 			}
-			return ['V', vcount];
+			return new List<object>() { 'V', vcount };
 		}
 		return null; // gravity
 	}
 	
-	function adjustHealth(scene, amount) {
+	void adjustHealth(PlayScene scene, int amount) {
 		this.lifemeter += amount;
 		if (this.lifemeter <= 0) {
 			this.lifemeter = 0;
