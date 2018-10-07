@@ -1,0 +1,12 @@
+class AbstractSpriteRenderer {
+	protected Sprite sprite;
+	
+	public constructor(Sprite sprite) {
+		this.sprite = sprite;
+	}
+
+	// arc = adjusted render counter (slowed down for animation frames, so I don't have to do rc = (rc // 4) to slow things down
+	public void render(PlayScene scene, int offsetX, int offsetY, int arc) {
+		throw new Exception(); // override me.
+	}
+}

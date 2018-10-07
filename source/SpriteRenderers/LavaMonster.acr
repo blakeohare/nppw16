@@ -1,19 +1,24 @@
-function SPRITE_renderLavaMonster(sprite, scene, offsetX, offsetY, arc) {
-
-	left = sprite.x - 8 + offsetX;
-	top = sprite.y - 24 + offsetY;
+public class LavaMonsterRenderer : AbstractSpriteRenderer {
 	
-	if (sprite.automation.mouthOpen) {
-		path = 'sprites/lava_monster_2.png';
-	} else {
-		path = 'sprites/lava_monster_1.png';
+	public constructor(Sprite sprite) : base(sprite) { }
+	
+	public override void render(PlayScene scene, int offsetX, int offsetY, int arc) {
+	
+		left = sprite.x - 8 + offsetX;
+		top = sprite.y - 24 + offsetY;
+		
+		if (sprite.automation.mouthOpen) {
+			path = 'sprites/lava_monster_2.png';
+		} else {
+			path = 'sprites/lava_monster_1.png';
+		}
+		
+		if (sprite.lastDirection == 'left') {
+			img = ImageLibrary.getBackwards(path);
+		} else {
+			img = ImageLibrary.get(path);
+		}
+		
+		img.draw(left, top);
 	}
-	
-	if (sprite.lastDirection == 'left') {
-		img = ImageLibrary.getBackwards(path);
-	} else {
-		img = ImageLibrary.get(path);
-	}
-	
-	img.draw(left, top);
 }

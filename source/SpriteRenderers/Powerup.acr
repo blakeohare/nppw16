@@ -1,17 +1,22 @@
-function SPRITE_renderPowerup(sprite, scene, offsetX, offsetY, arc) {
+public class PowerupRenderer : AbstractSpriteRenderer {
 	
-	if (sprite.automation.visible) {
-		left = sprite.x + offsetX - 8;
-		top = sprite.y + offsetY - 8;
-		type = sprite.powerupInfo.type;
-		if (type == '1up') {
-			path = 'sprites/1up.png';
-		} else if (type == 'life_small') {
-			path = 'sprites/life_small.png';
-		} else if (type == 'life_big') {
-			path = 'sprites/life_big.png';
+	public constructor(Sprite sprite) : base(sprite) { }
+	
+	public override void render(PlayScene scene, int offsetX, int offsetY, int arc) {
+			
+		if (sprite.automation.visible) {
+			left = sprite.x + offsetX - 8;
+			top = sprite.y + offsetY - 8;
+			type = sprite.powerupInfo.type;
+			if (type == '1up') {
+				path = 'sprites/1up.png';
+			} else if (type == 'life_small') {
+				path = 'sprites/life_small.png';
+			} else if (type == 'life_big') {
+				path = 'sprites/life_big.png';
+			}
+			
+			ImageLibrary.get(path).draw(left, top);
 		}
-		
-		ImageLibrary.get(path).draw(left, top);
 	}
 }

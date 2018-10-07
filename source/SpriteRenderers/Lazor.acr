@@ -1,7 +1,12 @@
 import Graphics2D;
 
-function SPRITE_renderLazor(sprite, scene, offsetX, offsetY, arc) {
-	x = offsetX + sprite.x - 8;
-	y = offsetY + sprite.y - 2;
-	Graphics2D.Draw.rectangle(x, y, 16, 4, 255, 255, 0);
+public class LazorRenderer : AbstractSpriteRenderer {
+	
+	public constructor(Sprite sprite) : base(sprite) { }
+	
+	public override void render(PlayScene scene, int offsetX, int offsetY, int arc) {
+		x = offsetX + sprite.x - 8;
+		y = offsetY + sprite.y - 2;
+		Graphics2D.Draw.rectangle(x, y, 16, 4, 255, 255, 0);
+	}
 }

@@ -1,21 +1,29 @@
-function SPRITE_renderByat(sprite, scene, offsetX, offsetY, arc) {
-	left = sprite.x + offsetX - 8;
-	top = sprite.y + offsetY - 8;
-	if (sprite.automation.perched) {
-		path = 'sprites/byat_hang.png';
-	} else {
-		if ((arc & 1) == 0) {
-			path = 'sprites/byat_fly_1.png';
+public class ByatRenderer : AbstractSpriteRenderer {
+	
+	public constructor(Sprite sprite) : base(sprite) { }
+	
+	public override void render(PlayScene scene, int offsetX, int offsetY, int arc) {
+		
+		int left = sprite.x + offsetX - 8;
+		int top = sprite.y + offsetY - 8;
+		string path;
+		if (sprite.automation.perched) {
+			path = 'sprites/byat_hang.png';
 		} else {
-			path = 'sprites/byat_fly_2.png';
+			if ((arc & 1) == 0) {
+				path = 'sprites/byat_fly_1.png';
+			} else {
+				path = 'sprites/byat_fly_2.png';
+			}
 		}
+		
+		GraphicsTexture img;
+		if (sprite.lastDirection == 'left') {
+			img = ImageLibrary.getBackwards(path);
+		} else {
+			img = ImageLibrary.get(path);
+		}
+		
+		img.draw(left, top);
 	}
-	
-	if (sprite.lastDirection == 'left') {
-		img = ImageLibrary.getBackwards(path);
-	} else {
-		img = ImageLibrary.get(path);
-	}
-	
-	img.draw(left, top);
 }

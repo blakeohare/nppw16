@@ -1,25 +1,31 @@
-function SPRITE_renderPoof(sprite, scene, offsetX, offsetY, arc) {
-	isBig = sprite.automation.isBig;
-	left = sprite.x + offsetX - 8;
-	top = sprite.y + offsetY - 8;
+public class PoofRenderer : AbstractSpriteRenderer {
 	
-	c = sprite.automation.counter;
-	if (c <= 3) {
-		num = '1';
-	} else if (c <= 6) {
-		num = '2';
-	} else if (c <= 9) {
-		num = '3';
-	} else {
-		return;
+	public constructor(Sprite sprite) : base(sprite) { }
+	
+	public override void render(PlayScene scene, int offsetX, int offsetY, int arc) {
+		
+		isBig = sprite.automation.isBig;
+		left = sprite.x + offsetX - 8;
+		top = sprite.y + offsetY - 8;
+		
+		c = sprite.automation.counter;
+		if (c <= 3) {
+			num = '1';
+		} else if (c <= 6) {
+			num = '2';
+		} else if (c <= 9) {
+			num = '3';
+		} else {
+			return;
+		}
+		
+		if (isBig) {
+			top -= 16;
+			img = ImageLibrary.get('sprites/large_poof_' + num + '.png');
+		} else {
+			img = ImageLibrary.get('sprites/small_poof_' + num + '.png');
+		}
+		
+		img.draw(left, top);
 	}
-	
-	if (isBig) {
-		top -= 16;
-		img = ImageLibrary.get('sprites/large_poof_' + num + '.png');
-	} else {
-		img = ImageLibrary.get('sprites/small_poof_' + num + '.png');
-	}
-	
-	img.draw(left, top);
 }

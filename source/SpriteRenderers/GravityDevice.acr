@@ -1,6 +1,11 @@
-function SPRITE_renderGravityDevice(sprite, scene, offsetX, offsetY, arc) {
-	left = sprite.x + offsetX - 8;
-	top = sprite.y + offsetY - 8;
-	i = (arc % 3) + 1;
-	ImageLibrary.get('sprites/gravity_device_' + i + '.png').draw(left, top);
+public class GravityDeviceRenderer : AbstractSpriteRenderer {
+	
+	public constructor(Sprite sprite) : base(sprite) { }
+	
+	public override void render(PlayScene scene, int offsetX, int offsetY, int arc) {
+		left = sprite.x + offsetX - 8;
+		top = sprite.y + offsetY - 8;
+		i = (arc % 3) + 1;
+		ImageLibrary.get('sprites/gravity_device_' + i + '.png').draw(left, top);
+	}
 }

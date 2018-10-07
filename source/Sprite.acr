@@ -29,7 +29,7 @@ public class Sprite {
 	public bool collidedWall = false;
 	public bool deleteWhenOffScreen = false;
 	public bool ghost = false;
-	public Func<Sprite, PlayScene, int, int, int, void> renderImpl = SPRITE_renderPlayerOver;
+	public bstractSpriteRenderer renderImpl = null;
 	public AbstractAutomation automation = null;
 	public bool floats = false;
 	public string deathState = null; // TODO: enum
@@ -64,81 +64,81 @@ public class Sprite {
 		
 		switch (type) {
 			case 'acorn':
-				this.renderImpl = SPRITE_renderAcorn;
+				this.renderImpl = new AcornRenderer(this);
 				this.automation = new AcornAutomation(this);
 				break;
 			case 'acorntop':
-				this.renderImpl = SPRITE_renderAcornTop;
+				this.renderImpl = new AcornTopRenderer(this);
 				this.automation = new AcornTopAutomation(this);
 				this.acorntopdir = 'left';
 				break;
 			case 'gravity_device':
-				this.renderImpl = SPRITE_renderGravityDevice;
+				this.renderImpl = new GravityDeviceRenderer(this);
 				this.automation = null;
 				break;
 			case 'lazor':
-				this.renderImpl = SPRITE_renderLazor;
+				this.renderImpl = new LazorRenderer(this);
 				this.automation = new LazorAutomation(this);
 				break;
 			case 'lavamonster':
-				this.renderImpl = SPRITE_renderLavaMonster;
+				this.renderImpl = new LavaMonsterRenderer(this);
 				this.automation = new LavaMonsterAutomation(this);
 				this.inBackground = true;
 				this.floats = true;
 				this.ghost = true;
 				break;
 			case 'fireball':
-				this.renderImpl = SPRITE_renderFireball;
+				this.renderImpl = new FireballRenderer(this);
 				this.automation = new FireBallAutomation(this);
 				this.floats = true;
 				// not a ghost, though. Collides with walls and that triggers it to fizzle.
 				break;
 			case 'waterpop':
-				this.renderImpl = SPRITE_renderWaterPop;
+				this.renderImpl = new WaterPopRenderer(this);
 				this.automation = new WaterPopAutomation(this);
 				this.floats = true;
 				break;
 			case 'powerup':
-				this.renderImpl = SPRITE_renderPowerup;
+				this.renderImpl = new PowerupRenderer(this);
 				this.automation = new PowerupAutomation(this);
 				break;
 			case 'poof_big':
-				this.renderImpl = SPRITE_renderPoof;
+				this.renderImpl = new PoofRenderer(this);
 				this.automation = new PoofAutomation(this, true);
 				this.floats = true;
 				break;
 			case 'poof_small':
-				this.renderImpl = SPRITE_renderPoof;
+				this.renderImpl = new PoofRenderer(this);
 				this.automation = new PoofAutomation(this, false);
 				this.floats = true;
 				break;
 			case 'byat':
-				this.renderImpl = SPRITE_renderByat;
+				this.renderImpl = new ByatRenderer(this);
 				this.automation = new ByatAutomation(this);
 				this.floats = true;
 				break;
 			case 'moonsquid':
-				this.renderImpl = SPRITE_renderMoonSquid;
+				this.renderImpl = new MoonSquidRenderer(this);
 				this.automation = new MoonSquidAutomation(this);
 				this.floats = true;
 				break;
 			case 'seeds':
-				this.renderImpl = SPRITE_renderSeed;
+				this.renderImpl = new SeedRenderer(this);
 				this.automation = new SeedAutomation(this);
 				break;
 			case 'bird1':
-				this.renderImpl = SPRITE_renderBird;
+				this.renderImpl = new BirdRenderer(this);
 				this.automation = new BirdAutomation(this, false);
 				this.floats = true;
 				break;
 			case 'bird2':
-				this.renderImpl = SPRITE_renderBird;
+				this.renderImpl = new BirdRenderer(this);
 				this.automation = new BirdAutomation(this, true);
 				this.floats = true;
 				this.ghost = true;
 				break;
 			case 'rocketbike':
-				this.renderImpl = SPRITE_renderRocketBike;
+				this.renderImpl = new RocketBikeAutomation(this);
 				this.automation = new RocketBikeAutomation(this);
 				this.ghost = true;
 				break;
@@ -604,7 +604,7 @@ public class Sprite {
 	
 	public void render(PlayScene scene, int offsetX, int offsetY, int rc) {
 		if (this.blinkCounter < 0 || (this.blinkCounter & 1) == 0) {
-			this.renderImpl(this, scene, offsetX, offsetY, rc);
+			this.renderImpl.render(scene, offsetX, offsetY, rc);
 		}
 	}
 	
