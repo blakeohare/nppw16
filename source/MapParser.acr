@@ -182,7 +182,7 @@ public class MapParser {
 			}
 		}
 		
-		List<List<Tile>> grid = makeGrid(width, height);
+		List<List<Tile>> grid = makeTileGrid(width, height);
 		int index = 0;
 		for (int y = 0; y < height; ++y) {
 			for (int x = 0; x < width; ++x) {

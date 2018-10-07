@@ -1,20 +1,19 @@
 import Graphics2D;
 
-class TitleScene : LegacyAbstractScene {
-	field next = this;
-	field flags = '';
-	field flash_counter = 0;
-	field options = [
-		['start', 'Start Game'],
-		['quickstart', "Quick Start"], // TODO: play intro vs play
-		['password', "Enter Password"],
-	];
-	field index = 0;
+public class TitleScene : LegacyAbstractScene {
+	public string flags = '';
+	public int flash_counter = 0;
+	public List<List<int>> options = new List<List<string>>() {
+		"start|Start Game".split('|'),
+		"quickstart|Quick Start".split('|'), // TODO: play intro vs play
+		"password|Enter Password".split('|'),
+	};
+	public int index = 0;
 	
 	constructor() : base() { }
 	
-	function processInput(events, pressedKeys) {
-		for (event : events) {
+	public override void processInput(List<MyEvent> events, Dictionary<string, bool> pressedKeys) {
+		for (MyEvent event : events) {
 			if (this.flash_counter < 0) {
 				if (event.down) {
 					switch (event.action) {
@@ -38,6 +37,7 @@ class TitleScene : LegacyAbstractScene {
 								playNoise('menu_move');
 							}
 							break;
+							
 						default:
 							break;
 					}
@@ -46,10 +46,10 @@ class TitleScene : LegacyAbstractScene {
 		}
 	}
 	
-	function update() {
+	public void update() {
 		this.flash_counter--;
 		if (this.flash_counter == 1) {
-			action = this.options[this.index][0];
+			string action = this.options[this.index][0];
 			if (action == 'start')
 				this.next = new IntroScene(false);
 			else if (action =='quickstart')
@@ -57,27 +57,27 @@ class TitleScene : LegacyAbstractScene {
 			else if (action == 'password')
 				this.next = new PasswordScene();
 			else
-				Core.assert(false, "Unknown option");
+				throw new Exception("Unknown option");
 		}
 	}
 	
-	function render(renderCounter) {
+	public override void render(int renderCounter) {
 		JukeBox.ensureSong('title');
 		
 		Graphics2D.Draw.fill(0, 0, 0);
 		
 		ImageLibrary.get('slides/title.png').draw(0, 0);
 		
-		showText = true; // (renderCounter // 10) % 3 != 0;
-		if ( this.flash_counter > 0)
+		bool showText = true; // (renderCounter // 10) % 3 != 0;
+		if (this.flash_counter > 0)
 			showText = renderCounter % 4 < 2;
 		
-		index = 0;
-		y = 136;
-		left = 64;
+		int index = 0;
+		int y = 136;
+		int left = 64;
 		
 		drawBox(left - 32, y - 16, 24, 9);
-		for (option : this.options) {
+		for (List<string> option : this.options) {
 			if (index == this.index) {
 				drawText(255, 255, 255, ">", left - 16, y);
 			}

@@ -2,9 +2,9 @@ import Resources;
 
 class TileStore {
 
-	static field _tileStore = null;
+	private static Dictionary<string, TileTemplate> _tileStore = null;
 	
-	static function getTile(id) {
+	public static TileTemplate getTile(string id) {
 		if (TileStore._tileStore == null) {
 			TileStore.initTileStore();
 		}
@@ -12,49 +12,49 @@ class TileStore {
 		return TileStore._tileStore.get(id, null);
 	}
 
-	static function initTileStore() {
-		t = Resources.readText('images/tiles/manifest.txt');
-		TileStore._tileStore = {};
+	public static void initTileStore() {
+		string t = (string) Resources.readText('images/tiles/manifest.txt');
+		TileStore._tileStore = new Dictionary<string, TileTemplate>();
 		
-		for (line : t.split('\n')) {
-			parts = line.split('#')[0].trim().split('\t');
+		for (string line : t.split('\n')) {
+			List<string> parts = line.split('#')[0].trim().split('\t');
 			if (parts.length == 3) {
-				id = parts[0].trim();
-				flags = parts[1].trim();
-				imagePaths = parts[2].trim().split(',');
+				string id = parts[0].trim();
+				string flags = parts[1].trim();
+				List<string> imagePaths = parts[2].trim().split(',');
 				
-				tile = new TileTemplate(id, flags, imagePaths);
+				TileTemplate tile = new TileTemplate(id, flags, imagePaths);
 				TileStore._tileStore[id] = tile;
 			}
 		}
 	}
 }
 
-class TileTemplate {
-	field id;
-	field solid = false;
-	field coveredA = false;
-	field coveredB = false;
-	field coveredC = false;
-	field coveredD = false;
-	field isDoor = false;
-	field isLadder = false;
-	field isTop = false;
-	field isSpike = false;
-	field isLava = false;
-	field isIce = false;
-	field isBalloon = false;
-	field isWater;
-	field primaryBalloonOffset = null; // Location of top-middle balloon tile relative to this
-	field images = [];
-	field staticImage = null;
-	field imageCount;
+public class TileTemplate {
+	public string id;
+	public bool solid = false;
+	public bool coveredA = false;
+	public bool coveredB = false;
+	public bool coveredC = false;
+	public bool coveredD = false;
+	public bool isDoor = false;
+	public bool isLadder = false;
+	public bool isTop = false;
+	public bool isSpike = false;
+	public bool isLava = false;
+	public bool isIce = false;
+	public bool isBalloon = false;
+	public bool isWater;
+	public List<int> primaryBalloonOffset = null; // Location of top-middle balloon tile relative to this
+	public List<GraphicsTexture> images = new List<GraphicsTexture>();
+	public GraphicsTexture staticImage = null;
+	public int imageCount;
 	
-	constructor(id, flags, imagePaths) {
+	constructor(string id, string flags, List<GraphicsTexture> imagePaths) {
 		this.id = id;
 
 		this.isWater = id == 'water' || id == 'watertop';
-		for (flag : flags) {
+		for (string flag : flags) {
 			switch (flag) {
 				case 'x':
 					this.solid = true;
@@ -92,18 +92,20 @@ class TileTemplate {
 					break;
 				case 'o':
 					this.isBalloon = true;
-					bid = Core.parseInt(id[-1]);
-					pOffset = [0, 0];
+					int bid = (int) Core.parseInt(id[-1]);
+					List<int> pOffset;
 					if (bid == 1) {
-						pOffset = [1, 0];
+						pOffset = new List<int>() { 1, 0 };
 					} else if (bid == 3) {
-						pOffset = [-1, 0];
+						pOffset = new List<int>() { -1, 0 };
 					} else if (bid == 4) {
-						pOffset= [1, -1];
+						pOffset= new List<int>() { 1, -1 };
 					} else if (bid == 5) {
-						pOffset = [0, -1];
+						pOffset = new List<int>() { 0, -1 };
 					} else if (bid == 6) {
-						pOffset = [-1, -1];
+						pOffset = new List<int>() { -1, -1 };
+					} else {
+						pOffset = new List<int>() { 0, 0 };
 					}
 					this.primaryBalloonOffset = pOffset;
 					break;
@@ -111,7 +113,7 @@ class TileTemplate {
 					break;
 			}
 		}
-		for (path : imagePaths) {
+		for (string path : imagePaths) {
 			this.images.add(ImageLibrary.get('tiles/' + path));
 		}
 		if (this.images.length == 1) {
@@ -120,51 +122,51 @@ class TileTemplate {
 		this.imageCount = this.images.length;
 	}
 	
-	function getImage(rc) {
+	GraphicsTexture getImage(rc) {
 		return this.staticImage ?? this.images[(rc / 4) % this.imageCount];
 	}
 }
 
-function makeTile(lower, upper, col, row) {
+public Tile makeTile(TileTemplate lower, TileTemplate upper, int col, int row) {
 	if (lower == null && upper == null) {
-		return new Tile([], col, row);
+		return new Tile(new List<TileTemplate>(), col, row);
 	}
 	
 	if (lower == null) {
-		return new Tile([upper], col, row);
+		return new Tile(new List<TileTemplate>() { upper }, col, row);
 	}
 	
 	if (upper == null) {
-		return new Tile([lower], col, row);
+		return new Tile(new List<TileTemplate>() { lower }, col, row);
 	}
 	
-	return new Tile([lower, upper], col, row);
+	return new Tile(new List<TileTemplate>() { lower, upper }, col, row);
 }
 
-class Tile {
-	field originalTemplates;
-	field col;
-	field row;
-	field templates = [];
-	field isDoor = false;
-	field isLadder = false;
-	field isTop = false;
-	field isLava = false;
-	field isWater = false;
-	field isIce = false;
-	field door = null;
-	field isSpike = false;
-	field isBalloon = false;
-	field primaryBalloonOffset = null;
-	field collisions = [];
-	field solid = false;
-		
-	constructor(templates, col, row) {
+public class Tile {
+	public List<TileTemplate> originalTemplates;
+	public int col;
+	public int row;
+	public List<TileTemplate> templates = new List<TileTemplate>();
+	public bool isDoor = false;
+	public bool isLadder = false;
+	public bool isTop = false;
+	public bool isLava = false;
+	public bool isWater = false;
+	public bool isIce = false;
+	public Door door = null;
+	public bool isSpike = false;
+	public bool isBalloon = false;
+	public List<int> primaryBalloonOffset = null;
+	public List<List<int>> collisions = new List<List<int>>();
+	public bool solid = false;
+	
+	public constructor(List<TileTemplaet> templates, int col, int row) {
 		this.originalTemplates = templates;
 		this.col = col;
 		this.row = row;
 		
-		for (tile : templates) {
+		for (TileTemplate tile : templates) {
 			if (tile != null) {
 				this.templates.add(tile);
 				if (tile.isDoor) this.isDoor = true;
@@ -181,12 +183,12 @@ class Tile {
 			}
 		}
 		
-		coveredA = false;
-		coveredB = false;
-		coveredC = false;
-		coveredD = false;
+		bool coveredA = false;
+		bool coveredB = false;
+		bool coveredC = false;
+		bool coveredD = false;
 		
-		for (t : this.templates) {
+		for (TileTemplate t : this.templates) {
 			if (t.solid) {
 				coveredA = true;
 				coveredB = true;
@@ -201,46 +203,46 @@ class Tile {
 			}
 		}
 		
-		leftCovered = coveredA && coveredC;
-		rightCovered = coveredB && coveredD;
-		topCovered = coveredA && coveredB;
-		bottomCovered = coveredC && coveredD;
+		bool leftCovered = coveredA && coveredC;
+		bool rightCovered = coveredB && coveredD;
+		bool topCovered = coveredA && coveredB;
+		bool bottomCovered = coveredC && coveredD;
 		
 		if (leftCovered && rightCovered) {
-			this.collisions.add([0, 0, 2, 2]);
+			this.collisions.add(new List<int>() { 0, 0, 2, 2 });
 			coveredA = false;
 			coveredB = false;
 			coveredC = false;
 			coveredD = false;
 			this.solid = true;
 		} else if (leftCovered) {
-			this.collisions.add([0, 0, 1, 2]);
+			this.collisions.add(new List<int>() { 0, 0, 1, 2 });
 			coveredA = false;
 			coveredC = false;
 		} else if (rightCovered) {
-			this.collisions.add([1, 0, 1, 2]);
+			this.collisions.add(new List<int>() { 1, 0, 1, 2 });
 			coveredB = false;
 			coveredD = false;
 		} else if (topCovered) {
-			this.collisions.add([0, 0, 2, 1]);
+			this.collisions.add(new List<int>() { 0, 0, 2, 1 });
 			coveredA = false;
 			coveredB = false;
 		} else if (bottomCovered) {
-			this.collisions.add([0, 1, 2, 1]);
+			this.collisions.add(new List<int>() { 0, 1, 2, 1 });
 			coveredC = false;
 			coveredD = false;
 		}
 		
 		if (coveredA)
-			this.collisions.add([0, 0, 1, 1]);
+			this.collisions.add(new List<int>() { 0, 0, 1, 1 });
 		if (coveredB)
-			this.collisions.add([1, 0, 1, 1]);
+			this.collisions.add(new List<int>() { 1, 0, 1, 1 });
 		if (coveredC)
-			this.collisions.add([0, 1, 1, 1]);
+			this.collisions.add(new List<int>() { 0, 1, 1, 1 });
 		if (coveredD)
-			this.collisions.add([1, 1, 1, 1]);
+			this.collisions.add(new List<int>() { 1, 1, 1, 1 });
 		
-		for (i = 0; i < this.collisions.length; ++i) {
+		for (int i = 0; i < this.collisions.length; ++i) {
 			c = this.collisions[i];
 			c[0] = c[0] * 8 + col * 16;
 			c[1] = c[1] * 8 + row * 16;

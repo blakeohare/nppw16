@@ -78,7 +78,7 @@ class PlayScene : LegacyAbstractScene {
 		
 		this.lazor_cooldown = 0;
 		
-		this.tiles = makeGrid(this.cols, this.rows);
+		this.tiles = makeTileGrid(this.cols, this.rows);
 		
 		this.doorSwaps = map.doorswaps;
 		

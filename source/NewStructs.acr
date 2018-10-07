@@ -1,4 +1,4 @@
-class Door {
+public class Door {
 	public string locationKey; // Format: "col|row"
 	public Tile tile;
 

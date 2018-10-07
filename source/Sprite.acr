@@ -29,29 +29,29 @@ public class Sprite {
 	public bool collidedWall = false;
 	public bool deleteWhenOffScreen = false;
 	public bool ghost = false;
-	field renderImpl = SPRITE_renderPlayerOver;
-	field automation = null;
-	field floats = false;
-	field deathState = null;
-	field sprinkle = false;
-	field isBullet;
-	field inBackground = false;
-	field bikemode = false;
-	field powerupInfo = null;
-	field acorntopdir;
-	field dx = 0;
-	field dy = 0;
-	field iceVX = 0;
-	field ddx = 0;
-	field damageDir = null;
-	field cling = false;
-	field ladderDY = 0;
-	field blinkCounter = -1;
-	field cameFromIce = false;
-	field bvx;
-	field goLeft;
+	public Func<Sprite, PlayScene, int, int, int, void> renderImpl = SPRITE_renderPlayerOver;
+	public AbstractAutomation automation = null;
+	public bool floats = false;
+	public string deathState = null; // TODO: enum
+	public bool sprinkle = false;
+	public bool isBullet;
+	public bool inBackground = false;
+	public bool bikemode = false;
+	public PowerUpParseUnit powerupInfo = null;
+	public string acorntopdir;
+	public int dx = 0;
+	public int dy = 0;
+	public int iceVX = 0;
+	public int ddx = 0;
+	public string damageDir = null;
+	public bool cling = false;
+	public int ladderDY = 0;
+	public int blinkCounter = -1;
+	public bool cameFromIce = false;
+	public int bvx;
+	public bool goLeft;
 	
-	constructor(type, px, py) {
+	constructor(string type, int px, int py) {
 		this.type = type;
 		this.height = getSpriteHeight(type);
 		this.x = px;
@@ -147,9 +147,9 @@ public class Sprite {
 		}
 	}
 	
-	static field NEIGHBOR_RANGE = [-1, 0, 1];
+	private static List<int> NEIGHBOR_RANGE = new List<int>() { -1, 0, 1 };
 
-	static field SPRITE_HEIGHT = {
+	private static Dictionary<string, int> SPRITE_HEIGHT = new Dictionary<string, int>() {
 		'player_side': 32,
 		'acorn': 16,
 		'acorntop': 16,
@@ -166,43 +166,45 @@ public class Sprite {
 		'rocketbike': 32,
 	};
 
-	static field XY_PAIRINGS = [
-		[0, 0],
-		[1, 0],
-		[2, 0],
-		[3, 0],
-		[4, 0],
-		[4, 1],
-		[4, 2],
-		[4, 3]
-	];
+	private static List<List<int>> XY_PAIRINGS = new List<int>() {
+		new List<int>() { 0, 0 },
+		new List<int>() { 1, 0 },
+		new List<int>() { 2, 0 },
+		new List<int>() { 3, 0 },
+		new List<int>() { 4, 0 },
+		new List<int>() { 4, 1 },
+		new List<int>() { 4, 2 },
+		new List<int>() { 4, 3 }
+	};
 
-	static field ENEMY_TYPES = [
+	// TODO: merge this into Automation
+	// There's currently a public setter when it gets a sprite from enemy information from the map parse data.
+	private static List<string> ENEMY_TYPES = [
 		'acorn',
 		'acorntop'
-	];
+	};
 
-	function checkNeighborCollision(scene, col, row, targetX, targetY) {
-		area_left = targetX - 5;
-		area_right = targetX + 5;
-		area_top = targetY - 5;
-		area_bottom = targetY + 5;
+	public bool checkNeighborCollision(PlayScene scene, int col, int row, int targetX, int targetY) {
+		int area_left = targetX - 5;
+		int area_right = targetX + 5;
+		int area_top = targetY - 5;
+		int area_bottom = targetY + 5;
 		
-		width = scene.cols;
-		height = scene.rows;
-		left = col - 2;
-		right = col + 2;
-		top = row - 2;
-		bottom = row + 2;
+		int width = scene.cols;
+		int height = scene.rows;
+		int left = col - 2;
+		int right = col + 2;
+		int top = row - 2;
+		int bottom = row + 2;
 		if (left < 0) left = 0;
 		if (right >= width) right = width - 1;
 		if (top < 0) top = 0;
 		if (bottom >= height) bottom = height - 1;
-		index = 0;
-		for (y = top; y <= bottom; ++y) {
-			for (x = left; x <= right; ++x) {
-				cs = scene.tiles[x][y].collisions;
-				for (csi = cs.length - 1; csi >= 0; --csi) {
+		int index = 0;
+		for (int y = top; y <= bottom; ++y) {
+			for (int x = left; x <= right; ++x) {
+				List<List<int>> cs = scene.tiles[x][y].collisions;
+				for (int csi = cs.length - 1; csi >= 0; --csi) {
 					this.neighbors[index] = cs[csi];
 					index++;
 				}
@@ -211,7 +213,7 @@ public class Sprite {
 		
 		index--;
 		while (index >= 0) {
-			n = this.neighbors[index];
+			List<int> n = this.neighbors[index];
 			// WAT? TODO: Clean this up, plz.
 			if (n[0] > area_right) { }
 			else if (n[1] > area_bottom) { }
@@ -224,8 +226,8 @@ public class Sprite {
 		}
 		return true;
 	}
-		
-	function update(scene) {
+	
+	public void update(PlayScene scene) {
 		if (this.automation != null) {
 			this.automation.doStuff(scene);
 		}
@@ -248,38 +250,38 @@ public class Sprite {
 		
 		if (scene.side) {
 			// hotspot is located in the center of the bottom most tile
-			areaX = this.modelX;
-			areaBottom = this.modelY + 8;
-			heightFromHotSpot = getSpriteHeight(this.type) - 8 - 4;
-			areaTop = this.modelY - heightFromHotSpot;
-			waterOnly = this.type == 'moonsquid';
+			float areaX = this.modelX;
+			float areaBottom = this.modelY + 8;
+			int heightFromHotSpot = getSpriteHeight(this.type) - 8 - 4;
+			float areaTop = this.modelY - heightFromHotSpot;
+			bool waterOnly = this.type == 'moonsquid';
 			
-			width = scene.cols;
-			height = scene.rows;
+			int width = scene.cols;
+			int height = scene.rows;
 			
-			isPlayer = this == scene.player;
-			bikePhysics = isPlayer && scene.id == 'bike_level';
+			bool isPlayer = this == scene.player;
+			bool bikePhysics = isPlayer && scene.id == 'bike_level';
 			
 			if (bikePhysics) {
-				offsetX = -(scene.updateCounter * BIKE_SPEED);
+				int offsetX = -(scene.updateCounter * BIKE_SPEED);
 				if (offsetX > 0) offsetX = 0;
-				right = -(scene.cols * 16 - 256);
+				int right = -(scene.cols * 16 - 256);
 				if (offsetX < right) offsetX = right;
 				
-				newX = areaX + this.dx;
-				pixelX = newX + offsetX;
+				float newX = areaX + this.dx;
+				int pixelX = newX + offsetX;
 				if (pixelX < 8)
 					this.dx = BIKE_SPEED;
 				else if (pixelX > 248)
 					this.dx = BIKE_SPEED;
-			}	
+			}
 			
-			tileBottomIceCheck = floor(areaBottom / 16);
-			tileX = floor(areaX / 16);
-			inWater = false;
-			onIce = false;
+			int tileBottomIceCheck = (int) Math.floor(areaBottom / 16);
+			int tileX = (int) Math.floor(areaX / 16);
+			bool inWater = false;
+			bool onIce = false;
 			if (tileX >= 0 && tileBottomIceCheck > 0 && tileX < scene.cols && tileBottomIceCheck < scene.rows) {
-				tileBelow = scene.tiles[tileX][tileBottomIceCheck];
+				Tile tileBelow = scene.tiles[tileX][tileBottomIceCheck];
 				if (tileBelow != null) {
 					onIce = tileBelow.isIce;
 				}
@@ -288,8 +290,8 @@ public class Sprite {
 			}
 			
 			// TODO: move these to global area
-			ICE_DIMINISH = .1;
-			ICE_MAX_SPEED = 8;
+			float ICE_DIMINISH = .1;
+			float ICE_MAX_SPEED = 8;
 			
 			if (this.type != 'lazor' && (onIce || (this.cameFromIce && !this.onGround && !this.cling))) {
 				
@@ -338,14 +340,14 @@ public class Sprite {
 					}
 				}
 					
-				newX = this.modelX + this.dx;
+				float newX = this.modelX + this.dx;
 				
 				// isCollision ignores collisions near the sprite's feet
 				// if you are near ground, you will be automatically placed standing
 				// upon it at the end of the vertical adjustment phase.
 				if (this.ghost || !scene.isCollision(newX, areaTop, newX, areaBottom)) {
 					if (this.cling) {
-						if (floor(newX / 16) != floor(this.modelX / 16)) {
+						if ((int) Math.floor(newX / 16) != (int) Math.floor(this.modelX / 16)) {
 							newX = this.modelX;
 						}
 					}
@@ -362,11 +364,11 @@ public class Sprite {
 				this.dx = 0;
 			}
 			
-			tileX = floor(this.modelX / 16);
-			tileY = floor(this.modelY / 16);
+			tileX = (int) Math.floor(this.modelX / 16);
+			int tileY = (int) Math.floor(this.modelY / 16);
 			
-			offScreen = tileX < 0 || tileX >= scene.cols || tileY < 0 || tileY >= scene.rows;
-			onScreen = !offScreen;
+			bool offScreen = tileX < 0 || tileX >= scene.cols || tileY < 0 || tileY >= scene.rows;
+			bool onScreen = !offScreen;
 			
 			if (bikePhysics && this.collidedWall) {
 				scene.next = new DeathOverrideScene(scene, 'lava');
@@ -374,7 +376,7 @@ public class Sprite {
 			
 			// vertical adjustment phase
 			// assume sprite is flying through the air unless you see ground
-			wasOnGround = this.onGround; // save the previous ground state. If you weren't on ground before but suddenly are, then you "landed" and a sound should be played. 
+			bool wasOnGround = this.onGround; // save the previous ground state. If you weren't on ground before but suddenly are, then you "landed" and a sound should be played. 
 			this.onGround = false;
 			
 			if (wasOnGround || this.floats) {
@@ -389,7 +391,7 @@ public class Sprite {
 				}
 			}
 			
-			rocketJump = false;
+			bool rocketJump = false;
 			if (inWater && isPlayer && this.vy < 0) {
 				tileY = floor(this.modelY / 16) - 1;
 				if (tileY >= 0) {
@@ -412,10 +414,10 @@ public class Sprite {
 				this.dy += this.vy;
 			}
 			
-			oldLadderDY = this.ladderDY;
+			int oldLadderDY = this.ladderDY;
 			this.ladderDY = 0;
 			
-			maxDY = 10;
+			int maxDY = 10;
 			if (this.dy > 4 && inWater) {
 				this.dy = 4;
 			}
@@ -430,13 +432,13 @@ public class Sprite {
 				this.dy = -15;
 			}
 			
-			wasCling = this.cling;
-			movedUp = false;
+			bool wasCling = this.cling;
+			bool movedUp = false;
 			
-			newBottom = areaBottom + this.dy;
-			newTop = areaTop + this.dy;
+			int newBottom = areaBottom + this.dy;
+			int newTop = areaTop + this.dy;
 			
-			no = false;
+			bool no = false;
 			
 			if (this.ghost) {
 				// just go with it
@@ -447,13 +449,13 @@ public class Sprite {
 						// TODO: do top transitions here.
 						no = true;
 					} else {
-						newTileTop = floor(newTop / 16);
+						int newTileTop = (int) Math.floor(newTop / 16);
 						
-						offScreen = tileX < 0 || tileX >= scene.cols || newTileTop < 0 || newTileTop >= scene.rows;
+						bool offScreen = tileX < 0 || tileX >= scene.cols || newTileTop < 0 || newTileTop >= scene.rows;
 						onScreen = !offScreen;
 						
 						if (onScreen) {
-							t = scene.tiles[tileX][newTileTop];
+							Tile t = scene.tiles[tileX][newTileTop];
 							if (t.solid || (waterOnly && !t.isWater)) {
 								if (wasOnGround) {
 									this.onGround = true;
@@ -481,7 +483,7 @@ public class Sprite {
 					// rather than stop the movement, you find where the top of the collided
 					// tile is and place the sprite there.
 					
-					newTileBottom = floor(newBottom / 16);
+					int newTileBottom = (int) Math.floor(newBottom / 16);
 					
 					// If the player fell off the bottom
 					if (isPlayer && newTileBottom >= height) {
@@ -495,10 +497,10 @@ public class Sprite {
 						onScreen = !offScreen;
 						
 						if (onScreen) {
-							t = scene.tiles[tileX][newTileBottom];
-							topStop = false;
+							Tile t = scene.tiles[tileX][newTileBottom];
+							bool topStop = false;
 							if (t.isTop) {
-								oldTileBottom = floor(areaBottom / 16);
+								int oldTileBottom = (int) Math.floor(areaBottom / 16);
 								if (newTileBottom > oldTileBottom) {
 									topStop = true;
 								} else if (newTileBottom == oldTileBottom && areaBottom == newBottom) {
@@ -532,7 +534,7 @@ public class Sprite {
 			this.dy = 0; // TODO: isn't this supposed to be this.dx?
 			this.dy = 0;
 			
-			tileY = floor(this.modelY / 16);
+			int tileY = (int) Math.floor(this.modelY / 16);
 			
 			offScreen = tileX < 0 || tileX >= scene.cols || tileY < 0 || tileY >= scene.rows;
 			onScreen = !offScreen;
@@ -559,7 +561,6 @@ public class Sprite {
 				} else {
 					this.lastDirection = 'right';
 				}
-					
 				
 				// TODO: this is silly. Break the vector down into horizontal and vertical
 				// components and do a TryMove approach.
@@ -578,10 +579,10 @@ public class Sprite {
 				ys[3] = this.modelY + this.dy / 4.0;
 				
 				for (List<int> pairing : Sprite.XY_PAIRINGS) {
-					newx = xs[pairing[0]];
-					newy = ys[pairing[1]];
-					col = floor(newx / 16);
-					row = floor(newy / 16);
+					float newx = xs[pairing[0]];
+					float newy = ys[pairing[1]];
+					int col = (int) Math.floor(newx / 16);
+					int row = (int) Math.floor(newy / 16);
 
 					if (this.checkNeighborCollision(scene, col, row, newx, newy)) {
 						this.modelX = newx;
@@ -601,44 +602,44 @@ public class Sprite {
 	private static List<float> xs = new List<float>() { 0.0 } * 5;
 	private static List<float> ys = new List<float>() { 0.0 } * 4;
 	
-	function render(scene, offsetX, offsetY, rc) {
+	public void render(PlayScene scene, int offsetX, int offsetY, int rc) {
 		if (this.blinkCounter < 0 || (this.blinkCounter & 1) == 0) {
 			this.renderImpl(this, scene, offsetX, offsetY, rc);
 		}
 	}
 	
-	function isCollision(other) {
-		left = this.x - 8;
-		oleft = other.x - 8;
-		right = left + 16;
-		oright = oleft + 16;
+	public bool isCollision(Sprite other) {
+		int left = this.x - 8;
+		int oleft = other.x - 8;
+		int right = left + 16;
+		int oright = oleft + 16;
 		
 		if (left >= oright || right <= oleft) {
 			return false;
 		}
 		
-		bottom = this.y + 8;
-		obottom = other.y + 8;
-		top = bottom - this.height;
-		otop = obottom - other.height;
+		int bottom = this.y + 8;
+		int obottom = other.y + 8;
+		int top = bottom - this.height;
+		int otop = obottom - other.height;
 		
 		if (top >= obottom || otop >= bottom)
 			return false;
 		return true;
 	}
 	
-	function hit(scene, amount) {
+	public void hit(PlayScene scene, int amount) {
 		this.blinkCounter = 40;
 		scene.context.adjustHealth(scene, -amount);
 		
 		if (scene.id != 'bike_level') {
-			tiles = scene.tiles;
-			tx = this.x / 16;
-			ty = this.y / 16;
+			List<List<Tile>> tiles = scene.tiles;
+			int tx = this.x / 16;
+			int ty = this.y / 16;
 			
-			inWater = false;
+			bool inWater = false;
 			if (tx >= 0 && ty >= 0 && tx < scene.cols && ty < scene.rows) {
-				t = tiles[tx][ty];
+				Tile t = tiles[tx][ty];
 				inWater = t.isWater;
 			}
 			

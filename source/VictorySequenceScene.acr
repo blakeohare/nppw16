@@ -1,32 +1,33 @@
 import Audio;
 import Graphics2D;
 
-class VictorySequenceScene : LegacyAbstractScene {
-	field next = this;
-	field flags = '';
-	field bg;
-	field images;
-	field player = null;
-	field counter = 0;
+public class VictorySequenceScene : LegacyAbstractScene {
+	public string flags = '';
+	public PlayScene bg;
+	private List<GraphicsTexture> images;
+	public Sprite player = null;
+	private int counter = 0;
 	
-	constructor(bg) : base() {
+	constructor(PlayScene bg) : base() {
 		this.bg = bg;
-		this.images = [
+		this.images = new List<GraphicsTexture>() {
 			ImageLibrary.get('slides/close1.png'),
-			ImageLibrary.get('slides/close2.png')];
+			ImageLibrary.get('slides/close2.png')
+		};
 	}
 	
-	function processInput(events, pressed) { }
+	public override void processInput(List<MyEvent> events, Dictionary<string, bool> pressed) { }
 	
-	function update() {
+	public override void update() {
 		// TODO: move this to JukeBox
 		Audio.Music.stop();
 		this.counter++;
 	}
 	
-	function render(rc) {
+	public override render(int rc) {
 		Graphics2D.Draw.fill(0, 0, 0);
 		
+		GraphicsTexture img;
 		if (this.counter < 60) {
 			img = this.images[0];
 		} else if (this.counter > 120) {

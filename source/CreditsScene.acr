@@ -67,7 +67,7 @@ class CreditsScene : LegacyAbstractScene {
 	public void render(int rc) {
 		Graphics2D.Draw.fill(0, 0, 0);
 		
-		int counter = Math.min(this.counter, 892);
+		int counter = (int) Math.min(this.counter, 892);
 		
 		int imagesLength = this.images.length;
 		for (int i = 0; i < imagesLength; ++i) {

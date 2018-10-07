@@ -1,21 +1,20 @@
-class VolcanoCompleteScene : LegacyAbstractScene {
+public class VolcanoCompleteScene : LegacyAbstractScene {
 
-	field next = this;
-	field flags = '';
-	field bg;
-	field context;
-	field counter = 0;
-	field player;
+	private string flags = '';
+	private PlayScene bg;
+	private Context context;
+	private int counter = 0;
+	private Sprite player;
 	
-	constructor(scene, context) : base() {
+	public constructor(PlayScene scene, Context context) : base() {
 		this.bg = scene;
 		this.context = context;
 		this.player = scene.player;
 	}
 	
-	function processInput(events, pressed) { }
+	public override void processInput(List<MyEvent> events, Dictionary<string, bool> pressed) { }
 	
-	function update() {
+	public override void update() {
 		this.counter++;
 		if (this.counter == 20) {
 			this.next = new DialogScene(this, 'Volcano', false);
@@ -26,7 +25,7 @@ class VolcanoCompleteScene : LegacyAbstractScene {
 		}
 	}
 	
-	function render(rc) {
+	public override void render(int rc) {
 		this.bg.render(rc);
 	}
 }

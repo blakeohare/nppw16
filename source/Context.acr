@@ -153,8 +153,8 @@ class Context {
 	}
 	
 	List<object> getCurrentCountAndType() {
-		int vcount = bool2Num(this.volcanoA) + bool2Num(this.volcanoB) + bool2Num(this.volcanoC);
-		int wcount = bool2Num(this.balloonA) + bool2Num(this.balloonB) + bool2Num(this.balloonC) + bool2Num(this.balloonD);
+		int vcount = (this.volcanoA ? 1 : 0) + (this.volcanoB ? 1 : 0) + (this.volcanoC ? 1 : 0);
+		int wcount = (this.balloonA ? 1 : 0) + (this.balloonB ? 1 : 0) + (this.balloonC ? 1 : 0) + (this.balloonD ? 1 : 0);
 		if (this.gravity) {
 			if (vcount == 3) {
 				if (wcount == 4) {
@@ -166,7 +166,7 @@ class Context {
 		}
 		return null; // gravity
 	}
-	
+
 	void adjustHealth(PlayScene scene, int amount) {
 		this.lifemeter += amount;
 		if (this.lifemeter <= 0) {

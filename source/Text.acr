@@ -1,6 +1,6 @@
 
-class TextRenderer {
-	static field TEXT_FILENAMES = {
+static class TextRenderer {
+	private static Dictionary<string, string> TEXT_FILENAMES = new Dictionary<string, string>() {
 		';': 'sc',
 		'<': 'left',
 		'>': 'right',
@@ -22,32 +22,36 @@ class TextRenderer {
 		',': 'cm',
 	};
 
-	static field lookup_by_color = {};
+	private static Dictionary<string, Dictionary<string, GraphicsTexture>> lookup_by_color = 
+		new Dictionary<string, Dictionary<string, GraphicsTexture>>();
 	
-	constructor() { }
-	
-	static function drawText(colorname, text, x, y) {
-		lookup = TextRenderer.lookup_by_color.get(colorname, null);
+	public static void drawText(string colorname, string text, int x, int y) {
+		Dictionary<string, GraphicsTexture> lookup = TextRenderer.lookup_by_color.get(colorname, null);
 		if (lookup == null) {
-			lookup = {};
-			letters = ALPHABET;
-			for (i = 0; i < 10; ++i) {
-				letters += i;
+			lookup = new Dictionary<string, GraphicsTexture>();
+			lettersBuilder = [];
+			for (int i = 0; i < 10; ++i) {
+				lettersBuilder.add('' + i);
 			}
-			for (key : TextRenderer.TEXT_FILENAMES.keys()) {
-				letters += key;
+			for (int i = 0; i < 26; ++i) {
+				lettersBuilder.add(ALPHABET[i]);
 			}
-			for (char : letters) {
+			
+			for (string key : TextRenderer.TEXT_FILENAMES.keys()) {
+				letters.add(key);
+			}
+			
+			for (string c : letters) {
 				c = char.lower();
-				img = ImageLibrary.get('text/' + colorname + '-' + TextRenderer.TEXT_FILENAMES.get(c, c) + '.png');
+				GraphicsTexture img = ImageLibrary.get('text/' + colorname + '-' + TextRenderer.TEXT_FILENAMES.get(c, c) + '.png');
 				lookup[c] = img;
 				lookup[c.upper()] = img;
 			}
 			TextRenderer.lookup_by_color[colorname] = lookup;
 		}
 		
-		for (c : text) {
-			img = lookup.get(c, null);
+		for (string c : text) {
+			GraphicsTexture img = lookup.get(c, null);
 			
 			if (img == null && c != ' ') {
 				img = lookup.get('?', null);
@@ -62,9 +66,9 @@ class TextRenderer {
 	}
 }
 
-function drawText(r, g, b, text, x, y) {
+public static void drawText(int r, int g, int b, string text, int x, int y) {
 	// TODO: change this to just pass in the color name as an enum.
-	color = null;
+	string color = null;
 	if (r == 255) {
 		if (g == 255 && b == 255) {
 			color = 'white';
@@ -79,6 +83,6 @@ function drawText(r, g, b, text, x, y) {
 		}
 	}
 	
-	if (color == null) Core.assert(false, "Unknown color: " + r + ', ' + g + ', ' + b);
+	if (color == null) throw new InvalidArgumentException(false, "Unknown color: " + r + ', ' + g + ', ' + b);
 	TextRenderer.drawText(color, text, x, y);
 }

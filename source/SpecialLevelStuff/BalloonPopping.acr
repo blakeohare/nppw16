@@ -83,8 +83,8 @@ class BalloonPopping : SpecialLevelStuff {
 		overlay = new PlayScene(overlayMapName, 0, 0, new Context());
 		original = this.scene;
 		
-		width = min(original.cols, original.cols);
-		height = min(original.rows, original.rows);
+		width = (int) Math.min(original.cols, original.cols);
+		height = (int) Math.min(original.rows, original.rows);
 		grid = original.tiles;
 		overlayTiles = overlay.tiles;
 		for (y = 0; y < height; ++y) {
