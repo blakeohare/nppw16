@@ -3,16 +3,17 @@ public class PlayerRenderer : AbstractSpriteRenderer {
 	public constructor(Sprite sprite) : base(sprite) { }
 	
 	public override void render(PlayScene scene, int offsetX, int offsetY, int arc) {
-		left = sprite.x + offsetX - 8;
-		top = sprite.y + offsetY - 8;
-		width = 16;
-		height = 16;
-		gun = scene.lazor_cooldown > 0;
+		int left = sprite.x + offsetX - 8;
+		int top = sprite.y + offsetY - 8;
+		int width = 16;
+		int height = 16;
+		bool gun = scene.lazor_cooldown > 0;
 		if (scene.side) {
 			top -= 16;
 			height = 32;
 		}
 		
+		GraphicsTexture img;
 		if (sprite.bikemode) {
 			if ((arc & 1) == 0) {
 				img = ImageLibrary.get('sprites/rocket_bike_1.png');
@@ -20,15 +21,17 @@ public class PlayerRenderer : AbstractSpriteRenderer {
 				img = ImageLibrary.get('sprites/rocket_bike_2.png');
 			}
 		} else if (scene.side) {
+			string dir;
 			if (sprite.damageDir != null) {
 				dir = sprite.damageDir;
 			} else {
 				dir = sprite.lastDirection;
 			}
-			reverse = dir == 'left';
+			bool reverse = dir == 'left';
 			
-			b = scene.hasAtmosphere ? 'cave' : 'space';
-			moving = sprite.moving;
+			string b = scene.hasAtmosphere ? 'cave' : 'space';
+			bool moving = sprite.moving;
+			string path;
 			if (sprite.cling) {
 				path = b + '_climb_';
 				if (gun) {
@@ -60,8 +63,8 @@ public class PlayerRenderer : AbstractSpriteRenderer {
 					}
 				}
 			}
-			x = left;
-			y = top;
+			int x = left;
+			int y = top;
 			if (sprite.deathState != null && sprite.deathState != 'fall') {
 				if (sprite.deathState == 'collapse') {
 					img = ImageLibrary.get('sprites/' + b + '_death.png');
@@ -87,19 +90,19 @@ public class PlayerRenderer : AbstractSpriteRenderer {
 				}
 			}
 		} else {
-			counter = sprite.moving ? '1232'[arc % 4] : '2';
-			dir = sprite.lastDirection;
-			reverse = false;
+			int counter = sprite.moving ? '1232'[arc % 4] : '2';
+			string dir = sprite.lastDirection;
+			bool reverse = false;
 			if (dir == 'left') {
 				reverse = true;
 				dir = 'right';
 			}
-			b = 'space';
-			ctx = scene.context;
+			string b = 'space';
+			Context ctx = scene.context;
 			if (ctx.volcanoA && ctx.volcanoB && ctx.volcanoC) {
 				b = 'cave';
 			}
-			path = 'sprites/' + b + '_overworld_' + dir + '_' + counter + '.png';
+			string path = 'sprites/' + b + '_overworld_' + dir + '_' + counter + '.png';
 			img = reverse ? ImageLibrary.getBackwards(path) : ImageLibrary.get(path);
 		}
 		

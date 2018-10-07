@@ -5,9 +5,10 @@ public class PowerupRenderer : AbstractSpriteRenderer {
 	public override void render(PlayScene scene, int offsetX, int offsetY, int arc) {
 			
 		if (sprite.automation.visible) {
-			left = sprite.x + offsetX - 8;
-			top = sprite.y + offsetY - 8;
-			type = sprite.powerupInfo.type;
+			int left = sprite.x + offsetX - 8;
+			int top = sprite.y + offsetY - 8;
+			string type = sprite.powerupInfo.type;
+			string path;
 			if (type == '1up') {
 				path = 'sprites/1up.png';
 			} else if (type == 'life_small') {

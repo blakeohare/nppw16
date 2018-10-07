@@ -1,17 +1,16 @@
 import Math;
 
-class VolcanoCoreActivation : SpecialLevelStuff {
-	field id;
-	field spotX = 11;
-	field spotY = 9;
-	field sequenceCounter = -1;
-	field done = false;
-	field warpBack = false;
+public class VolcanoCoreActivation : SpecialLevelStuff {
+	private string id;
+	private int spotX = 11;
+	private int spotY = 9;
+	private int sequenceCounter = -1;
+	private bool done = false;
+	private bool warpBack = false;
 	
-	constructor(scene, id) : base(scene) {
+	public constructor(PlayScene scene, string id) : base(scene) {
 		this.id = id;
 		this.scene = scene;
-		this.context = scene.context;
 		this.hasUpdate = true;
 		this.hasPostInit = true;
 		this.lavaLevel = 0;
@@ -19,12 +18,12 @@ class VolcanoCoreActivation : SpecialLevelStuff {
 		this.freeze = false;
 	}
 		
-	function update() {
-		player = this.scene.player;
-		tx = player.x / 16;
-		ty = player.y / 16;
+	public override void update() {
+		Sprite player = this.scene.player;
+		int tx = player.x / 16;
+		int ty = player.y / 16;
 		
-		if (tx == this.spotX && Math.abs(ty - this.spotY) < 2 && !this.done) {
+		if (tx == this.spotX && (int) Math.abs(ty - this.spotY) < 2 && !this.done) {
 			this.doLavaSequence(false);
 		}
 		
@@ -33,12 +32,13 @@ class VolcanoCoreActivation : SpecialLevelStuff {
 		this.scene.player.sprinkle = false;
 		
 		if (this.sequenceCounter >= 0) {
-			SPRINKLE = 30; // player sprinkles mix
-			SHAKE = 60; // screenshakes 
-			RISE_RATE = 30; // this happens 3 times
+			int SPRINKLE = 30; // player sprinkles mix
+			int SHAKE = 60; // screenshakes 
+			int RISE_RATE = 30; // this happens 3 times
 			
 			this.freeze = true;
-			sc = this.sequenceCounter;
+			int sc = this.sequenceCounter;
+			float progress = 0.0;
 			if (sc < SPRINKLE) {
 				this.scene.player.sprinkle = true;
 				if (sc == 0) {
@@ -87,8 +87,8 @@ class VolcanoCoreActivation : SpecialLevelStuff {
 		}
 	}
 
-	function postInit() {
-		isLavaOn = false;
+	public override void postInit() {
+		bool isLavaOn = false;
 		if (this.id == 1) {
 			isLavaOn = this.context.volcanoA;
 		} else if (this.id == 2) {
@@ -102,7 +102,7 @@ class VolcanoCoreActivation : SpecialLevelStuff {
 		}
 	}
 	
-	function doLavaSequence(instant) {
+	public void doLavaSequence(bool instant) {
 		this.done = true;
 		if (instant) {
 			this.sequenceCounter = 9999999;
@@ -110,7 +110,7 @@ class VolcanoCoreActivation : SpecialLevelStuff {
 			this.sequenceCounter = 0;
 		}
 		
-		complete = this.context.volcanoA && this.context.volcanoB && this.context.volcanoC;
+		bool complete = this.context.volcanoA && this.context.volcanoB && this.context.volcanoC;
 		
 		if (!complete) {
 			if (this.id == 1) {

@@ -1,14 +1,13 @@
-class PowerupAutomation {
-	field sprite;
-	field counter = 0;
-	field visible = true;
+class PowerupAutomation : AbstractAutomation {
+	private int counter = 0;
+	private bool visible = true;
 
-	constructor(sprite) {
+	constructor(Sprite sprite) : base(sprite) {
 		this.sprite = sprite;
 	}
 		
-	function doStuff(scene) {
-		player = scene.player;
+	public override void doStuff(PlayScene scene) {
+		Sprite player = scene.player;
 		if (this.sprite.powerupInfo.id == null) {
 			this.counter++;
 			if (this.counter > 8 * 30) {
@@ -18,22 +17,22 @@ class PowerupAutomation {
 			}
 		}
 			
-		for (playerY : [player.y, player.y - 16]) {
-			x = player.x;
-			y = playerY;
-			dx = this.sprite.x - x;
-			dy = this.sprite.y - y;
+		for (int playerY : new List<int>() { player.y, player.y - 16 }) {
+			int x = player.x;
+			int y = playerY;
+			int dx = this.sprite.x - x;
+			int dy = this.sprite.y - y;
 			if (dx * dx + dy * dy < 12 ** 2) {
 				this.applyPowerup(scene.context);
 			}
 		}
 	}
 	
-	function applyPowerup(context) {
+	private void applyPowerup(Context context) {
 		this.sprite.dead = true;
-		info = this.sprite.powerupInfo;
-		id = info.id;
-		type = info.type;
+		PowerUpParseUnit info = this.sprite.powerupInfo;
+		string id = info.id;
+		string type = info.type;
 		if (id != null) {
 			context.powerupsTaken[id] = true;
 		}

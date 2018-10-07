@@ -2,44 +2,44 @@ import Graphics2D;
 import Math;
 import Random;
 
-class Point {
-	field x;
-	field y;
-	field vx;
-	field vy;
+public class Point {
+	float x;
+	float y;
+	float vx;
+	float vy;
 	
 	constructor() { }
 }
 
-class BikeLevelStuff : SpecialLevelStuff {
-	field particles = [];
-	field counter = 0;
+public class BikeLevelStuff : SpecialLevelStuff {
+	private List<Point> particles = new List<Point>();
+	private int counter = 0;
 	
-	constructor(scene) : base(scene) { }
+	public constructor(PlayScene scene) : base(scene) { }
 		
-	function update() {
+	public override void update() {
 		if (this.counter == 0) {
 			this.scene.sprites.add(new Sprite('bird2', 16, 48));
 		}
 		
 		this.counter++;
 		
-		scene = this.scene;
-		player = scene.player;
+		PlayScene scene = this.scene;
+		Sprite player = scene.player;
 		if (player.x > (scene.cols - 1) * 16) { // one less because you can't technically go off screen
 			scene.next = new VictorySequenceScene(scene);
 		}
 		
 		if (this.counter % 2 == 0) {
-			pt = new Point();
+			Point pt = new Point();
 			pt.x = player.x;
 			pt.y = player.y;
-			pt.vx = Random.randomFloat() * 16 - 8;
-			pt.vy = Random.randomFloat() * 6 - 5;
+			pt.vx = 16 * (float) Random.randomFloat() - 8;
+			pt.vy = 6 * (float) Random.randomFloat() - 5;
 			this.particles.add(pt);
 		}
 		
-		for (pt : this.particles) {
+		for (Point pt : this.particles) {
 			pt.x += pt.vx;
 			pt.y += pt.vy;
 			pt.vy += 2;
@@ -47,9 +47,14 @@ class BikeLevelStuff : SpecialLevelStuff {
 	}
 	
 	function render(rc, offsetX, offsetY) {
-		p = this.scene.player;
-		for (pt : this.particles) {
-			Graphics2D.Draw.rectangle(floor(pt.x + offsetX), floor(pt.y + offsetY), 3, 3, 255, 255, 128);
+		Sprite p = this.scene.player;
+		for (Point pt : this.particles) {
+			Graphics2D.Draw.rectangle(
+				(int) Math.floor(pt.x + offsetX),
+				(int) Math.floor(pt.y + offsetY),
+				3,
+				3, 
+				255, 255, 128);
 		}
 		
 		if (this.particles.length > 40) {

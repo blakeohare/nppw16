@@ -3,8 +3,8 @@ public class WaterPopRenderer : AbstractSpriteRenderer {
 	public constructor(Sprite sprite) : base(sprite) { }
 	
 	public override void render(PlayScene scene, int offsetX, int offsetY, int arc) {
-		left = sprite.x + offsetX - 24;
-		top = sprite.y + offsetY - 8;
+		int left = sprite.x + offsetX - 24;
+		int top = sprite.y + offsetY - 8;
 		ImageLibrary.get('tiles/balloons/pop.png').draw(left, top);
 	}
 }

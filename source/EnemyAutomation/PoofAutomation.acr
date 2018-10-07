@@ -1,15 +1,14 @@
 
-class PoofAutomation {
-	field sprite;
-	field counter = 0;
-	field isBig;
+class PoofAutomation : AbstractAutomation {
+	private int counter = 0;
+	private bool isBig;
 	
-	constructor(sprite, isBig) {
+	constructor(Sprite sprite, bool isBig) : base(sprite) {
 		this.sprite = sprite;
 		this.isBig = isBig;
 	}	
 	
-	function doStuff(scene) {
+	public override void doStuff(PlayScene scene) {
 		this.counter++;
 		if (this.counter == 15) {
 			this.sprite.dead = true;

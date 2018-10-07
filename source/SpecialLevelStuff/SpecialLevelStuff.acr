@@ -1,37 +1,39 @@
-function getSpecialLevelStuff(id, scene) {
+public List<SpecialLevelStuff> getSpecialLevelStuff(string id, PlayScene scene) {
+	List<SpecialLevelStuff> output = new List<SpecialLevelStuff>();
 	switch (id) {
-		case 'main': return [new BalloonPopping(scene, 'water1'), new BalloonPopping(scene, 'water4'), new BalloonPopping(scene, 'lava1')];
-		case 'ship_1': return [new ShipTransmission(scene)];
-		case 'grav_core': return [new GravityCorePlacement(scene)];
-		case 'grav_ascent': return [new GravityAscentExit(scene)];
-		case 'volcano_1_core': return [new VolcanoCoreActivation(scene, 1)];
-		case 'volcano_2_core': return [new VolcanoCoreActivation(scene, 2)];
-		case 'volcano_3_core': return [new VolcanoCoreActivation(scene, 3)];
-		case 'balloon_2_overland': return [new BalloonPopping(scene, 'water2')];
-		case 'balloon_3_overland': return [new BalloonPopping(scene, 'water3')];
-		case 'bike_level': return [new BikeLevelStuff(scene)];
-		case 'volcano_2_overland': return [new BalloonPopping(scene, 'lava2')];
-		case 'volcano_3_overland': return [new BalloonPopping(scene, 'lava3')];
-		case 'birdfeeder': return [new BirdFeeder(scene)];
-		default: return [];
+		case 'main': output.add(new BalloonPopping(scene, 'water1'), new BalloonPopping(scene, 'water4'), new BalloonPopping(scene, 'lava1')); break;
+		case 'ship_1': output.add(new ShipTransmission(scene)); break;
+		case 'grav_core': output.add(new GravityCorePlacement(scene)); break;
+		case 'grav_ascent': output.add(new GravityAscentExit(scene)); break;
+		case 'volcano_1_core': output.add(new VolcanoCoreActivation(scene, 1)); break;
+		case 'volcano_2_core': output.add(new VolcanoCoreActivation(scene, 2)); break;
+		case 'volcano_3_core': output.add(new VolcanoCoreActivation(scene, 3)); break;
+		case 'balloon_2_overland': output.add(new BalloonPopping(scene, 'water2')); break;
+		case 'balloon_3_overland': output.add(new BalloonPopping(scene, 'water3')); break;
+		case 'bike_level': output.add(new BikeLevelStuff(scene)); break;
+		case 'volcano_2_overland': output.add(new BalloonPopping(scene, 'lava2')); break;
+		case 'volcano_3_overland': output.add(new BalloonPopping(scene, 'lava3')); break;
+		case 'birdfeeder': output.add(new BirdFeeder(scene));
+		default: break;
 	}
+	return output;
 }
 
-class SpecialLevelStuff {
-	field scene;
-	field context;
-	field tiles;
-	field hasUpdate = false;
-	field hasPostInit = false;
-	field hasDoorTrigger = false;
-	field hasRender = false;
+public class SpecialLevelStuff {
+	protected PlayScene scene;
+	protected Context context;
+	protected List<List<Tile>> tiles;
+	protected bool hasUpdate = false;
+	protected bool hasPostInit = false;
+	protected bool hasDoorTrigger = false;
+	protected bool hasRender = false;
 	
-	// meh, hacks
-	field lavaLevel = 0;
-	field shakeScreen = false;
-	field freeze = false;
+	// TODO: remove these specific hacks
+	protected bool lavaLevel = 0;
+	protected bool shakeScreen = false;
+	protected bool freeze = false;
 	
-	constructor(scene) {
+	constructor(PlayScene scene) {
 		this.scene = scene;
 		this.context = scene.context;
 		this.tiles = scene.tiles;
@@ -39,7 +41,10 @@ class SpecialLevelStuff {
 	
 	// override and return None if you want that door to do something special. 
 	// The doorId will be post-swapped.
-	function doorTrigger(doorId) {
+	public string doorTrigger(string doorId) {
 		return doorId;
 	}
+	
+	public void update() { }
+	public void postInit() { }
 }

@@ -1,25 +1,23 @@
 import Math;
 import Random;
 
-const ACORN_SPEED = 1.5;
-const ACORN_DELAY_FOR_TOP_THROWING = 5 * 30;
+const float ACORN_SPEED = 1.5;
+const int ACORN_DELAY_FOR_TOP_THROWING = 5 * 30;
 
-class AcornAutomation {
-	field sprite;
-	field countdown;
+class AcornAutomation : AbstractAutomation {
+	private int countdown;
 	// TODO: replace with enum
-	field mode = 'patrolling'; // patrolling | throwing | baldpatrolling
-	field top = null;
-	field walkingLeft = true;
+	private string mode = 'patrolling'; // patrolling | throwing | baldpatrolling
+	private Sprite top = null;
+	private bool walkingLeft = true;
 	
-	constructor(sprite) {
-		this.sprite = sprite;
+	constructor(Sprite sprite) : base(sprite) {
 		this.countdown = Random.randomInt(ACORN_DELAY_FOR_TOP_THROWING);
 	}
 	
-	function doStuff(scene) {
+	public void doStuff(PlayScene scene) {
 		this.countdown--;
-		walk = false;
+		bool walk = false;
 		if (this.mode == 'patrolling') {
 			if (this.countdown <= 0) {
 				this.mode = 'throwing';
@@ -28,7 +26,7 @@ class AcornAutomation {
 				this.top.goLeft = this.top.acorntopdir == 'left';
 				this.top.automation.setGoLeft(this.sprite.lastDirection == 'left');
 				this.top.automation.setGoUp(this.sprite.y > scene.player.y);
-				this.top.automation.body = this.sprite;
+				//this.top.automation.body = this.sprite;
 				this.top.deleteWhenOffScreen = true;
 				this.top.ghost = true;
 				this.top.floats = true;
@@ -53,20 +51,20 @@ class AcornAutomation {
 				this.walkingLeft = !this.walkingLeft;
 			}
 			
-			tiles = scene.tiles;
-			cols = scene.cols;
-			rows = scene.rows;
-			dx = this.walkingLeft ? ACORN_SPEED : -ACORN_SPEED; // TODO: isn't this backwards?
-			oldTileX = Math.floor(this.sprite.modelX / 16);
-			newX = this.sprite.modelX + dx;
-			oldTileY = Math.floor(this.sprite.modelY / 16);
-			newTileX = Math.floor(newX / 16);
+			List<List<Tile>> tiles = scene.tiles;
+			int cols = scene.cols;
+			int rows = scene.rows;
+			int dx = this.walkingLeft ? ACORN_SPEED : -ACORN_SPEED; // TODO: isn't this backwards?
+			int oldTileX = (int) Math.floor(this.sprite.modelX / 16);
+			int newX = this.sprite.modelX + dx;
+			int oldTileY = (int) Math.floor(this.sprite.modelY / 16);
+			int newTileX = Math.floor(newX / 16);
 			if (newTileX < 0 || newTileX >= cols) {
 				this.walkingLeft = !this.walkingLeft;
 				return;
 			}
 			
-			belowTileY = oldTileY + 1;
+			int belowTileY = oldTileY + 1;
 			
 			if (newTileX == oldTileX) {
 				this.sprite.dx = dx;
@@ -74,7 +72,7 @@ class AcornAutomation {
 				if (belowTileY < 0 || belowTileY >= rows) {
 					// TODO: remove this? why was this if statement here?
 				}
-				t = tiles[newTileX][belowTileY];
+				Tile t = tiles[newTileX][belowTileY];
 				if (!t.solid && !t.isTop) {
 					this.walkingLeft = !this.walkingLeft;
 				} else {

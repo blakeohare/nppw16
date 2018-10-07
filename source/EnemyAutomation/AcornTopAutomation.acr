@@ -1,97 +1,99 @@
 import Math;
 
-const ACORN_TOP_SPEED = 4.5;
+const float ACORN_TOP_SPEED = 4.5;
 
-class AcornTopAutomation {
+class AcornTopAutomation : AbstractAutomation {
 
-	static field TRAIL = [];
+	static List<List<int>> TRAIL = new List<List<int>>();
 
 	static constructor() {
 		// this is the best I can come up with off the top of my head. I'm sure there's a faster way to create a parametric function of the acorn top path
 
-		ball = [0, 0];
+		List<float> ball = new List<float>() { 0, 0 };
 
-		waypoints = [
-			[-1, 0],
-			[-6, 0],
-			[-6.6, -0.4],
-			[-7, -1],
-			[-6.6, -1.6],
-			[-6, -2],
-			[-1, -2],
-			[-0.4, -1.6],
-			[0, -1],
-			[0, -.5]];
+		List<List<float>> waypoints = new List<List<float>>() {
+			new List<float>() { -1, 0 },
+			new List<float>() { -6, 0 },
+			new List<float>() { -6.6, -0.4 },
+			new List<float>() { -7, -1 },
+			new List<float>() { -6.6, -1.6 },
+			new List<float>() { -6, -2 },
+			new List<float>() { -1, -2 },
+			new List<float>() { -0.4, -1.6 },
+			new List<float>() { 0, -1 },
+			new List<float>() { 0, -.5}
+		};
 
-		v = ACORN_TOP_SPEED + 0.0;
+		float v = ACORN_TOP_SPEED + 0.0;
 
 		// TODO: use foreach loop?
-		for (i = 0; i < waypoints.length; ++i) {
-			target = waypoints[i];
-			tx = target[0] * 16.0;
-			ty = target[1] * 16.0;
+		for (int i = 0; i < waypoints.length; ++i) {
+			List<float> target = waypoints[i];
+			float tx = target[0] * 16.0;
+			float ty = target[1] * 16.0;
 			
-			done = false;
+			bool done = false;
 			while (!done) {
-				dx = tx - ball[0];
-				dy = ty - ball[1];
-				distance = (dx ** 2 + dy ** 2) ** .5;
+				float dx = tx - ball[0];
+				float dy = ty - ball[1];
+				float distance = (dx ** 2 + dy ** 2) ** .5;
 				if (distance <= v) {
 					done = true;
-					AcornTopAutomation.TRAIL.add([tx, ty]);
-					ball = [tx, ty];
+					ball = new List<float>() { tx, ty };
+					AcornTopAutomation.TRAIL.add(ball.clone());
 				} else {
 					dx *= v / distance;
 					dy *= v / distance;
 					ball[0] += dx;
 					ball[1] += dy;
-					AcornTopAutomation.TRAIL.add([Math.floor(10 * ball[0]) / 10.0, Math.floor(10 * ball[1]) / 10.0]);
+					AcornTopAutomation.TRAIL.add(new List<float>() {
+						// TODO: figure out what's going on here with the weird rounding.
+						0.1 * (int) Math.floor(10 * ball[0]),
+						0.1 * (int) Math.floor(10 * ball[1]) });
 				}
 			}
 		}
 	}
 
-	field sprite;
-	field trail;
-	field trailIndex = 0;
-	field startX;
-	field startY;
-	field completed = false;
-	field goLeft = true;
-	field xSign = 1;
-	field ySign = 1;
-	field body;
+	private List<List<float>> trail;
+	private int trailIndex = 0;
+	private float startX;
+	private float startY;
+	private bool completed = false;
+	private bool goLeft = true;
+	private int xSign = 1;
+	private int ySign = 1;
+	//field body;
 	
-	constructor(sprite) {
-		this.sprite = sprite;
+	public constructor(Sprite sprite) : base(sprite) {
 		this.trail = AcornTopAutomation.TRAIL.clone();
 		this.startX = sprite.modelX;
 		this.startY = sprite.modelY;
 	}
 	
-	function setGoLeft(goLeft) {
+	public void setGoLeft(bool goLeft) {
 		this.goLeft = goLeft;
 		this.xSign = this.goLeft ? 1 : -1;
 	}
 	
-	function setGoUp(goUp) {
+	public void setGoUp(bool goUp) {
 		this.ySign = goUp ? 1 : -1;
 	}
 	
-	function doStuff(scene) {
+	public override void doStuff(PlayScene scene) {
 		if (this.trailIndex < this.trail.length) {
 			
-			rawX = this.trail[this.trailIndex][0];
-			rawY = this.trail[this.trailIndex][1];
+			float rawX = this.trail[this.trailIndex][0];
+			float rawY = this.trail[this.trailIndex][1];
 			
 			rawX *= this.xSign;
 			rawY *= this.ySign;
 			
-			targetX = this.startX + rawX;
-			targetY = this.startY + rawY;
+			float targetX = this.startX + rawX;
+			float targetY = this.startY + rawY;
 			
-			dx = targetX - this.sprite.modelX;
-			dy = targetY - this.sprite.modelY;
+			float dx = targetX - this.sprite.modelX;
+			float dy = targetY - this.sprite.modelY;
 			
 			this.sprite.dx = dx;
 			this.sprite.dy = dy;

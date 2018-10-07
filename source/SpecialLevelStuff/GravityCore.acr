@@ -1,35 +1,35 @@
 import Math;
 
-class GravityCorePlacement : SpecialLevelStuff {
-	field col = 11;
-	field row = 9;
-	field done = false;
+public class GravityCorePlacement : SpecialLevelStuff {
+	private int col = 11;
+	private int row = 9;
+	private bool done = false;
 
-	constructor(scene) : base(scene) {
+	public constructor(PlayScene scene) : base(scene) {
 		this.hasPostInit = true;
 		this.hasUpdate = true;
 	}
 	
-	function update() {
-		player = this.scene.player;
-		tx = Math.floor(player.x / 16);
-		ty = Math.floor(player.y / 16);
+	public override void update() {
+		Sprite player = this.scene.player;
+		int tx = (int) Math.floor(player.x / 16);
+		int ty = (int) Math.floor(player.y / 16);
 	
-		if (tx == this.col && Math.abs(ty - this.row) < 2 && !this.done) {
+		if (tx == this.col && (int) Math.abs(ty - this.row) < 2 && !this.done) {
 			this.addGDevice(true);
 		}
 	}
 	
-	function postInit() {
+	public override void postInit() {
 		if (this.context.gravity) {
 			this.addGDevice();
 		}
 	}
 	
-	function addGDevice(showDialog = false) {
+	public void addGDevice(bool showDialog = false) {
 		this.done = true;
 		this.context.gravity = true;
-		gd = new Sprite('gravity_device', this.col * 16, this.row * 16);
+		Sprite gd = new Sprite('gravity_device', this.col * 16, this.row * 16);
 		gd.floats = true;
 		this.scene.sprites.add(gd);
 		if (showDialog) {

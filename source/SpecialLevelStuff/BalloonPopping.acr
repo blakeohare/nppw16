@@ -1,11 +1,11 @@
 
-class BalloonPopping : SpecialLevelStuff {
-	field id;
-	field done = false;
-	field balloonCoords = {};
+public class BalloonPopping : SpecialLevelStuff {
+	private string id;
+	private bool done = false;
+	private Dictionary<string, Tile> balloonCoords = new Dictionary<string, Tile>();
 	
 	// ID's: water1, water2, water3, water4, lava1, lava2, lava3
-	constructor(scene, id) : base(scene) {
+	constructor(PlayScene scene, string id) : base(scene) {
 		this.id = id;
 		this.scene = scene;
 		this.context = scene.context;
@@ -13,10 +13,10 @@ class BalloonPopping : SpecialLevelStuff {
 		this.hasPostInit = true;
 		
 		if (id.startsWith('water')) {
-			rows = scene.rows;
-			cols = scene.cols;
-			for (y = 0; y < rows; ++y) {
-				for (x = 0; x < cols; ++x) {
+			int rows = scene.rows;
+			int cols = scene.cols;
+			for (int y = 0; y < rows; ++y) {
+				for (int x = 0; x < cols; ++x) {
 					if (scene.tiles[x][y].isBalloon) {
 						this.balloonCoords[x + '|' + y] = scene.tiles[x][y];
 					}
@@ -25,23 +25,26 @@ class BalloonPopping : SpecialLevelStuff {
 		}
 	}
 	
-	function update() {
+	public override void update() {
 		if (!this.done) {
-			player = this.scene.player;
-			tx = player.x / 16;
-			ty = player.y / 16;
+			Sprite player = this.scene.player;
+			int tx = player.x / 16;
+			int ty = player.y / 16;
 			
 			if (this.id == 'water1' && ty > 18) return;
 			if (this.id == 'water4' && ty < 18) return;
 			
-			tile = this.balloonCoords.get(tx + '|' + ty, null);
+			Tile tile = this.balloonCoords.get(tx + '|' + ty, null);
 			if (tile != null) {
-				this.applyOverlayAndSaveContext(true, [tx + tile.primaryBalloonOffset[0], ty + tile.primaryBalloonOffset[1]]);
+				this.applyOverlayAndSaveContext(
+					true,
+					tx + tile.primaryBalloonOffset[0],
+					ty + tile.primaryBalloonOffset[1]);
 			}
 		}
 	}
 
-	function postInit() {
+	public void postInit() {
 		switch (this.id) {
 			case 'water1':
 				if (this.context.balloonA) this.applyOverlayAndSaveContext();
@@ -75,22 +78,26 @@ class BalloonPopping : SpecialLevelStuff {
 		}
 	}
 	
-	function applyOverlayAndSaveContext(showPop = false, balloonLoc = null) {
+	public void applyOverlayAndSaveContext(
+		bool showPop = false,
+		int balloonX = 0,
+		int balloon = 0) {
+		
 		if (this.done) return;
 		
-		overlayMapName = this.scene.overlayTriggers[this.id]; // Go ahead and crash if not present. Game is busted at this point anyway.
+		string overlayMapName = this.scene.overlayTriggers[this.id]; // Go ahead and crash if not present. Game is busted at this point anyway.
 		
-		overlay = new PlayScene(overlayMapName, 0, 0, new Context());
-		original = this.scene;
+		PlayScene overlay = new PlayScene(overlayMapName, 0, 0, new Context());
+		PlayScene original = this.scene;
 		
-		width = (int) Math.min(original.cols, original.cols);
-		height = (int) Math.min(original.rows, original.rows);
-		grid = original.tiles;
-		overlayTiles = overlay.tiles;
-		for (y = 0; y < height; ++y) {
-			for (x = 0; x < width; ++x) {
+		int width = (int) Math.min(original.cols, original.cols);
+		int height = (int) Math.min(original.rows, original.rows);
+		List<List<Tile>> grid = original.tiles;
+		List<List<Tile>> overlayTiles = overlay.tiles;
+		for (int y = 0; y < height; ++y) {
+			for (int x = 0; x < width; ++x) {
 				if (overlay.tiles[x][y].originalTemplates.length > 0) {
-					templates = grid[x][y].originalTemplates + overlay.tiles[x][y].originalTemplates;
+					List<TileTemplate> templates = grid[x][y].originalTemplates + overlay.tiles[x][y].originalTemplates;
 					grid[x][y] = new Tile(templates, x, y);
 				}
 			}

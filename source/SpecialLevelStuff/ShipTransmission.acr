@@ -1,11 +1,11 @@
-class ShipTransmission : SpecialLevelStuff {
-	constructor(scene) : base(scene) {
+public class ShipTransmission : SpecialLevelStuff {
+	public constructor(PlayScene scene) : base(scene) {
 		this.hasUpdate = true;
 	}
 	
-	function update() {
+	public override void update() {
 		
-		ctx = this.context;
+		Context ctx = this.context;
 		if (!ctx.gravity) {
 			if (!ctx.transmission1) {
 				this.scene.triggerDialog('T1', true);

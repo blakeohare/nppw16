@@ -1,13 +1,10 @@
 
-class LazorAutomation {
-	field sprite;
-
-	constructor(sprite) {
-		this.sprite = sprite;
-	}
+class LazorAutomation : AbstractAutomation {
+	
+	constructor(Sprite sprite) : base(sprite) { }
 		
-	function doStuff(scene) {
-		vx = this.sprite.bvx;
+	public override void doStuff(PlayScene scene) {
+		int vx = this.sprite.bvx;
 		this.sprite.dx = this.sprite.bvx;
 		if (scene.id == 'bike_level') {
 			this.sprite.dx += 5;

@@ -4,11 +4,12 @@ public class PoofRenderer : AbstractSpriteRenderer {
 	
 	public override void render(PlayScene scene, int offsetX, int offsetY, int arc) {
 		
-		isBig = sprite.automation.isBig;
-		left = sprite.x + offsetX - 8;
-		top = sprite.y + offsetY - 8;
+		bool isBig = sprite.automation.isBig;
+		int left = sprite.x + offsetX - 8;
+		int top = sprite.y + offsetY - 8;
 		
-		c = sprite.automation.counter;
+		int c = sprite.automation.counter;
+		string num;
 		if (c <= 3) {
 			num = '1';
 		} else if (c <= 6) {
@@ -19,6 +20,7 @@ public class PoofRenderer : AbstractSpriteRenderer {
 			return;
 		}
 		
+		GraphicsTexture img;
 		if (isBig) {
 			top -= 16;
 			img = ImageLibrary.get('sprites/large_poof_' + num + '.png');

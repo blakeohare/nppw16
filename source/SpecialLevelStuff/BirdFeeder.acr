@@ -1,29 +1,33 @@
-class BirdFeeder : SpecialLevelStuff {
-	field counter = 0;
-	field seedsLeft;
-	field closingShown = false;
+public class BirdFeeder : SpecialLevelStuff {
+	private int counter = 0;
+	private int seedsLeft;
+	private bool closingShown = false;
 	
-	constructor(scene) : base(scene) {
+	public constructor(PlayScene scene) : base(scene) {
 		this.hasPostInit = true;
 		this.hasUpdate = true;
-		seeds = [[4,36],
-			[11,30],
-			[4,24],
-			[11,18],
-			[4,12],
-			[11,6]];
+		List<List<int>> seeds = new List<List<int>>() {
+			new List<int>() { 4, 36 },
+			new List<int>() { 11, 30 },
+			new List<int>() { 4, 24 },
+			new List<int>() { 11, 18 },
+			new List<int>() { 4, 12 },
+			new List<int>() { 11, 6 }
+		};
+		
 		this.seedsLeft = seeds.length;
-		for (seed : seeds) {
+		
+		for (List<int> seed : seeds) {
 			scene.sprites.add(new Sprite('seeds', seed[0] * 16 + 8, seed[1] * 16 + 7));
 		}
 		
-		bike = new Sprite('rocketbike', 12 * 16 + 8, 39 * 16 + 8);
+		Sprite bike = new Sprite('rocketbike', 12 * 16 + 8, 39 * 16 + 8);
 		bike.floats = true;
 		scene.sprites.add(bike);
 	}
 		
-	function update() {
-		p = this.scene.player;
+	public void update() {
+		Sprite p = this.scene.player;
 		this.counter++;
 		
 		if (this.counter == 3) {
@@ -37,5 +41,5 @@ class BirdFeeder : SpecialLevelStuff {
 		}
 	}
 		
-	function postInit() { }
+	public void postInit() { }
 }

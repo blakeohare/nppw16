@@ -1,26 +1,24 @@
 import Math;
 
-class BirdAutomation {
-	field counter = 0;
+class BirdAutomation : AbstractAutomation {
+	private int counter = 0;
 	// TODO: replace with enum.
-	field mode = 'stalk'; // 'right' | 'left'
-	field sprite;
-	field bikeLevel;
+	private string mode = 'stalk'; // 'right' | 'left'
+	private bool bikeLevel;
 
-	constructor(sprite, onBikeLevel) {
+	constructor(Sprite sprite, bool onBikeLevel) : base(sprite) {
 		sprite.isEnemy = true;
-		this.sprite = sprite;
 		this.bikeLevel = onBikeLevel;
 	}
 		
-	function doStuff(scene) {
+	public override void doStuff(PlayScene scene) {
 		this.counter++;
-		p = scene.player;
-		sprite = this.sprite;
+		Sprite p = scene.player;
+		Sprite sprite = this.sprite;
 		if (this.mode == 'stalk') {
-			dy = p.y - this.sprite.y;
+			int dy = p.y - this.sprite.y;
 			
-			if (Math.abs(dy) < 6) {
+			if ((int) Math.abs(dy) < 6) {
 				this.mode = 'right';
 			} else if (dy > 0) {
 				this.sprite.dy += 3;
@@ -34,7 +32,7 @@ class BirdAutomation {
 				this.mode = 'left';
 			}
 		} else { // mode == 'left'
-			spriteX = sprite.x;
+			int spriteX = sprite.x;
 			if (this.bikeLevel) {
 				spriteX -= this.counter * BIKE_SPEED;
 			}

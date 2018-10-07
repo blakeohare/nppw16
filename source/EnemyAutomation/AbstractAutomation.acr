@@ -1,3 +1,10 @@
 class AbstractAutomation {
+
+	protected Sprite sprite;
 	
+	public constructor(Sprite sprite) { 
+		this.sprite = sprite;
+	}
+	
+	public void doStuff(PlayScene scene) { }
 }

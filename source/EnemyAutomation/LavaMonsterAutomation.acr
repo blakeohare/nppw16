@@ -1,20 +1,17 @@
-const RISE_SPEED = 1;
-const WAIT_INTERVAL = FPS * 4;
+const int RISE_SPEED = 1;
+const int WAIT_INTERVAL = FPS * 4;
 
-class LavaMonsterAutomation {
-	field sprite;
-	field counter = 0;
-	field mode ='wait'; // { wait | rise | shoot | fall }
-	field mouthOpen = false;
+class LavaMonsterAutomation : AbstractAutomation {
+	private int counter = 0;
+	private string mode ='wait'; // { wait | rise | shoot | fall }
+	private bool mouthOpen = false;
 	
-	constructor(sprite) {
-		this.sprite = sprite;
-	}
+	constructor(Sprite sprite) : base(sprite) { }
 	
-	function doStuff(scene) {
+	public override void doStuff(PlayScene scene) {
 		this.counter++;
 		this.mouthOpen = false;
-		faceLeft = scene.player.x < this.sprite.x;
+		bool faceLeft = scene.player.x < this.sprite.x;
 		this.sprite.lastDirection = faceLeft ? 'left' : 'right';
 		if (this.mode == 'wait') {
 			if (this.counter == WAIT_INTERVAL) {
@@ -47,8 +44,8 @@ class LavaMonsterAutomation {
 		}
 	}
 		
-	function createFireBall() {
-		fireball = new Sprite('fireball', this.sprite.x, this.sprite.y);
-		this.sprite.spawns = [fireball];
+	public void createFireBall() {
+		Sprite fireball = new Sprite('fireball', this.sprite.x, this.sprite.y);
+		this.sprite.spawns = new List<Sprite>() { fireball };
 	}
 }

@@ -3,10 +3,10 @@ public class FireballRenderer : AbstractSpriteRenderer {
 	public constructor(Sprite sprite) : base(sprite) { }
 	
 	public override void render(PlayScene scene, int offsetX, int offsetY, int arc) {
-		left = sprite.x - 8 + offsetX;
-		top = sprite.y - 8 + offsetY;
+		int left = sprite.x - 8 + offsetX;
+		int top = sprite.y - 8 + offsetY;
 		
-		img = ImageLibrary.get('sprites/lava_monster_projectile.png');
+		GraphicsTexture img = ImageLibrary.get('sprites/lava_monster_projectile.png');
 		
 		img.draw(left, top);
 	}

@@ -4,15 +4,17 @@ public class LavaMonsterRenderer : AbstractSpriteRenderer {
 	
 	public override void render(PlayScene scene, int offsetX, int offsetY, int arc) {
 	
-		left = sprite.x - 8 + offsetX;
-		top = sprite.y - 24 + offsetY;
+		int left = sprite.x - 8 + offsetX;
+		int top = sprite.y - 24 + offsetY;
 		
+		string path;
 		if (sprite.automation.mouthOpen) {
 			path = 'sprites/lava_monster_2.png';
 		} else {
 			path = 'sprites/lava_monster_1.png';
 		}
 		
+		GraphicsTexture img;
 		if (sprite.lastDirection == 'left') {
 			img = ImageLibrary.getBackwards(path);
 		} else {

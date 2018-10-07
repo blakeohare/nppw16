@@ -1,42 +1,40 @@
 import Math;
 
-const FIREBALL_VELOCITY = 1.5;
+const float FIREBALL_VELOCITY = 1.5;
 
-class FireBallAutomation {
-	field sprite;
-	field counter = 0;
-	field startX;
-	field startY;
-	field goLeft;
-	field vx = -FIREBALL_VELOCITY;
-	field vy = 0;
-	field predictedX;
+class FireBallAutomation : AbstractAutomation {
+	private int counter = 0;
+	private int startX;
+	private int startY;
+	private bool goLeft;
+	private float vx = -FIREBALL_VELOCITY;
+	private float vy = 0;
+	private int predictedX;
 	
-	constructor (sprite) {
-		this.sprite = sprite;
+	constructor (Sprite sprite) : base(sprite) {
 		this.startX = sprite.x;
 		this.startY = sprite.y;
 		this.goLeft = sprite.lastDirection == 'left';
 	}
 	
-	function doStuff(scene) {
+	public override void doStuff(PlayScene scene) {
 		if (this.counter == 0) {
-			dx = scene.player.x - this.startX;
-			dy = scene.player.y - this.startY;
+			int dx = scene.player.x - this.startX;
+			int dy = scene.player.y - this.startY;
 			
 			if (dx == 0) {
 				dx = 1;
 			}
-							
-			m = 1.0 * dy / dx;
+			
+			float m = 1.0 * dy / dx;
 			if (m > 1.0) {
 				m = 1.0;
 			} else if (m < -1.0) {
 				m = -1.0;
 			}
-			ang = Math.arctan(m);
-			this.vx = FIREBALL_VELOCITY * Math.cos(ang);
-			this.vy = -FIREBALL_VELOCITY * Math.sin(ang);
+			float ang = (float) Math.arctan(m);
+			this.vx = FIREBALL_VELOCITY * (float) Math.cos(ang);
+			this.vy = -FIREBALL_VELOCITY * (float) Math.sin(ang);
 			if (this.goLeft) {
 				this.vx *= -1;
 			}
@@ -50,7 +48,7 @@ class FireBallAutomation {
 		this.sprite.dx += this.vx;
 		this.sprite.dy += this.vy;
 		
-		this.predictedX = Math.floor(this.sprite.dx + this.sprite.modelX);
+		this.predictedX = (int) Math.floor(this.sprite.dx + this.sprite.modelX);
 		
 		if (this.sprite.collidedWall) {
 			this.sprite.dead = true;
