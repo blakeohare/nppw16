@@ -30,7 +30,7 @@ class AcornAutomation : AbstractAutomation {
 				this.top.deleteWhenOffScreen = true;
 				this.top.ghost = true;
 				this.top.floats = true;
-				this.sprite.spawns = [this.top];
+				this.sprite.spawns = new List<Sprite>() { this.top };
 			} else {
 				walk = true;
 			}
