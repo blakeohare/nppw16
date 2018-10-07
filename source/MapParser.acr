@@ -27,7 +27,7 @@ public class Map {
 	public List<List<Tile>> lower;
 	public List<DoorParseUnit> doors;
 	public List<EnemiesParseUnit> enemies;
-	//field doorswaps;
+	public Dictionary<string, List<List<string>>> doorSwaps;
 	public Dictionary<string, string> overlayTriggers;
 	public List<PowerUpParseUnit> powerups;
 	
@@ -69,7 +69,7 @@ public class MapParser {
 		m.lower = this.getTiles(this.values['lower'], m.width, m.height);
 		m.doors = this.getDoors(this.values.get('doors', ''));
 		m.enemies = this.getEnemies(this.values.get('enemies', ''));
-		//m.doorswaps = this.getDoorswaps(this.values.get('doorswaps', ''));
+		m.doorSwaps = this.getDoorSwaps(this.values.get('doorswaps', ''));
 		m.overlayTriggers = this.getOverlayTriggers(this.values.get('overlay', ''));
 		m.powerups = this.getPowerups(this.values.get('powerups', ''));
 		return m;
@@ -116,23 +116,22 @@ public class MapParser {
 	
 	// door swap output format:
 	// { original ID => List[ Pair<trigger, swapped ID> ] }
-	/*public  getDoorswaps(strValue) {
+	public Dictionary<string, List<List<string>>> getDoorSwaps(string strValue) {
 		strValue = strValue.trim();
-		if (strValue.length == 0) {
-			return {};
-		}
-		swaps = {};
-		for (swap : strValue.split(',')) {
-			parts = swap.split('|');
-			trigger = parts[0].trim();
-			original = parts[1].trim();
-			swapped = parts[2].trim();
-			
-			swaps[original] = swaps.get(original, []);
-			swaps[original].add([trigger, swapped]);
+		Dictionary<string, List<List<string>>> swaps = new Dictionary<string, List<List<string>>>();
+		if (strValue.length > 0) {
+			for (string swap : strValue.split(',')) {
+				List<string> parts = swap.split('|');
+				string trigger = parts[0].trim();
+				string original = parts[1].trim();
+				string swapped = parts[2].trim();
+				
+				swaps[original] = swaps.get(original) ?? new List<List<string>>());
+				swaps[original].add(new List<string>() { trigger, swapped });
+			}
 		}
 		return swaps;
-	}//*/
+	}
 	
 	public List<EnemiesParseUnit> getEnemies(string enemyString) {
 		enemyString = enemyString.trim();

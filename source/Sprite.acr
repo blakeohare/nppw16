@@ -1,36 +1,34 @@
 import Math;
 
-const JUMPING_VY = -14;
-const RUN_JUMPING_VY = -16;
-const WATER_JUMPING_VY = -5;
-const G = 0.7;
-const STRONG_G = 1.55;
-const WATER_G = 0.1;
+const int JUMPING_VY = -14;
+const int RUN_JUMPING_VY = -16;
+const int WATER_JUMPING_VY = -5;
+const float G = 0.7;
+const float STRONG_G = 1.55;
+const float WATER_G = 0.1;
 
-function getSpriteHeight(type) {
+public int getSpriteHeight(string type) {
 	return Sprite.SPRITE_HEIGHT.get(type, 16);
 }
 
-class Sprite {
-	field type;
-	field isEnemy = false;
-	field height;
-	field x;
-	field y;
-	field modelX;
-	field modelY;
-	field xs = [null] * 5;
-	field ys = [null] * 5;
-	field vy = 0;
-	field moving = false;
-	field lastDirection = 'left';
-	field onGround = false;
-	field neighbors = [null] * 36;
-	field spawns = null;
-	field dead = false;
-	field collidedWall = false;
-	field deleteWhenOffScreen = false;
-	field ghost = false;
+public class Sprite {
+	public string type;
+	public bool isEnemy = false;
+	public int height;
+	public int x;
+	public int y;
+	public float modelX;
+	public float modelY;
+	public float vy = 0;
+	public bool moving = false;
+	public string lastDirection = 'left';
+	public bool onGround = false;
+	public List<List<int>> neighbors = [null] * 36;
+	public List<Sprite> spawns = null;
+	public bool dead = false;
+	public bool collidedWall = false;
+	public bool deleteWhenOffScreen = false;
+	public bool ghost = false;
 	field renderImpl = SPRITE_renderPlayerOver;
 	field automation = null;
 	field floats = false;
@@ -562,8 +560,11 @@ class Sprite {
 					this.lastDirection = 'right';
 				}
 					
-				xs = this.xs;
-				ys = this.ys;
+				
+				// TODO: this is silly. Break the vector down into horizontal and vertical
+				// components and do a TryMove approach.
+				List<float> xs = Sprite.xs;
+				List<float> ys = Sprite.ys;
 				
 				xs[0] = this.modelX + this.dx;
 				xs[1] = this.modelX + this.dx * 3.0 / 4;
@@ -575,8 +576,8 @@ class Sprite {
 				ys[1] = this.modelY + this.dy * 3.0 / 4;
 				ys[2] = this.modelY + this.dy / 2.0;
 				ys[3] = this.modelY + this.dy / 4.0;
-
-				for (pairing : Sprite.XY_PAIRINGS) {
+				
+				for (List<int> pairing : Sprite.XY_PAIRINGS) {
 					newx = xs[pairing[0]];
 					newy = ys[pairing[1]];
 					col = floor(newx / 16);
@@ -596,6 +597,9 @@ class Sprite {
 			}
 		}
 	}
+	
+	private static List<float> xs = new List<float>() { 0.0 } * 5;
+	private static List<float> ys = new List<float>() { 0.0 } * 4;
 	
 	function render(scene, offsetX, offsetY, rc) {
 		if (this.blinkCounter < 0 || (this.blinkCounter & 1) == 0) {

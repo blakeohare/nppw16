@@ -1,22 +1,21 @@
 import Graphics2D;
 
-class ReadyScene : LegacyAbstractScene {
-	field next = this;
-	field flags = '';
-	field context;
-	field startArgs;
-	field counter = 0;
-	field playscene;
+public class ReadyScene : LegacyAbstractScene {
+	public string flags = '';
+	private Context context;
+	private List<object> startArgs;
+	private int counter = 0;
+	private PlayScene playscene;
 	
-	constructor(previousScene, context) : base() {
+	constructor(PlayScene previousScene, Context context) : base() {
 		this.context = context;
 		this.startArgs = previousScene.startArgs;
-		this.playscene = new PlayScene(this.startArgs[0], this.startArgs[1], this.startArgs[2], this.context);
+		this.playscene = new PlayScene((string) this.startArgs[0], (int) this.startArgs[1], (int) this.startArgs[2], this.context);
 	}
 	
-	function processInput(events, pressed) { }
+	public override void processInput(List<MyEvent> events, Dictionary<string, bool> pressed) { }
 	
-	function update() {
+	public override void update() {
 		this.playscene.playMusic();
 		this.counter++;
 		if (this.counter > 90) {
@@ -24,7 +23,7 @@ class ReadyScene : LegacyAbstractScene {
 		}
 	}
 	
-	function render(rc) {
+	public void render(int rc) {
 		if (this.counter < 21) {
 			Graphics2D.Draw.fill(0, 0, 0);
 		} else {
