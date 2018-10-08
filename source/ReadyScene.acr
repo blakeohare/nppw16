@@ -1,7 +1,7 @@
 import Graphics2D;
 
 public class ReadyScene : LegacyAbstractScene {
-	public string flags = '';
+	
 	private Context context;
 	private List<object> startArgs;
 	private int counter = 0;

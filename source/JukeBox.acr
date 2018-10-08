@@ -117,7 +117,7 @@ public static class JukeBox {
 		if (SOUND_ENABLED) {
 			Audio.Music music = JukeBox.musicResourceCache.get(path);
 			if (music == null) {
-				music = Audio.Music.loadFromResource(path);
+				music = (Audio.Music) Audio.Music.loadFromResource(path);
 				JukeBox.musicResourceCache[path] = music;
 			}
 			return music;
@@ -125,7 +125,7 @@ public static class JukeBox {
 	}
 	
 	public static void playSongForLevelMaybe(string id) {
-		Audio.Music song = JukeBox.SONG_BY_MAP.get(id, null);
+		string song = JukeBox.SONG_BY_MAP.get(id, null);
 		if (song != null) {
 			JukeBox.ensureSong(song);
 		}

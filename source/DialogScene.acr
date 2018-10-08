@@ -2,27 +2,27 @@ import Graphics2D;
 import Math;
 
 class DialogScene : LegacyAbstractScene {
-	private string flags = '';
-	private PlayScene bg;
+	
+	private LegacyAbstractScene bg;
 	private bool storyMode;
 	private bool forceArrow;
 	private int delayCounter;
 	private List<string> activeStanza;
 	private List<List<string>> stanzas;
 	private int stanzaIndex = 0;
-	private int textCursor = 0;
+	private float textCursor = 0;
 	private List<string> showLines = new List<string>();
 	private bool blink = false;
 	private string id;
 	private List<int> generalLoc = null;
 	
-	constructor(PlayScene bg, string dialogId, bool slightDelay, bool storyMode = false, bool forceArrow = false) 
+	constructor(LegacyAbstractScene bg, string dialogId, bool slightDelay, bool storyMode = false, bool forceArrow = false) 
 		: base() {
 		
 		this.bg = bg;
 		this.storyMode = storyMode;
 		this.forceArrow = forceArrow;
-		Sprite player = bg.player;
+		Sprite player = bg is PlayScene ? ((PlayScene)bg).player : null;
 		if (player != null) {
 			player.moving = false;
 			player.lastDirection = 'left';

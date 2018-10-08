@@ -1,9 +1,17 @@
 import Graphics2D;
 
+// TODO: Generics!
 public List<List<Tile>> makeTileGrid(int width, int height) {
 	List<List<Tile>> cols = new List<List<Tile>>();
 	while (width-- > 0) {
 		cols.add(new List<Tile>() { null } * height);
+	}
+	return cols;
+}
+public List<List<TileTemplate>> makeTileTemplateGrid(int width, int height) {
+	List<List<TileTemplate>> cols = new List<List<TileTemplate>>();
+	while (width-- > 0) {
+		cols.add(new List<TileTemplate>() { null } * height);
 	}
 	return cols;
 }

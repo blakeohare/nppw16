@@ -1,3 +1,5 @@
+import Graphics2D;
+
 public class ByatRenderer : AbstractSpriteRenderer {
 	
 	public constructor(Sprite sprite) : base(sprite) { }
@@ -7,7 +9,7 @@ public class ByatRenderer : AbstractSpriteRenderer {
 		int left = sprite.x + offsetX - 8;
 		int top = sprite.y + offsetY - 8;
 		string path;
-		if (sprite.automation.perched) {
+		if (((ByatAutomation)sprite.automation).perched) {
 			path = 'sprites/byat_hang.png';
 		} else {
 			if ((arc & 1) == 0) {

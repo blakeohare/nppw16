@@ -2,7 +2,6 @@ import Graphics2D;
 
 public class PauseScene : LegacyAbstractScene {
 	public PlayScene bg;
-	private string flags = '';
 	private int counter = 0;
 	
 	constructor(PlayScene bg) : base() {

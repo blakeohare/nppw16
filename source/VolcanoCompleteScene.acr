@@ -1,6 +1,5 @@
 public class VolcanoCompleteScene : LegacyAbstractScene {
 
-	private string flags = '';
 	private PlayScene bg;
 	private Context context;
 	private int counter = 0;

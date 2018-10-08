@@ -2,7 +2,7 @@ import Audio;
 import Graphics2D;
 
 public class VictorySequenceScene : LegacyAbstractScene {
-	public string flags = '';
+	
 	public PlayScene bg;
 	private List<GraphicsTexture> images;
 	public Sprite player = null;

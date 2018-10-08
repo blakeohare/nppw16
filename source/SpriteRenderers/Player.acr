@@ -1,3 +1,5 @@
+import Graphics2D;
+
 public class PlayerRenderer : AbstractSpriteRenderer {
 	
 	public constructor(Sprite sprite) : base(sprite) { }
@@ -91,7 +93,7 @@ public class PlayerRenderer : AbstractSpriteRenderer {
 				}
 			}
 		} else {
-			int counter = sprite.moving ? '1232'[arc % 4] : '2';
+			string counter = sprite.moving ? '1232'[arc % 4] : '2';
 			string dir = sprite.lastDirection;
 			bool reverse = false;
 			if (dir == 'left') {

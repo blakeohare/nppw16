@@ -1,7 +1,7 @@
 import Graphics2D;
 
 public class TitleScene : LegacyAbstractScene {
-	public string flags = '';
+	
 	public int flash_counter = 0;
 	public List<List<int>> options = new List<List<string>>() {
 		"start|Start Game".split('|'),

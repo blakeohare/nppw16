@@ -20,7 +20,6 @@ class PlayScene : LegacyAbstractScene {
 	public List<object> startArgs;
 	private int updateCounter = 0;
 	public Context context;
-	public string flags = 'M';
 	public string id;
 	public bool hasAtmosphere;
 	public string bg;
@@ -46,6 +45,7 @@ class PlayScene : LegacyAbstractScene {
 	constructor(string mapId, int startCol, int startRow, Context context) 
 		: base() {
 		
+		this.flags = 'M';
 		this.startArgs = new List<object>() { mapId, startCol, startRow };
 		
 		this.context = context;
@@ -357,7 +357,7 @@ class PlayScene : LegacyAbstractScene {
 		}
 	}
 	
-	public void playMusic() {
+	public override void playMusic() {
 		JukeBox.playSongForLevelMaybe(this.id);
 	}
 	

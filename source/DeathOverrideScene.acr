@@ -2,12 +2,11 @@ import Math;
 
 public class DeathOverrideScene : LegacyAbstractScene {
 	
-	private string bg;
-	private PlayScene context;
-	private string flags = '';
+	private PlayScene bg;
+	private Context context;
 	private string type;
 	private int counter = 0;
-	private int vy = -10;
+	private float vy = -10;
 	
 	// types = "lava", "collapse", "fall"
 	// TODO: replace with enum
@@ -34,7 +33,7 @@ public class DeathOverrideScene : LegacyAbstractScene {
 		}
 			
 		this.counter++;
-		this.vy++;
+		this.vy += 1.0;
 		
 		if (this.type == 'lava' || this.type == 'fall') {
 			this.bg.player.modelY += this.vy;

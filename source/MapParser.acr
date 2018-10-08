@@ -23,8 +23,8 @@ public class Map {
 	public int width;
 	public int height;
 	public bool side;
-	public List<List<Tile>> upper;
-	public List<List<Tile>> lower;
+	public List<List<TileTemplate>> upper;
+	public List<List<TileTemplate>> lower;
 	public List<DoorParseUnit> doors;
 	public List<EnemiesParseUnit> enemies;
 	public Dictionary<string, List<List<string>>> doorSwaps;
@@ -77,7 +77,7 @@ public class MapParser {
 	
 	public List<PowerUpParseUnit> getPowerups(string sv) {
 		sv = sv.trim();
-		Lsit<PowerUpParseUnit> output = new List<PowerUpParseUnit>();
+		List<PowerUpParseUnit> output = new List<PowerUpParseUnit>();
 		if (sv.length == 0) {
 			return output;
 		}
@@ -140,8 +140,8 @@ public class MapParser {
 			for (string value : enemyString.split(',')) {
 				List<string> parts = value.split('|');
 				string id = parts[0];
-				int col = Core.parseInt(parts[1]);
-				int row = Core.parseInt(parts[2]);
+				int col = (int) Core.parseInt(parts[1]);
+				int row = (int) Core.parseInt(parts[2]);
 				EnemiesParseUnit e = new EnemiesParseUnit();
 				e.id = id;
 				e.col = col;
@@ -171,8 +171,8 @@ public class MapParser {
 		return doors;
 	}
 	
-	public List<List<Tile>> getTiles(List<string> ids, int width, int height) {
-		List<Tile> output = new List<Tile>();
+	public List<List<TileTemplate>> getTiles(string ids, int width, int height) {
+		List<TileTemplate> output = new List<TileTemplate>();
 		for (string id : ids.split(',')) {
 			id = id.trim();
 			if (id == '') {
@@ -182,7 +182,7 @@ public class MapParser {
 			}
 		}
 		
-		List<List<Tile>> grid = makeTileGrid(width, height);
+		List<List<TileTemplate>> grid = makeTileGrid(width, height);
 		int index = 0;
 		for (int y = 0; y < height; ++y) {
 			for (int x = 0; x < width; ++x) {

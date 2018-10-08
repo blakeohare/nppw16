@@ -1,3 +1,5 @@
+import Graphics2D;
+
 public class PoofRenderer : AbstractSpriteRenderer {
 	
 	public constructor(Sprite sprite) : base(sprite) { }
@@ -5,11 +7,12 @@ public class PoofRenderer : AbstractSpriteRenderer {
 	public override void render(PlayScene scene, int offsetX, int offsetY, int arc) {
 		
 		Sprite sprite = this.sprite;
-		bool isBig = sprite.automation.isBig;
+		PoofAutomation pa = (PoofAutomation)sprite.automation;
+		bool isBig = pa.isBig;
 		int left = sprite.x + offsetX - 8;
 		int top = sprite.y + offsetY - 8;
 		
-		int c = sprite.automation.counter;
+		int c = pa.counter;
 		string num;
 		if (c <= 3) {
 			num = '1';

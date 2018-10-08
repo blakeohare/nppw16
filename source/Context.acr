@@ -58,7 +58,7 @@ class Context {
 		
 		if (count >= 2) {
 			int value = (this.volcanoA ? 1 : 0) + (this.volcanoB ? 2 : 0) + (this.volcanoC ? 4 : 0);
-			string letter = Core.chr(Core.ord('1') + value - 1);
+			string letter = (string) Core.chr(value + (int) Core.ord('0'));
 			password += letter;
 		} else {
 			password += this.randomChar('0123456789');
@@ -66,7 +66,7 @@ class Context {
 		
 		if (count >= 3) {
 			int value = (this.balloonA ? 1 : 0) + (this.balloonB ? 2 : 0) + (this.balloonC ? 4 : 0) + (this.balloonD ? 8 : 0);
-			string letter = Core.chr(Core.ord('A') + value - 1);
+			string letter = (string) Core.chr(value + ((int) Core.ord('A') - 1));
 			password += letter;
 		} else {
 			password += this.randomChar(ALPHABET);
@@ -101,22 +101,22 @@ class Context {
 	*/
 	
 	private string randomChar(string characters) {
-		return characters[Random.randomInt(characters.length)];
+		return characters[(int) Random.randomInt(characters.length)];
 	}
 	
 	private string enforceLetter(string letter) {
 		letter = letter.upper();
-		if (Core.ord(letter) < Core.ord('A'))
+		if ((int) Core.ord(letter) < (int) Core.ord('A'))
 			return 'A';
-		if (Core.ord(letter) > Core.ord('Z'))
+		if ((int) Core.ord(letter) > (int) Core.ord('Z'))
 			return 'Z';
 		return letter;
 	}
 	
 	private string enforceNumber(string c) {
-		if (Core.ord(c) < Core.ord('0'))
+		if ((int) Core.ord(c) < (int) Core.ord('0'))
 			return '0';
-		if (Core.ord(c) > Core.ord('9'))
+		if ((int) Core.ord(c) > (int) Core.ord('9'))
 			return '9';
 		return c;
 	}
@@ -128,20 +128,20 @@ class Context {
 		string p4 = this.enforceLetter(password[3]);
 		
 		if ('ABC'.contains(p1)) {
-			if (Core.ord(p2) <= Core.ord('M')) {
+			if ((int) Core.ord(p2) <= (int) Core.ord('M')) {
 				this.gravity = true;
 			}
 		}
 		
 		if ('BC'.contains(p1)) {
-			int value = Core.ord(p3) - Core.ord('1') + 1;
+			int value = (int) Core.ord(p3) - (int) Core.ord('1') + 1;
 			this.volcanoA = (value & 1) != 0;
 			this.volcanoB = (value & 2) != 0;
 			this.volcanoC = (value & 4) != 0;
 		}
 		
 		if (p1 == 'C') {
-			int value = Core.ord(p4) - Core.ord('A') + 1;
+			int value = (int) Core.ord(p4) - (int) Core.ord('A') + 1;
 			this.balloonA = (value & 1) != 0;
 			this.balloonB = (value & 2) != 0;
 			this.balloonC = (value & 4) != 0;

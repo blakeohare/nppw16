@@ -12,7 +12,7 @@ const string cred_AC = "ADRIAN CLINE";
 
 class CreditsScene : LegacyAbstractScene {
 
-	private static List<object> CREDITS = new List<object>() {
+	private static List<List<object>> CREDITS = new List<List<object>>() {
 		new List<object>() { 'TEAM NERD PARADISE', new List<string>() },
 		new List<object>() { 'PROGRAMMING', new List<string>() { cred_BO } },
 		new List<object>() { 'LEVEL DESIGN', new List<string>() { cred_TB, cred_SC, cred_LF } },
@@ -24,12 +24,12 @@ class CreditsScene : LegacyAbstractScene {
 		new List<object>() { '', new List<string>() { 'THE END' } },
 	};
 
-	private string flags = 'M';
 	private int counter = 0;
 	private List<string> images = new List<string>();
 	private List<int> imageYs = new List<int>();
 	
 	public constructor() : base() {
+		this.flags = 'M';
 		int y = 0;
 		for (int i = 0; i < CreditsScene.CREDITS.length; ++i) {
 			this.images.add((string) CreditsScene.CREDITS[i][0]);
@@ -75,7 +75,7 @@ class CreditsScene : LegacyAbstractScene {
 		}
 	}
 	
-	public void playMusic() {
+	public override void playMusic() {
 		JukeBox.ensureSong('credits');
 	}
 }

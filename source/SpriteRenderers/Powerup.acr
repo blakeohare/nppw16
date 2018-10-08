@@ -5,7 +5,7 @@ public class PowerupRenderer : AbstractSpriteRenderer {
 	public override void render(PlayScene scene, int offsetX, int offsetY, int arc) {
 		
 		Sprite sprite = this.sprite;
-		if (sprite.automation.visible) {
+		if (((PowerupAutomation)sprite.automation).visible) {
 			int left = sprite.x + offsetX - 8;
 			int top = sprite.y + offsetY - 8;
 			string type = sprite.powerupInfo.type;
