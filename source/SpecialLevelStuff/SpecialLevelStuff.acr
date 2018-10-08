@@ -33,7 +33,7 @@ public class SpecialLevelStuff {
 	protected bool hasRender = false;
 	
 	// TODO: remove these specific hacks
-	protected bool lavaLevel = 0;
+	protected int lavaLevel = 0;
 	protected bool shakeScreen = false;
 	protected bool freeze = false;
 	

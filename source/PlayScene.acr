@@ -40,7 +40,7 @@ class PlayScene : LegacyAbstractScene {
 	private Sprite player;
 	private List<Sprite> sprites;
 	private Dictionary<string, string> overlayTriggers;
-	private SpecialLevelStuff special;
+	private List<SpecialLevelStuff> special;
 	private bool shooting;
 	
 	constructor(string mapId, int startCol, int startRow, Context context) 

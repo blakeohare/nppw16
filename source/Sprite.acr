@@ -39,10 +39,10 @@ public class Sprite {
 	public bool bikemode = false;
 	public PowerUpParseUnit powerupInfo = null;
 	public string acorntopdir;
-	public int dx = 0;
-	public int dy = 0;
-	public int iceVX = 0;
-	public int ddx = 0;
+	public float dx = 0;
+	public float dy = 0;
+	private float iceVX = 0;
+	private int ddx = 0;
 	public string damageDir = null;
 	public bool cling = false;
 	public int ladderDY = 0;

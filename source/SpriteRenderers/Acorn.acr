@@ -1,3 +1,5 @@
+import Graphics2D;
+
 public class AcornRenderer : AbstractSpriteRenderer {
 	
 	constructor(Sprite sprite) : base(sprite) { }
@@ -9,7 +11,7 @@ public class AcornRenderer : AbstractSpriteRenderer {
 		int height = 16;
 
 		string b = 'acorn';
-		string m = this.sprite.automation.mode; // TODO: enum
+		string m = ((AcornAutomation)this.sprite.automation).mode; // TODO: enum
 		if (m == 'throwing' || m == 'baldpatrolling') {
 			b = 'acorn_capless';
 		}

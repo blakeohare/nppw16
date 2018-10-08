@@ -13,7 +13,7 @@ class SeedAutomation : AbstractAutomation {
 		if (dx * dx + dy * dy < 10 ** 2 && !this.used) {
 			this.sprite.dead = true;
 			this.used = true;
-			scene.special[0].seedsLeft--;
+			((BirdFeeder)scene.special[0]).seedsLeft--;
 			playNoise('raise_health');
 		}
 	}

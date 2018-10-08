@@ -11,7 +11,7 @@ class RocketBikeAutomation : AbstractAutomation {
 		int dx = p.x - this.sprite.x;
 		int dy = p.y - this.sprite.y;
 		if (dx * dx + dy * dy < 10 ** 2) {
-			if (scene.special[0].seedsLeft == 0) {
+			if (((BirdFeeder)scene.special[0]).seedsLeft == 0) {
 				scene.next = new PlayScene('bike_level', 8, 7, scene.context);
 			}
 		}
