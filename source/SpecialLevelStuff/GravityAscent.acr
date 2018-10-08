@@ -5,7 +5,7 @@ public class GravityAscentExit : SpecialLevelStuff {
 		this.hasDoorTrigger = true;
 	}
 	
-	public override void doorTrigger(string doorId) {
+	public override string doorTrigger(string doorId) {
 		if (doorId == 'XXXXX') {
 			this.scene.next = new PlayScene('ship_1', 8, 9, this.scene.context);
 			return null;

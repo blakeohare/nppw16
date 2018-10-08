@@ -46,7 +46,7 @@ public class BikeLevelStuff : SpecialLevelStuff {
 		}
 	}
 	
-	function render(rc, offsetX, offsetY) {
+	public override void render(int rc, int offsetX, int offsetY) {
 		Sprite p = this.scene.player;
 		for (Point pt : this.particles) {
 			Graphics2D.Draw.rectangle(

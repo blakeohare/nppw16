@@ -1,3 +1,4 @@
+import Math;
 
 public class BalloonPopping : SpecialLevelStuff {
 	private string id;
@@ -44,7 +45,7 @@ public class BalloonPopping : SpecialLevelStuff {
 		}
 	}
 
-	public void postInit() {
+	public override void postInit() {
 		switch (this.id) {
 			case 'water1':
 				if (this.context.balloonA) this.applyOverlayAndSaveContext();
@@ -81,7 +82,7 @@ public class BalloonPopping : SpecialLevelStuff {
 	public void applyOverlayAndSaveContext(
 		bool showPop = false,
 		int balloonX = 0,
-		int balloon = 0) {
+		int balloonY = 0) {
 		
 		if (this.done) return;
 		
@@ -115,7 +116,7 @@ public class BalloonPopping : SpecialLevelStuff {
 		
 		if (showPop) {
 			playNoise('water_pop');
-			original.sprites.add(new Sprite('waterpop', balloonLoc[0] * 16 + 8, balloonLoc[1] * 16 + 8));
+			original.sprites.add(new Sprite('waterpop', balloonX * 16 + 8, balloonY * 16 + 8));
 			
 			if (this.context.balloonA && this.context.balloonB && this.context.balloonC && this.context.balloonD) {
 				this.scene.next = new DialogScene(this.scene, 'WaterDone', true, false, false);

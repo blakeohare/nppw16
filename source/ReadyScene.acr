@@ -23,7 +23,7 @@ public class ReadyScene : LegacyAbstractScene {
 		}
 	}
 	
-	public void render(int rc) {
+	public override void render(int rc) {
 		if (this.counter < 21) {
 			Graphics2D.Draw.fill(0, 0, 0);
 		} else {

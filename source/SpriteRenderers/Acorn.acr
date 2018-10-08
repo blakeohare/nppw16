@@ -3,26 +3,26 @@ public class AcornRenderer : AbstractSpriteRenderer {
 	constructor(Sprite sprite) : base(sprite) { }
 	
 	public override void render(PlayScene scene, int offsetX, int offsetY, int arc) {
-		int left = sprite.x + offsetX - 8;
-		int top = sprite.y + offsetY - 8;
+		int left = this.sprite.x + offsetX - 8;
+		int top = this.sprite.y + offsetY - 8;
 		int width = 16;
 		int height = 16;
 
 		string b = 'acorn';
-		string m = sprite.automation.mode; // TODO: enum
+		string m = this.sprite.automation.mode; // TODO: enum
 		if (m == 'throwing' || m == 'baldpatrolling') {
 			b = 'acorn_capless';
 		}
 		
 		string path;
-		if (sprite.moving) {
+		if (this.sprite.moving) {
 			path = b + '_' + '13'[(arc / 2) & 1];
 		} else {
 			path = b + '_2';
 		}
 		
 		path = 'sprites/' + path + '.png';
-		bool reverse = sprite.lastDirection == 'left';
+		bool reverse = this.sprite.lastDirection == 'left';
 		GraphicsTexture img;
 		if (reverse) {
 			img = ImageLibrary.getBackwards(path);

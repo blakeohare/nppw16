@@ -21,7 +21,7 @@ class PlayScene : LegacyAbstractScene {
 	private int updateCounter = 0;
 	public Context context;
 	public string flags = 'M';
-	public strinng id;
+	public string id;
 	public bool hasAtmosphere;
 	public string bg;
 	public List<GraphicsTexture> stars;
@@ -51,16 +51,16 @@ class PlayScene : LegacyAbstractScene {
 		this.context = context;
 		string levelname = mapId.split('.')[0];
 		this.id = levelname;
-		if (!map.endsWith('.map'))
-			map += '.map';
+		if (!mapId.endsWith('.map'))
+			mapId += '.map';
 		MapParser mapParser = new MapParser(mapId);
 		Map map = mapParser.parse();
 		
 		this.hasAtmosphere = context.volcanoA && context.volcanoB && context.volcanoC;
 
 		this.bg = getBackground(levelname);
-		List<GraphicsTexture> stars = [];
-		for (i = 1; i <= 5; ++i) {
+		List<GraphicsTexture> stars = new List<GraphicsTexture>();
+		for (int i = 1; i <= 5; ++i) {
 			stars.add(ImageLibrary.get('tiles/background/stars' + i + '.png'));
 		}
 		stars.concat(new List<GraphicsTexture>() { null } * 10);
@@ -316,7 +316,7 @@ class PlayScene : LegacyAbstractScene {
 							}
 							
 							playNoise('lazor');
-							bullet = new Sprite('lazor', x, y);
+							Sprite bullet = new Sprite('lazor', x, y);
 							bullet.bvx = lazorVX;
 							bullet.isBullet = true;
 							bullet.ghost = true;
@@ -380,7 +380,7 @@ class PlayScene : LegacyAbstractScene {
 				}
 				
 				if (sprite.spawns != null) {
-					for (spawn : sprite.spawns) {
+					for (Sprite spawn : sprite.spawns) {
 						this.sprites.add(spawn);
 					}
 				}
@@ -391,7 +391,7 @@ class PlayScene : LegacyAbstractScene {
 				}
 			}
 		}
-		List<Sprite> new_sprites = [];
+		List<Sprite> new_sprites = new List<Sprite>();
 		
 		for (int i = 0; i < this.sprites.length; ++i) {
 			Sprite sprite = this.sprites[i];
@@ -582,6 +582,7 @@ class PlayScene : LegacyAbstractScene {
 		if (cat != null) {
 			int cnt = (int) cat[1];
 			int total;
+			GraphicsTexture img;
 			if (cat[0] == 'W') {
 				img = ImageLibrary.get('misc/water_icon.png');
 				total = 4;
@@ -660,8 +661,8 @@ class PlayScene : LegacyAbstractScene {
 			shake = (int) Math.max(shake, s.shakeScreen ? 3 : 0);
 		}
 		
-		int offsetX += shake;
-		int offsetY += shake / 3;
+		offsetX += shake;
+		offsetY += shake / 3;
 		
 		string lavaRowType = null;
 		

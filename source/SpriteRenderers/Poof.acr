@@ -4,6 +4,7 @@ public class PoofRenderer : AbstractSpriteRenderer {
 	
 	public override void render(PlayScene scene, int offsetX, int offsetY, int arc) {
 		
+		Sprite sprite = this.sprite;
 		bool isBig = sprite.automation.isBig;
 		int left = sprite.x + offsetX - 8;
 		int top = sprite.y + offsetY - 8;

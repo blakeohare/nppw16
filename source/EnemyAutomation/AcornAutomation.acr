@@ -12,20 +12,21 @@ class AcornAutomation : AbstractAutomation {
 	private bool walkingLeft = true;
 	
 	constructor(Sprite sprite) : base(sprite) {
-		this.countdown = Random.randomInt(ACORN_DELAY_FOR_TOP_THROWING);
+		this.countdown = (int) Random.randomInt(ACORN_DELAY_FOR_TOP_THROWING);
 	}
 	
-	public void doStuff(PlayScene scene) {
+	public override void doStuff(PlayScene scene) {
 		this.countdown--;
 		bool walk = false;
+		AcornTopAutomation ata = (AcornTopAutomation) this.top.automation;
 		if (this.mode == 'patrolling') {
 			if (this.countdown <= 0) {
 				this.mode = 'throwing';
 				this.top = new Sprite('acorntop', this.sprite.x, this.sprite.y);
 				this.top.acorntopdir = this.sprite.lastDirection;
 				this.top.goLeft = this.top.acorntopdir == 'left';
-				this.top.automation.setGoLeft(this.sprite.lastDirection == 'left');
-				this.top.automation.setGoUp(this.sprite.y > scene.player.y);
+				ata.setGoLeft(this.sprite.lastDirection == 'left');
+				ata.setGoUp(this.sprite.y > scene.player.y);
 				//this.top.automation.body = this.sprite;
 				this.top.deleteWhenOffScreen = true;
 				this.top.ghost = true;
@@ -37,7 +38,7 @@ class AcornAutomation : AbstractAutomation {
 		} else if (this.mode == 'throwing') {
 			if (this.top.dead) {
 				this.mode = 'baldpatrolling';
-			} else if (this.top.automation.completed) {
+			} else if (ata.completed) {
 				this.mode = 'patrolling';
 				this.top.dead = true;
 				this.countdown = ACORN_DELAY_FOR_TOP_THROWING;
@@ -54,11 +55,11 @@ class AcornAutomation : AbstractAutomation {
 			List<List<Tile>> tiles = scene.tiles;
 			int cols = scene.cols;
 			int rows = scene.rows;
-			int dx = this.walkingLeft ? ACORN_SPEED : -ACORN_SPEED; // TODO: isn't this backwards?
+			float dx = this.walkingLeft ? ACORN_SPEED : -ACORN_SPEED; // TODO: isn't this backwards?
 			int oldTileX = (int) Math.floor(this.sprite.modelX / 16);
-			int newX = this.sprite.modelX + dx;
+			float newX = this.sprite.modelX + dx;
 			int oldTileY = (int) Math.floor(this.sprite.modelY / 16);
-			int newTileX = Math.floor(newX / 16);
+			int newTileX = (int) Math.floor(newX / 16);
 			if (newTileX < 0 || newTileX >= cols) {
 				this.walkingLeft = !this.walkingLeft;
 				return;

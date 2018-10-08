@@ -46,7 +46,7 @@ public class TitleScene : LegacyAbstractScene {
 		}
 	}
 	
-	public void update() {
+	public override void update() {
 		this.flash_counter--;
 		if (this.flash_counter == 1) {
 			string action = this.options[this.index][0];

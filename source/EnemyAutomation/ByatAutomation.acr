@@ -7,7 +7,7 @@ class ByatAutomation : AbstractAutomation {
 	private bool perched = true;
 	private int dropHeight = 10;
 	private int targetY;
-	private bol swoopLeft;
+	private bool swoopLeft;
 
 	constructor(Sprite sprite) : base(sprite) {
 		this.sprite = sprite;
@@ -62,7 +62,7 @@ class ByatAutomation : AbstractAutomation {
 				if (tx < 0 || tx >= scene.cols || ty < 0 || ty >= scene.rows) {
 					stop = true;
 				} else {
-					t = tiles[tx][ty];
+					Tile t = tiles[tx][ty];
 					if (t.isTop || t.solid) {
 						stop = true;
 					}

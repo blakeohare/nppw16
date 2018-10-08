@@ -16,8 +16,8 @@ public class ImageLibrary {
 		return img;
 	}
 	
-	public static GraphicsTexture function getBackwards(string path) {
-		img = ImageLibrary.flipped.get(path, null);
+	public static GraphicsTexture getBackwards(string path) {
+		GraphicsTexture img = ImageLibrary.flipped.get(path, null);
 		if (img == null) {
 			img = (GraphicsTexture) Images.get('images/' + path, ImageOptions.FLIP_X);
 			ImageLibrary.flipped[path] = img;

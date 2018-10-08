@@ -3,6 +3,7 @@ public class MoonSquidRenderer : AbstractSpriteRenderer {
 	public constructor(Sprite sprite) : base(sprite) { }
 	
 	public override void render(PlayScene scene, int offsetX, int offsetY, int arc) {
+		Sprite sprite = this.sprite;
 		int left = offsetX + sprite.x - 8;
 		int top = offsetY + sprite.y - 8;
 		int arc = arc / 3;

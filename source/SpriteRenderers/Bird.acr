@@ -3,8 +3,8 @@ public class BirdRenderer : AbstractSpriteRenderer {
 	public constructor(Sprite sprite) : base(sprite) { }
 	
 	public override void render(PlayScene scene, int offsetX, int offsetY, int arc) {
-		int left = sprite.x + offsetX - 16;
-		int top = sprite.y + offsetY - 16;
+		int left = this.sprite.x + offsetX - 16;
+		int top = this.sprite.y + offsetY - 16;
 		GraphicsTexture img = ImageLibrary.get('sprites/bird_chase_' + ((((arc / 2) & 1) == 0) ? '1' : '2') + '.png');
 		img.draw(left, top);
 	}

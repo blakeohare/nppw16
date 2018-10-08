@@ -1,14 +1,14 @@
 import Math;
 
 public class VolcanoCoreActivation : SpecialLevelStuff {
-	private string id;
+	private int id;
 	private int spotX = 11;
 	private int spotY = 9;
 	private int sequenceCounter = -1;
 	private bool done = false;
 	private bool warpBack = false;
 	
-	public constructor(PlayScene scene, string id) : base(scene) {
+	public constructor(PlayScene scene, int id) : base(scene) {
 		this.id = id;
 		this.scene = scene;
 		this.hasUpdate = true;

@@ -11,34 +11,34 @@ class SoundLookup {
 		return new List<object>() { a, b };
 	}
 	
-	private static Dictionary<string, object> SOUND_LOOKUP = new Dictionary<string, object>() {
-		'head_bonk': pairOf('head_bonk', 1.0), // fairly subtle sound as it will also happen a lot. Re-used when trying to move a menu cursor someplace where it cannot go.
-		'password_enter_digit': pairOf('password_digit_enter', 1.0),
-		'bad_password': pairOf('bad_password', 1.0), // sad fanfare: "DOO DOOoooo"
-		'sprinkle_lava_packet': pairOf('sprinkle_lava', 1.0), // "chkhchkhchkchkh" no longer than 1 second
-		'screen_shaking': pairOf('everythingfalls', 1.0), // done. perfect.
-		'fall_to_death': pairOf('fall_to_death', 1.0), // fairly obvious
-		'lava_rise': pairOf('crash', 1.0),
-		'land_on_ground': pairOf('land_on_ground', 0.5), // subtle sound as it will happen a lot
-		'water_pop': pairOf('crash', 1.0),
+	internal static Dictionary<string, List<object>> SOUND_LOOKUP = new Dictionary<string, List<object>>() {
+		'head_bonk': SoundLookup.pairOf('head_bonk', 1.0), // fairly subtle sound as it will also happen a lot. Re-used when trying to move a menu cursor someplace where it cannot go.
+		'password_enter_digit': SoundLookup.pairOf('password_digit_enter', 1.0),
+		'bad_password': SoundLookup.pairOf('bad_password', 1.0), // sad fanfare: "DOO DOOoooo"
+		'sprinkle_lava_packet': SoundLookup.pairOf('sprinkle_lava', 1.0), // "chkhchkhchkchkh" no longer than 1 second
+		'screen_shaking': SoundLookup.pairOf('everythingfalls', 1.0), // done. perfect.
+		'fall_to_death': SoundLookup.pairOf('fall_to_death', 1.0), // fairly obvious
+		'lava_rise': SoundLookup.pairOf('crash', 1.0),
+		'land_on_ground': SoundLookup.pairOf('land_on_ground', 0.5), // subtle sound as it will happen a lot
+		'water_pop': SoundLookup.pairOf('crash', 1.0),
 		
 		// TODO(Blake): make sure these are hooked up in all menus
-		'menu_select': pairOf('menuhigh', 6.0), // positive sound
-		'menu_move': pairOf('menulow', 4.0),  //subtle
+		'menu_select': SoundLookup.pairOf('menuhigh', 6.0), // positive sound
+		'menu_move': SoundLookup.pairOf('menulow', 4.0),  //subtle
 		
-		'low_health': pairOf('low_health', 1.0), // annoying as hell, 5 high pitched beeps in quick succession
-		'get_hit': pairOf('get_hit', 1.0), // use megaman taking-damage sound as inspiration, if that's doable.
-		'raise_health': pairOf('raise_health', 1.0), // dwoooOOO (but short)
-		'1up': pairOf('1up', 1.0),
-		'jump': pairOf('jump', 0.4), 
-		'swim': pairOf('jump', 0.4), // maybe use a different sound?
-		'pause_sound': pairOf('pause_sound', 1.0), // "TEE KOO TEE KOO!"
-		'lava_roast': pairOf('lava_roast', 1.0), // player dies by lava
-		'text_char': pairOf('text_char', 0.3), // subtle text character bloop
-		'lazor': pairOf('lazor', 1.0), // player shoots lazor
+		'low_health': SoundLookup.pairOf('low_health', 1.0), // annoying as hell, 5 high pitched beeps in quick succession
+		'get_hit': SoundLookup.pairOf('get_hit', 1.0), // use megaman taking-damage sound as inspiration, if that's doable.
+		'raise_health': SoundLookup.pairOf('raise_health', 1.0), // dwoooOOO (but short)
+		'1up': SoundLookup.pairOf('1up', 1.0),
+		'jump': SoundLookup.pairOf('jump', 0.4), 
+		'swim': SoundLookup.pairOf('jump', 0.4), // maybe use a different sound?
+		'pause_sound': SoundLookup.pairOf('pause_sound', 1.0), // "TEE KOO TEE KOO!"
+		'lava_roast': SoundLookup.pairOf('lava_roast', 1.0), // player dies by lava
+		'text_char': SoundLookup.pairOf('text_char', 0.3), // subtle text character bloop
+		'lazor': SoundLookup.pairOf('lazor', 1.0), // player shoots lazor
 		
 		// TODO(Blake): The following are not hooked in by the code yet
-		'enemy_dies': pairOf('enemy_dies', 1.0), // after shooting it
+		'enemy_dies': SoundLookup.pairOf('enemy_dies', 1.0), // after shooting it
 	};
 	
 	static Dictionary<string, Audio.SoundResource> _sound_cache = new Dictionary<string, Audio.SoundResource>();
@@ -50,12 +50,12 @@ public void playNoise(string key) {
 	}
 	Audio.SoundResource snd = SoundLookup._sound_cache.get(key, null);
 	if (snd == null) {
-		data = SoundLookup.SOUND_LOOKUP.get(key, null);
+		List<object> data = SoundLookup.SOUND_LOOKUP.get(key, null);
 		if (data != null) {
 			string filename = (string) data[0];
 			float volumeRatio = (float) data[1];
 			string path = 'sfx/' + filename + '.ogg';
-			snd = Audio.SoundResource.loadFromResource(path);
+			snd = (Audio.SoundResource) Audio.SoundResource.loadFromResource(path);
 			snd.setDefaultVolume(volumeRatio);
 			SoundLookup._sound_cache[key] = snd;
 		}

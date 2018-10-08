@@ -9,7 +9,7 @@ public class PauseScene : LegacyAbstractScene {
 		this.bg = bg;
 	}
 	
-	public override processInput(List<MyEvent> events, Dictionary<string, bool> pressed) {
+	public override void processInput(List<MyEvent> events, Dictionary<string, bool> pressed) {
 		for (MyEvent event : events) {
 			if (event.down && event.action == 'start') {
 				if (this.bg.flags.contains('M')) {
@@ -22,7 +22,7 @@ public class PauseScene : LegacyAbstractScene {
 		}
 	}
 	
-	public override update() {
+	public override void update() {
 		if (this.bg.flags.contains('M')) {
 			if (this.counter == 0) {
 				JukeBox.pause();
@@ -32,7 +32,7 @@ public class PauseScene : LegacyAbstractScene {
 		this.counter++;
 	}
 	
-	public override render(int rc) {
+	public override void render(int rc) {
 		Graphics2D.Draw.fill(0, 0, 0);
 		drawText(255, 255, 255, "PAUSE", 108, 108);
 	}

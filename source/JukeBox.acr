@@ -21,7 +21,7 @@ public static class JukeBox {
 		'gameover': 'fluffytales',
 	};
 
-	private static Dictionary<string, string> SONG_BY_MAP = {
+	private static Dictionary<string, string> SONG_BY_MAP = new Dictionary<string, string>() {
 		'ship_1': 'ship',
 		
 		'main': 'overworld',

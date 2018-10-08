@@ -1,3 +1,4 @@
+import Graphics2D;
 
 static class TextRenderer {
 	private static Dictionary<string, string> TEXT_FILENAMES = new Dictionary<string, string>() {
@@ -29,20 +30,22 @@ static class TextRenderer {
 		Dictionary<string, GraphicsTexture> lookup = TextRenderer.lookup_by_color.get(colorname, null);
 		if (lookup == null) {
 			lookup = new Dictionary<string, GraphicsTexture>();
-			lettersBuilder = [];
+			List<string> lettersBuilder = new List<string>();
 			for (int i = 0; i < 10; ++i) {
 				lettersBuilder.add('' + i);
 			}
+			
+			int a = (int) Core.ord('a');
 			for (int i = 0; i < 26; ++i) {
-				lettersBuilder.add(ALPHABET[i]);
+				lettersBuilder.add((string) Core.chr(i + a));
 			}
 			
 			for (string key : TextRenderer.TEXT_FILENAMES.keys()) {
-				letters.add(key);
+				lettersBuilder.add(key);
 			}
 			
-			for (string c : letters) {
-				c = char.lower();
+			for (string c : lettersBuilder) {
+				c = c.lower();
 				GraphicsTexture img = ImageLibrary.get('text/' + colorname + '-' + TextRenderer.TEXT_FILENAMES.get(c, c) + '.png');
 				lookup[c] = img;
 				lookup[c.upper()] = img;
@@ -66,7 +69,7 @@ static class TextRenderer {
 	}
 }
 
-public static void drawText(int r, int g, int b, string text, int x, int y) {
+public void drawText(int r, int g, int b, string text, int x, int y) {
 	// TODO: change this to just pass in the color name as an enum.
 	string color = null;
 	if (r == 255) {

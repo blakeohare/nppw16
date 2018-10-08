@@ -27,7 +27,7 @@ class AdapterScene : AbstractScene {
 		}
 	}
 	
-	public override update(object inputManager, object events) {
+	public override object update(object inputManager, object events) {
 		this.events.clear();
 		for (Event event : (List<Event>) events) {
 			bool down = false;
@@ -63,9 +63,10 @@ class AdapterScene : AbstractScene {
 		this.activeScene.update();
 	}
 	
-	function render() {
+	public override object render() {
 		this.activeScene.render(this.renderCounter++);
 		this.activeScene = this.activeScene.next;
+		return null;
 	}
 }
 

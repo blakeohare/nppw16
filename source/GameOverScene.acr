@@ -67,7 +67,7 @@ public class GameOverScene : LegacyAbstractScene {
 		}
 	}
 	
-	public override render(int rc) {
+	public override void render(int rc) {
 		Graphics2D.Draw.fill(0, 0, 0);
 		
 		bool show_selected = this.mode == 'prompt' || (rc % 2) == 0;

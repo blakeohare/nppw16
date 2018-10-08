@@ -1,3 +1,4 @@
+import Graphics2D;
 import Resources;
 
 class TileStore {
@@ -122,7 +123,7 @@ public class TileTemplate {
 		this.imageCount = this.images.length;
 	}
 	
-	GraphicsTexture getImage(rc) {
+	GraphicsTexture getImage(int rc) {
 		return this.staticImage ?? this.images[(rc / 4) % this.imageCount];
 	}
 }
@@ -161,7 +162,7 @@ public class Tile {
 	public List<List<int>> collisions = new List<List<int>>();
 	public bool solid = false;
 	
-	public constructor(List<TileTemplaet> templates, int col, int row) {
+	public constructor(List<TileTemplate> templates, int col, int row) {
 		this.originalTemplates = templates;
 		this.col = col;
 		this.row = row;
@@ -243,7 +244,7 @@ public class Tile {
 			this.collisions.add(new List<int>() { 1, 1, 1, 1 });
 		
 		for (int i = 0; i < this.collisions.length; ++i) {
-			c = this.collisions[i];
+			List<int> c = this.collisions[i];
 			c[0] = c[0] * 8 + col * 16;
 			c[1] = c[1] * 8 + row * 16;
 			c[2] = c[0] + c[2] * 8;

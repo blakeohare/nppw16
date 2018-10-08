@@ -23,13 +23,13 @@ public class Sprite {
 	public bool moving = false;
 	public string lastDirection = 'left';
 	public bool onGround = false;
-	public List<List<int>> neighbors = [null] * 36;
+	public List<List<int>> neighbors = new List<List<int>>() { null } * 36;
 	public List<Sprite> spawns = null;
 	public bool dead = false;
 	public bool collidedWall = false;
 	public bool deleteWhenOffScreen = false;
 	public bool ghost = false;
-	public bstractSpriteRenderer renderImpl = null;
+	public AbstractSpriteRenderer renderImpl = null;
 	public AbstractAutomation automation = null;
 	public bool floats = false;
 	public string deathState = null; // TODO: enum
@@ -149,7 +149,7 @@ public class Sprite {
 	
 	private static List<int> NEIGHBOR_RANGE = new List<int>() { -1, 0, 1 };
 
-	private static Dictionary<string, int> SPRITE_HEIGHT = new Dictionary<string, int>() {
+	internal static Dictionary<string, int> SPRITE_HEIGHT = new Dictionary<string, int>() {
 		'player_side': 32,
 		'acorn': 16,
 		'acorntop': 16,
@@ -179,7 +179,7 @@ public class Sprite {
 
 	// TODO: merge this into Automation
 	// There's currently a public setter when it gets a sprite from enemy information from the map parse data.
-	private static List<string> ENEMY_TYPES = [
+	private static List<string> ENEMY_TYPES = new List<string>() {
 		'acorn',
 		'acorntop'
 	};
@@ -332,7 +332,7 @@ public class Sprite {
 			// side-to-side calcuation is done first, independent of whether you are on the ground.
 			if (this.dx != 0) {
 				if (inWater && isPlayer) {
-					maxDX = this.onGround ? 1.0 : 1.5;
+					float maxDX = this.onGround ? 1.0 : 1.5;
 					if (this.dx < -maxDX) {
 						this.dx = -maxDX;
 					} else if (this.dx > maxDX) {

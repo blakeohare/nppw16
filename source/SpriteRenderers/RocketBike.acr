@@ -3,6 +3,7 @@ public class RocketBikeRenderer : AbstractSpriteRenderer {
 	public constructor(Sprite sprite) : base(sprite) { }
 	
 	public override void render(PlayScene scene, int offsetX, int offsetY, int arc) {
+		Sprite sprite = this.sprite;
 		int left = sprite.x + offsetX - 16;
 		int top = sprite.y + offsetY - 24;
 		GraphicsTexture img = ImageLibrary.get('sprites/rocket_bike_squirrelless.png');

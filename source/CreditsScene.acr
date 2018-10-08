@@ -24,7 +24,6 @@ class CreditsScene : LegacyAbstractScene {
 		new List<object>() { '', new List<string>() { 'THE END' } },
 	};
 
-	public LegacyAbstractScene next = this;
 	private string flags = 'M';
 	private int counter = 0;
 	private List<string> images = new List<string>();
@@ -64,7 +63,7 @@ class CreditsScene : LegacyAbstractScene {
 		this.counter++;
 	}
 	
-	public void render(int rc) {
+	public override void render(int rc) {
 		Graphics2D.Draw.fill(0, 0, 0);
 		
 		int counter = (int) Math.min(this.counter, 892);

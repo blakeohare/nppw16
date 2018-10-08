@@ -104,7 +104,7 @@ class Context {
 		return characters[Random.randomInt(characters.length)];
 	}
 	
-	private string enforceLetter(letter) {
+	private string enforceLetter(string letter) {
 		letter = letter.upper();
 		if (Core.ord(letter) < Core.ord('A'))
 			return 'A';
@@ -113,7 +113,7 @@ class Context {
 		return letter;
 	}
 	
-	private string enforceNumber(c) {
+	private string enforceNumber(string c) {
 		if (Core.ord(c) < Core.ord('0'))
 			return '0';
 		if (Core.ord(c) > Core.ord('9'))
@@ -122,10 +122,10 @@ class Context {
 	}
 	
 	void convertFromPassword(string password) {
-		p1 = this.enforceLetter(password[0]);
-		p2 = this.enforceLetter(password[1]);
-		p3 = this.enforceNumber(password[2]);
-		p4 = this.enforceLetter(password[3]);
+		string p1 = this.enforceLetter(password[0]);
+		string p2 = this.enforceLetter(password[1]);
+		string p3 = this.enforceNumber(password[2]);
+		string p4 = this.enforceLetter(password[3]);
 		
 		if ('ABC'.contains(p1)) {
 			if (Core.ord(p2) <= Core.ord('M')) {

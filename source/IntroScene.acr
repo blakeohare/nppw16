@@ -10,7 +10,7 @@ public class IntroScene : LegacyAbstractScene {
 	private int counter = 0;
 	private bool quickEnabled;
 	
-	constructor(quickEnabled) : base() {
+	constructor(bool quickEnabled) : base() {
 		this.quickEnabled = quickEnabled;
 		
 		this.pages = new List<GraphicsTexture>() {
@@ -20,7 +20,7 @@ public class IntroScene : LegacyAbstractScene {
 		};
 	}
 	
-	public override void processInput(List<MyEvent> events, Dictionary<strig, bool> pressedKeys) { }
+	public override void processInput(List<MyEvent> events, Dictionary<string, bool> pressedKeys) { }
 	
 	public override void update() {
 		if (DEBUG_MODE || this.quickEnabled) {
@@ -46,12 +46,12 @@ public class IntroScene : LegacyAbstractScene {
 			this.next = this.getStartScene();
 	}
 	
-	public void render(int rc) {
+	public override void render(int rc) {
 		Graphics2D.Draw.fill(0, 0, 0);
 		this.pages[this.page].draw(0, 16);
 	}
 	
-	public AbstractLegacyScene getStartScene() {
+	public LegacyAbstractScene getStartScene() {
 		/*
 		if os.path.exists('fast_start.txt'):
 			c = open('fast_start.txt', 'rt')

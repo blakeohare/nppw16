@@ -114,13 +114,13 @@ class DialogScene : LegacyAbstractScene {
 		}
 		
 		int startY = y;
-		for (strig line : this.showLines) {
+		for (string line : this.showLines) {
 			drawText(255, 255, 255, line, x, y);
 			y += space;
 		}
 		
 		if (this.blink && ((rc / 7) & 1) == 0) {
-			List<int> pos = [256 - 40, startY + space * 4];
+			List<int> pos = new List<int>() { 256 - 40, startY + space * 4 };
 			if (!this.forceArrow && this.stanzaIndex == this.stanzas.length - 1) {
 				Graphics2D.Draw.rectangle(pos[0], pos[1], 8, 8, 255, 255, 255);
 			} else {

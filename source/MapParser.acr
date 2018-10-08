@@ -43,7 +43,7 @@ public class EnemiesParseUnit {
 }
 
 public class MapParser {
-	private Dictionary<strig, string> values = new Dictionary<string, string>();
+	private Dictionary<string, string> values = new Dictionary<string, string>();
 	
 	constructor(string file) {
 		string path = 'maps/' + file;
@@ -126,7 +126,7 @@ public class MapParser {
 				string original = parts[1].trim();
 				string swapped = parts[2].trim();
 				
-				swaps[original] = swaps.get(original) ?? new List<List<string>>());
+				swaps[original] = swaps.get(original) ?? new List<List<string>>();
 				swaps[original].add(new List<string>() { trigger, swapped });
 			}
 		}

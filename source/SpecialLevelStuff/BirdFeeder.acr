@@ -26,7 +26,7 @@ public class BirdFeeder : SpecialLevelStuff {
 		scene.sprites.add(bike);
 	}
 		
-	public void update() {
+	public override void update() {
 		Sprite p = this.scene.player;
 		this.counter++;
 		
@@ -41,5 +41,5 @@ public class BirdFeeder : SpecialLevelStuff {
 		}
 	}
 		
-	public void postInit() { }
+	public override void postInit() { }
 }
