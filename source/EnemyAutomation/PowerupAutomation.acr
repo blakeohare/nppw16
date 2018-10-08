@@ -30,7 +30,7 @@ class PowerupAutomation : AbstractAutomation {
 	
 	private void applyPowerup(Context context) {
 		this.sprite.dead = true;
-		PowerUpParseUnit info = this.sprite.powerupInfo;
+		AbstractPowerupThing info = this.sprite.powerupInfo;
 		string id = info.id;
 		string type = info.type;
 		if (id != null) {

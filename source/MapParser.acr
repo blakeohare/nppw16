@@ -10,13 +10,12 @@ public class DoorParseUnit {
 	constructor() { }
 }
 
-public class PowerUpParseUnit {
-	public string type;
-	public string id;
+public class PowerUpParseUnit : AbstractPowerupThing {
+	// .field and .type are on the base class
 	public int row;
 	public int col;
 	
-	constructor() { }
+	constructor() : base() { }
 }
 
 public class Map {

@@ -2,11 +2,17 @@ import Graphics2D;
 import Math;
 import Random;
 
-public class PowerupDrop {
+// TODO: in the dynamically typed days, the PowerupDrop and PowerUpParseUnit objects were
+// passed around interchangeably and both have .id and .type fields. Clean this up and
+// figure out which one is the real one that needs to be on the Sprite class.
+public class AbstractPowerupThing {
 	public string id = null;
-	public string type;
-	
-	constructor(string type) { 
+	public string type = null;
+	constructor() { } 
+}
+
+public class PowerupDrop : AbstractPowerupThing {
+	constructor(string type) : base() { 
 		this.type = type;
 	}
 }
@@ -28,8 +34,8 @@ class PlayScene : LegacyAbstractScene {
 	private string runCounterValidFor;
 	private int cols;
 	private int rows;
-	private List<List<Tile>> upper;
-	private List<List<Tile>> lower;
+	private List<List<TileTemplate>> upper;
+	private List<List<TileTemplate>> lower;
 	private bool side;
 	private int lazor_cooldown = 0;
 	private List<List<Tile>> tiles;
@@ -80,7 +86,7 @@ class PlayScene : LegacyAbstractScene {
 		
 		this.tiles = makeTileGrid(this.cols, this.rows);
 		
-		this.doorSwaps = map.doorswaps;
+		this.doorSwaps = map.doorSwaps;
 		
 		List<Door> doorTiles = new List<Door>();
 		Dictionary<string, List<int>> ladderTiles = new Dictionary<string, List<int>>();
@@ -114,8 +120,8 @@ class PlayScene : LegacyAbstractScene {
 				}
 			}
 		}
-		Dictionary<string, Door> doorLookup = new Dictionary<string, Door>();
-		for (Door door : map.doors) {
+		Dictionary<string, DoorParseUnit> doorLookup = new Dictionary<string, DoorParseUnit>();
+		for (DoorParseUnit door : map.doors) {
 			int x = door.sx;
 			int y = door.sy;
 			doorLookup[x + "|" + y] = door;
@@ -124,13 +130,13 @@ class PlayScene : LegacyAbstractScene {
 			}
 		}
 		
-		for (Door doorTile : doorTiles) {
-			string dk = doorTile[0];
-			Door door = doorLookup.get(dk, null);
-			if (door != null) {
-				doorTile.tile.door = door;
-				doorTile.tile.collisions = new List<List<int>>();
-				doorTile.tile.solid = false;
+		for (Door door : doorTiles) {
+			string dk = door.locationKey;
+			DoorParseUnit doorData = doorLookup.get(dk, null);
+			if (doorData != null) {
+				door.tile.door = doorData;
+				door.tile.collisions = new List<List<int>>();
+				door.tile.solid = false;
 			}
 		}
 		
@@ -365,8 +371,6 @@ class PlayScene : LegacyAbstractScene {
 		this.updateCounter++;
 		this.playMusic();
 		
-		int playerX = this.player.modelX;
-		int playerY = this.player.modelY;
 		this.lazor_cooldown--;
 		List<Sprite> allBullets = new List<Sprite>();
 		for (int i = 0; i < this.sprites.length; ++i) { // use an indexed loop instead of for loop since you're adding spawned sprites to the list while iterating through it.
@@ -424,7 +428,7 @@ class PlayScene : LegacyAbstractScene {
 								case 'byat':
 								case 'moonsquid':
 								case 'lavamonster':
-									int dropN = Random.randomInt(200);
+									int dropN = (int) Random.randomInt(200);
 									string drop = null;
 									if (dropN == 0) {
 										drop = '1up';
@@ -469,7 +473,7 @@ class PlayScene : LegacyAbstractScene {
 		int player_ty = (int) Math.floor(this.player.modelY / 16);
 		Tile activeTile = this.tiles[player_tx][player_ty];
 		if (activeTile.door != null) {
-			Door door = activeTile.door;
+			DoorParseUnit door = activeTile.door;
 			string target = door.target;
 			List<List<string>> swaps = this.doorSwaps.get(target, null);
 			
@@ -527,7 +531,7 @@ class PlayScene : LegacyAbstractScene {
 		}
 	}
 	
-	public bool isCollision(int pLeft, int pTop, int pRight, int pBottom) {
+	public bool isCollision(float pLeft, float pTop, float pRight, float pBottom) {
 		if (pLeft < 0) return true;
 		if (pTop < 0) return true;
 		int tLeft = (int) Math.floor(pLeft / 16);

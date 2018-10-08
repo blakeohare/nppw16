@@ -51,7 +51,7 @@ public class TileTemplate {
 	public GraphicsTexture staticImage = null;
 	public int imageCount;
 	
-	constructor(string id, string flags, List<GraphicsTexture> imagePaths) {
+	constructor(string id, string flags, List<string> imagePaths) {
 		this.id = id;
 
 		this.isWater = id == 'water' || id == 'watertop';
@@ -155,7 +155,7 @@ public class Tile {
 	public bool isLava = false;
 	public bool isWater = false;
 	public bool isIce = false;
-	public Door door = null;
+	public DoorParseUnit door = null;
 	public bool isSpike = false;
 	public bool isBalloon = false;
 	public List<int> primaryBalloonOffset = null;

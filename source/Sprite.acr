@@ -37,7 +37,7 @@ public class Sprite {
 	public bool isBullet;
 	public bool inBackground = false;
 	public bool bikemode = false;
-	public PowerUpParseUnit powerupInfo = null;
+	public AbstractPowerupThing powerupInfo = null;
 	public string acorntopdir;
 	public float dx = 0;
 	public float dy = 0;
@@ -138,7 +138,7 @@ public class Sprite {
 				this.ghost = true;
 				break;
 			case 'rocketbike':
-				this.renderImpl = new RocketBikeAutomation(this);
+				this.renderImpl = new RocketBikeRenderer(this);
 				this.automation = new RocketBikeAutomation(this);
 				this.ghost = true;
 				break;
@@ -166,7 +166,7 @@ public class Sprite {
 		'rocketbike': 32,
 	};
 
-	private static List<List<int>> XY_PAIRINGS = new List<int>() {
+	private static List<List<int>> XY_PAIRINGS = new List<List<int>>() {
 		new List<int>() { 0, 0 },
 		new List<int>() { 1, 0 },
 		new List<int>() { 2, 0 },
@@ -184,11 +184,11 @@ public class Sprite {
 		'acorntop'
 	};
 
-	public bool checkNeighborCollision(PlayScene scene, int col, int row, int targetX, int targetY) {
-		int area_left = targetX - 5;
-		int area_right = targetX + 5;
-		int area_top = targetY - 5;
-		int area_bottom = targetY + 5;
+	public bool checkNeighborCollision(PlayScene scene, int col, int row, float targetX, float targetY) {
+		float area_left = targetX - 5;
+		float area_right = targetX + 5;
+		float area_top = targetY - 5;
+		float area_bottom = targetY + 5;
 		
 		int width = scene.cols;
 		int height = scene.rows;
@@ -269,7 +269,7 @@ public class Sprite {
 				if (offsetX < right) offsetX = right;
 				
 				float newX = areaX + this.dx;
-				int pixelX = newX + offsetX;
+				float pixelX = newX + offsetX;
 				if (pixelX < 8)
 					this.dx = BIKE_SPEED;
 				else if (pixelX > 248)
@@ -435,8 +435,8 @@ public class Sprite {
 			bool wasCling = this.cling;
 			bool movedUp = false;
 			
-			int newBottom = areaBottom + this.dy;
-			int newTop = areaTop + this.dy;
+			float newBottom = areaBottom + this.dy;
+			float newTop = areaTop + this.dy;
 			
 			bool no = false;
 			

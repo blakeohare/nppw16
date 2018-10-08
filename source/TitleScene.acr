@@ -3,7 +3,7 @@ import Graphics2D;
 public class TitleScene : LegacyAbstractScene {
 	
 	public int flash_counter = 0;
-	public List<List<int>> options = new List<List<string>>() {
+	public List<List<string>> options = new List<List<string>>() {
 		"start|Start Game".split('|'),
 		"quickstart|Quick Start".split('|'), // TODO: play intro vs play
 		"password|Enter Password".split('|'),
