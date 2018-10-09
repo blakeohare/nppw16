@@ -1,0 +1,38 @@
+import Graphics2D;
+
+public class PauseScene : LegacyAbstractScene {
+	public PlayScene bg;
+	private int counter = 0;
+	
+	constructor(PlayScene bg) : base() {
+		this.bg = bg;
+	}
+	
+	public override void processInput(List<MyEvent> events, Dictionary<string, bool> pressed) {
+		for (MyEvent event : events) {
+			if (event.down && event.action == 'start') {
+				if (this.bg.flags.contains('M')) {
+					playNoise('pause_sound');
+					JukeBox.resume();
+				}
+				this.next = this.bg;
+				this.bg.next = this.bg;
+			}
+		}
+	}
+	
+	public override void update() {
+		if (this.bg.flags.contains('M')) {
+			if (this.counter == 0) {
+				JukeBox.pause();
+				playNoise('pause_sound');
+			}
+		}
+		this.counter++;
+	}
+	
+	public override void render(int rc) {
+		Graphics2D.Draw.fill(0, 0, 0);
+		drawText(255, 255, 255, "PAUSE", 108, 108);
+	}
+}

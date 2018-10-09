@@ -1,0 +1,30 @@
+public class VolcanoCompleteScene : LegacyAbstractScene {
+
+	private PlayScene bg;
+	private Context context;
+	private int counter = 0;
+	private Sprite player;
+	
+	public constructor(PlayScene scene, Context context) : base() {
+		this.bg = scene;
+		this.context = context;
+		this.player = scene.player;
+	}
+	
+	public override void processInput(List<MyEvent> events, Dictionary<string, bool> pressed) { }
+	
+	public override void update() {
+		this.counter++;
+		if (this.counter == 20) {
+			this.next = new DialogScene(this, 'Volcano', false);
+		}
+		
+		if (this.counter == 30) {
+			this.next = new PlayScene('ship_1', 8, 9, this.context);
+		}
+	}
+	
+	public override void render(int rc) {
+		this.bg.render(rc);
+	}
+}

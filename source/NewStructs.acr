@@ -1,0 +1,9 @@
+public class Door {
+	public string locationKey; // Format: "col|row"
+	public Tile tile;
+
+	public constructor(string locationKey, Tile tile) {
+		this.locationKey = locationKey;
+		this.tile = tile;
+	}
+}

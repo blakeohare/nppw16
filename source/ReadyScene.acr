@@ -1,0 +1,36 @@
+import Graphics2D;
+
+public class ReadyScene : LegacyAbstractScene {
+	
+	private Context context;
+	private List<object> startArgs;
+	private int counter = 0;
+	private PlayScene playscene;
+	
+	constructor(PlayScene previousScene, Context context) : base() {
+		this.context = context;
+		this.startArgs = previousScene.startArgs;
+		this.playscene = new PlayScene((string) this.startArgs[0], (int) this.startArgs[1], (int) this.startArgs[2], this.context);
+	}
+	
+	public override void processInput(List<MyEvent> events, Dictionary<string, bool> pressed) { }
+	
+	public override void update() {
+		this.playscene.playMusic();
+		this.counter++;
+		if (this.counter > 90) {
+			this.next = this.playscene;
+		}
+	}
+	
+	public override void render(int rc) {
+		if (this.counter < 21) {
+			Graphics2D.Draw.fill(0, 0, 0);
+		} else {
+			this.playscene.render(0);
+			if (rc % 8 < 4) {
+				drawText(255, 255, 255, 'ready', 112, 112);
+			}
+		}
+	}
+}

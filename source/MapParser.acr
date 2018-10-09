@@ -1,0 +1,193 @@
+import Resources;
+
+public class DoorParseUnit {
+	public string target;
+	public int sx;
+	public int sy;
+	public int tx;
+	public int ty;
+	
+	constructor() { }
+}
+
+public class PowerUpParseUnit : AbstractPowerupThing {
+	// .field and .type are on the base class
+	public int row;
+	public int col;
+	
+	constructor() : base() { }
+}
+
+public class Map {
+	public int width;
+	public int height;
+	public bool side;
+	public List<List<TileTemplate>> upper;
+	public List<List<TileTemplate>> lower;
+	public List<DoorParseUnit> doors;
+	public List<EnemiesParseUnit> enemies;
+	public Dictionary<string, List<List<string>>> doorSwaps;
+	public Dictionary<string, string> overlayTriggers;
+	public List<PowerUpParseUnit> powerups;
+	
+	constructor() { }
+}
+
+public class EnemiesParseUnit {
+	public string id;
+	public int col;
+	public int row;
+
+	constructor() { }
+}
+
+public class MapParser {
+	private Dictionary<string, string> values = new Dictionary<string, string>();
+	
+	constructor(string file) {
+		string path = 'maps/' + file;
+		string t = (string) Resources.readText(path);
+		for (string line : t.split('\n')) {
+			List<string> parts = line.split(':');
+			if (parts.length < 2)
+				continue;
+			
+			string key = parts[0][1:].trim();
+			string value = parts[1:].join(':').trim();
+			this.values[key] = value.trim();
+		}
+	}
+	
+	public Map parse() {
+		// TODO: create a real Map definition.
+		Map m = new Map();
+		m.width = (int) Core.parseInt(this.values['width']);
+		m.height = (int) Core.parseInt(this.values['height']);
+		m.side = this.values.get('view', 'side').lower() == 'side';
+		m.upper = this.getTiles(this.values['upper'], m.width, m.height);
+		m.lower = this.getTiles(this.values['lower'], m.width, m.height);
+		m.doors = this.getDoors(this.values.get('doors', ''));
+		m.enemies = this.getEnemies(this.values.get('enemies', ''));
+		m.doorSwaps = this.getDoorSwaps(this.values.get('doorswaps', ''));
+		m.overlayTriggers = this.getOverlayTriggers(this.values.get('overlay', ''));
+		m.powerups = this.getPowerups(this.values.get('powerups', ''));
+		return m;
+	}
+	
+	public List<PowerUpParseUnit> getPowerups(string sv) {
+		sv = sv.trim();
+		List<PowerUpParseUnit> output = new List<PowerUpParseUnit>();
+		if (sv.length == 0) {
+			return output;
+		}
+
+		for (string item : sv.split(',')) {
+			List<string> parts = item.split('|');
+			PowerUpParseUnit pu = new PowerUpParseUnit();
+			pu.type = parts[0];
+			pu.id = parts[1];
+			pu.col = (int) Core.parseInt(parts[2]);
+			pu.row = (int) Core.parseInt(parts[3]);
+			output.add(pu);
+		}
+		
+		return output;
+	}
+	
+	public Dictionary<string, string> getOverlayTriggers(string strValue) {
+		strValue = strValue.trim();
+		Dictionary<string, string> output = new Dictionary<string, string>();
+		if (strValue.length == 0) {
+			return output;
+		}
+		
+		List<string> items = strValue.split(',');
+		for (string item : items) {
+			List<string> parts = item.split('|');
+		
+			if (parts.length == 2) {
+				output[parts[0].trim()] = parts[1].trim();
+			}
+		}
+		
+		return output;
+	}
+	
+	// door swap output format:
+	// { original ID => List[ Pair<trigger, swapped ID> ] }
+	public Dictionary<string, List<List<string>>> getDoorSwaps(string strValue) {
+		strValue = strValue.trim();
+		Dictionary<string, List<List<string>>> swaps = new Dictionary<string, List<List<string>>>();
+		if (strValue.length > 0) {
+			for (string swap : strValue.split(',')) {
+				List<string> parts = swap.split('|');
+				string trigger = parts[0].trim();
+				string original = parts[1].trim();
+				string swapped = parts[2].trim();
+				
+				swaps[original] = swaps.get(original) ?? new List<List<string>>();
+				swaps[original].add(new List<string>() { trigger, swapped });
+			}
+		}
+		return swaps;
+	}
+	
+	public List<EnemiesParseUnit> getEnemies(string enemyString) {
+		enemyString = enemyString.trim();
+		List<EnemiesParseUnit> enemies = new List<EnemiesParseUnit>();
+		if (enemyString.length > 0) {
+			for (string value : enemyString.split(',')) {
+				List<string> parts = value.split('|');
+				string id = parts[0];
+				int col = (int) Core.parseInt(parts[1]);
+				int row = (int) Core.parseInt(parts[2]);
+				EnemiesParseUnit e = new EnemiesParseUnit();
+				e.id = id;
+				e.col = col;
+				e.row = row;
+				enemies.add(e);
+			}
+		}
+		
+		return enemies;
+	}
+	
+	public List<DoorParseUnit> getDoors(string doorString) {
+		doorString = doorString.trim();
+		List<DoorParseUnit> doors = new List<DoorParseUnit>();
+		if (doorString.length > 0) {
+			for (string doorStr : doorString.split(',')) {
+				List<string> door = doorStr.split('|');
+				DoorParseUnit d = new DoorParseUnit();
+				d.target = door[0];
+				d.sx = (int) Core.parseInt(door[1]);
+				d.sy = (int) Core.parseInt(door[2]);
+				d.tx = (int) Core.parseInt(door[3]);
+				d.ty = (int) Core.parseInt(door[4]);
+				doors.add(d);
+			}
+		}
+		return doors;
+	}
+	
+	public List<List<TileTemplate>> getTiles(string ids, int width, int height) {
+		List<TileTemplate> output = new List<TileTemplate>();
+		for (string id : ids.split(',')) {
+			id = id.trim();
+			if (id == '') {
+				output.add(null);
+			} else {
+				output.add(TileStore.getTile(id));
+			}
+		}
+		List<List<TileTemplate>> grid = makeTileTemplateGrid(width, height);
+		int index = 0;
+		for (int y = 0; y < height; ++y) {
+			for (int x = 0; x < width; ++x) {
+				grid[x][y] = output[index++];
+			}
+		}
+		
+		return grid;
+	}
+}

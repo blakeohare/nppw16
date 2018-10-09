@@ -1,6 +1,0 @@
-function SPRITE_renderSeed(sprite, scene, offsetX, offsetY, arc) {
-	left = sprite.x + offsetX - 8;
-	top = sprite.y + offsetY - 8;
-	img = ImageLibrary.get('sprites/bird_seed.png');
-	img.draw(left, top);
-}

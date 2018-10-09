@@ -1,0 +1,17 @@
+import Graphics2D;
+
+public class AcornTopRenderer : AbstractSpriteRenderer {
+	
+	public constructor(Sprite sprite) : base(sprite) { }
+	
+	public override void render(PlayScene scene, int offsetX, int offsetY, int arc) {
+		int left = this.sprite.x + offsetX - 8;
+		int top = this.sprite.y + offsetY - 8;
+		int width = 16;
+		int height = 16;
+		string path = 'acorn_projectile_1';
+		string path = 'sprites/' + path + '.png';
+		GraphicsTexture img = ImageLibrary.get(path);
+		img.draw(left, top);
+	}
+}

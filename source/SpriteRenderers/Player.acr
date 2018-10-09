@@ -1,0 +1,114 @@
+import Graphics2D;
+
+public class PlayerRenderer : AbstractSpriteRenderer {
+	
+	public constructor(Sprite sprite) : base(sprite) { }
+	
+	public override void render(PlayScene scene, int offsetX, int offsetY, int arc) {
+		Sprite sprite = this.sprite;
+		int left = sprite.x + offsetX - 8;
+		int top = sprite.y + offsetY - 8;
+		int width = 16;
+		int height = 16;
+		bool gun = scene.lazor_cooldown > 0;
+		if (scene.side) {
+			top -= 16;
+			height = 32;
+		}
+		
+		GraphicsTexture img;
+		if (sprite.bikemode) {
+			if ((arc & 1) == 0) {
+				img = ImageLibrary.get('sprites/rocket_bike_1.png');
+			} else {
+				img = ImageLibrary.get('sprites/rocket_bike_2.png');
+			}
+		} else if (scene.side) {
+			string dir;
+			if (sprite.damageDir != null) {
+				dir = sprite.damageDir;
+			} else {
+				dir = sprite.lastDirection;
+			}
+			bool reverse = dir == 'left';
+			
+			string b = scene.hasAtmosphere ? 'cave' : 'space';
+			bool moving = sprite.moving;
+			string path;
+			if (sprite.cling) {
+				path = b + '_climb_';
+				if (gun) {
+					path += 'shoot';
+					if (reverse) {
+						left -= 8;
+					} else {
+						left += 8;
+					}
+				} else if (moving) {
+					path += '1232'[arc % 4];
+				} else {
+					path += '2';
+				}
+			} else {
+				path = b + '_';
+				if (gun) {
+					if (moving) {
+						path += 'shooting_' + '1213'[arc % 4];
+					} else {
+						path += 'shooting';
+					}
+				} else {
+					if (moving || (sprite.cling && sprite.vy != 0)) {
+						// TODO: running, cut RC in half
+						path += '1213'[arc % 4];
+					} else {
+						path += '1';
+					}
+				}
+			}
+			int x = left;
+			int y = top;
+			if (sprite.deathState != null && sprite.deathState != 'fall') {
+				if (sprite.deathState == 'collapse') {
+					img = ImageLibrary.get('sprites/' + b + '_death.png');
+					top += 16;
+					left -= 8;
+				} else if (sprite.deathState == 'lava') {
+					if (reverse) {
+						img = ImageLibrary.getBackwards('sprites/roasted.png');
+					} else {
+						img = ImageLibrary.get('sprites/roasted.png');
+						left = left + 16 - img.width;
+					}
+				}
+			} else {
+				if (sprite.sprinkle) {
+					img = ImageLibrary.get('sprites/space_sprinkle.png');
+					left = left + 16 - img.width;
+				} else if (reverse) {
+					img = ImageLibrary.getBackwards('sprites/' + path +'.png');
+				} else {
+					img = ImageLibrary.get('sprites/' + path +'.png');
+					left = left + 16 - img.width;
+				}
+			}
+		} else {
+			string counter = sprite.moving ? '1232'[arc % 4] : '2';
+			string dir = sprite.lastDirection;
+			bool reverse = false;
+			if (dir == 'left') {
+				reverse = true;
+				dir = 'right';
+			}
+			string b = 'space';
+			Context ctx = scene.context;
+			if (ctx.volcanoA && ctx.volcanoB && ctx.volcanoC) {
+				b = 'cave';
+			}
+			string path = 'sprites/' + b + '_overworld_' + dir + '_' + counter + '.png';
+			img = reverse ? ImageLibrary.getBackwards(path) : ImageLibrary.get(path);
+		}
+		
+		img.draw(left, top);
+	}
+}

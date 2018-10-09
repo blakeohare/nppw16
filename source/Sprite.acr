@@ -1,0 +1,664 @@
+import Math;
+
+const int JUMPING_VY = -14;
+const int RUN_JUMPING_VY = -16;
+const int WATER_JUMPING_VY = -5;
+const float G = 0.7;
+const float STRONG_G = 1.55;
+const float WATER_G = 0.1;
+
+public int getSpriteHeight(string type) {
+	return Sprite.SPRITE_HEIGHT.get(type, 16);
+}
+
+public class Sprite {
+	public string type;
+	public bool isEnemy = false;
+	public int height;
+	public int x;
+	public int y;
+	public float modelX;
+	public float modelY;
+	public float vy = 0;
+	public bool moving = false;
+	public string lastDirection = 'left';
+	public bool onGround = false;
+	public List<List<int>> neighbors = new List<List<int>>() { null } * 36;
+	public List<Sprite> spawns = null;
+	public bool dead = false;
+	public bool collidedWall = false;
+	public bool deleteWhenOffScreen = false;
+	public bool ghost = false;
+	public AbstractSpriteRenderer renderImpl = null;
+	public AbstractAutomation automation = null;
+	public bool floats = false;
+	public string deathState = null; // TODO: enum
+	public bool sprinkle = false;
+	public bool isBullet;
+	public bool inBackground = false;
+	public bool bikemode = false;
+	public AbstractPowerupThing powerupInfo = null;
+	public string acorntopdir;
+	public float dx = 0;
+	public float dy = 0;
+	private float iceVX = 0;
+	private int ddx = 0;
+	public string damageDir = null;
+	public bool cling = false;
+	public int ladderDY = 0;
+	public int blinkCounter = -1;
+	public bool cameFromIce = false;
+	public int bvx;
+	public bool goLeft;
+	
+	constructor(string type, int px, int py) {
+		this.type = type;
+		this.height = getSpriteHeight(type);
+		this.x = px;
+		this.y = py;
+		this.modelX = px + 0.0;
+		this.modelY = py + 0.0;
+		
+		this.isEnemy = Sprite.ENEMY_TYPES.contains(type);
+		this.isBullet = type == 'lazor';
+		
+		switch (type) {
+			case 'acorn':
+				this.renderImpl = new AcornRenderer(this);
+				this.automation = new AcornAutomation(this);
+				break;
+			case 'acorntop':
+				this.renderImpl = new AcornTopRenderer(this);
+				this.automation = new AcornTopAutomation(this);
+				this.acorntopdir = 'left';
+				break;
+			case 'gravity_device':
+				this.renderImpl = new GravityDeviceRenderer(this);
+				this.automation = null;
+				break;
+			case 'lazor':
+				this.renderImpl = new LazorRenderer(this);
+				this.automation = new LazorAutomation(this);
+				break;
+			case 'lavamonster':
+				this.renderImpl = new LavaMonsterRenderer(this);
+				this.automation = new LavaMonsterAutomation(this);
+				this.inBackground = true;
+				this.floats = true;
+				this.ghost = true;
+				break;
+			case 'fireball':
+				this.renderImpl = new FireballRenderer(this);
+				this.automation = new FireBallAutomation(this);
+				this.floats = true;
+				// not a ghost, though. Collides with walls and that triggers it to fizzle.
+				break;
+			case 'waterpop':
+				this.renderImpl = new WaterPopRenderer(this);
+				this.automation = new WaterPopAutomation(this);
+				this.floats = true;
+				break;
+			case 'powerup':
+				this.renderImpl = new PowerupRenderer(this);
+				this.automation = new PowerupAutomation(this);
+				break;
+			case 'poof_big':
+				this.renderImpl = new PoofRenderer(this);
+				this.automation = new PoofAutomation(this, true);
+				this.floats = true;
+				break;
+			case 'poof_small':
+				this.renderImpl = new PoofRenderer(this);
+				this.automation = new PoofAutomation(this, false);
+				this.floats = true;
+				break;
+			case 'byat':
+				this.renderImpl = new ByatRenderer(this);
+				this.automation = new ByatAutomation(this);
+				this.floats = true;
+				break;
+			case 'moonsquid':
+				this.renderImpl = new MoonSquidRenderer(this);
+				this.automation = new MoonSquidAutomation(this);
+				this.floats = true;
+				break;
+			case 'seeds':
+				this.renderImpl = new SeedRenderer(this);
+				this.automation = new SeedAutomation(this);
+				break;
+			case 'bird1':
+				this.renderImpl = new BirdRenderer(this);
+				this.automation = new BirdAutomation(this, false);
+				this.floats = true;
+				break;
+			case 'bird2':
+				this.renderImpl = new BirdRenderer(this);
+				this.automation = new BirdAutomation(this, true);
+				this.floats = true;
+				this.ghost = true;
+				break;
+			case 'rocketbike':
+				this.renderImpl = new RocketBikeRenderer(this);
+				this.automation = new RocketBikeAutomation(this);
+				this.ghost = true;
+				break;
+			case 'player_side':
+			case 'player_over':
+				this.renderImpl = new PlayerRenderer(this);
+				break;
+			default:
+				throw new Exception("No sprite info defined for " + type);
+		}
+	}
+	
+	private static List<int> NEIGHBOR_RANGE = new List<int>() { -1, 0, 1 };
+
+	internal static Dictionary<string, int> SPRITE_HEIGHT = new Dictionary<string, int>() {
+		'player_side': 32,
+		'acorn': 16,
+		'acorntop': 16,
+		'gravity_device': 16,
+		'lazor': 16,
+		'lavamonster': 32,
+		'waterpop': 32,
+		'powerup': 16,
+		'poof_big': 32,
+		'poof_small': 16,
+		'byat': 16,
+		'moonsquid': 16,
+		'seed': 16,
+		'rocketbike': 32,
+	};
+
+	private static List<List<int>> XY_PAIRINGS = new List<List<int>>() {
+		new List<int>() { 0, 0 },
+		new List<int>() { 1, 0 },
+		new List<int>() { 2, 0 },
+		new List<int>() { 3, 0 },
+		new List<int>() { 4, 0 },
+		new List<int>() { 4, 1 },
+		new List<int>() { 4, 2 },
+		new List<int>() { 4, 3 }
+	};
+
+	// TODO: merge this into Automation
+	// There's currently a public setter when it gets a sprite from enemy information from the map parse data.
+	private static List<string> ENEMY_TYPES = new List<string>() {
+		'acorn',
+		'acorntop'
+	};
+
+	public bool checkNeighborCollision(PlayScene scene, int col, int row, float targetX, float targetY) {
+		float area_left = targetX - 5;
+		float area_right = targetX + 5;
+		float area_top = targetY - 5;
+		float area_bottom = targetY + 5;
+		
+		int width = scene.cols;
+		int height = scene.rows;
+		int left = col - 2;
+		int right = col + 2;
+		int top = row - 2;
+		int bottom = row + 2;
+		if (left < 0) left = 0;
+		if (right >= width) right = width - 1;
+		if (top < 0) top = 0;
+		if (bottom >= height) bottom = height - 1;
+		int index = 0;
+		for (int y = top; y <= bottom; ++y) {
+			for (int x = left; x <= right; ++x) {
+				List<List<int>> cs = scene.tiles[x][y].collisions;
+				for (int csi = cs.length - 1; csi >= 0; --csi) {
+					this.neighbors[index] = cs[csi];
+					index++;
+				}
+			}
+		}
+		
+		index--;
+		while (index >= 0) {
+			List<int> n = this.neighbors[index];
+			// WAT? TODO: Clean this up, plz.
+			if (n[0] > area_right) { }
+			else if (n[1] > area_bottom) { }
+			else if (n[2] < area_left) { }
+			else if (n[3] < area_top) { }
+			else {
+				return false;
+			}
+			--index;
+		}
+		return true;
+	}
+	
+	public void update(PlayScene scene) {
+		if (this.automation != null) {
+			this.automation.doStuff(scene);
+		}
+		
+		--this.blinkCounter;
+		
+		if (this.blinkCounter < 0 || this.onGround) {
+			this.ddx = 0;
+			if (this.damageDir != null) {
+				this.lastDirection = this.damageDir;
+			}
+			this.damageDir = null;
+		}
+		
+		if (this.damageDir != null) {
+			this.dx = 0;
+		}
+		
+		this.dx += this.ddx;
+		
+		if (scene.side) {
+			// hotspot is located in the center of the bottom most tile
+			float areaX = this.modelX;
+			float areaBottom = this.modelY + 8;
+			int heightFromHotSpot = getSpriteHeight(this.type) - 8 - 4;
+			float areaTop = this.modelY - heightFromHotSpot;
+			bool waterOnly = this.type == 'moonsquid';
+			
+			int width = scene.cols;
+			int height = scene.rows;
+			
+			bool isPlayer = this == scene.player;
+			bool bikePhysics = isPlayer && scene.id == 'bike_level';
+			
+			if (bikePhysics) {
+				int offsetX = -(scene.updateCounter * BIKE_SPEED);
+				if (offsetX > 0) offsetX = 0;
+				int right = -(scene.cols * 16 - 256);
+				if (offsetX < right) offsetX = right;
+				
+				float newX = areaX + this.dx;
+				float pixelX = newX + offsetX;
+				if (pixelX < 8)
+					this.dx = BIKE_SPEED;
+				else if (pixelX > 248)
+					this.dx = BIKE_SPEED;
+			}
+			
+			int tileBottomIceCheck = (int) Math.floor(areaBottom / 16);
+			int tileX = (int) Math.floor(areaX / 16);
+			bool inWater = false;
+			bool onIce = false;
+			if (tileX >= 0 && tileBottomIceCheck > 0 && tileX < scene.cols && tileBottomIceCheck < scene.rows) {
+				Tile tileBelow = scene.tiles[tileX][tileBottomIceCheck];
+				if (tileBelow != null) {
+					onIce = tileBelow.isIce;
+				}
+				
+				inWater = scene.tiles[tileX][tileBottomIceCheck - 1].isWater;
+			}
+			
+			// TODO: move these to global area
+			float ICE_DIMINISH = .1;
+			float ICE_MAX_SPEED = 8;
+			
+			if (this.type != 'lazor' && (onIce || (this.cameFromIce && !this.onGround && !this.cling))) {
+				
+				if (this.dx == 0) {
+					if (this.iceVX > 0) {
+						this.iceVX -= ICE_DIMINISH;
+						if (this.iceVX < 0) {
+							this.iceVX = 0;
+						}
+					} else if (this.iceVX < 0) {
+						this.iceVX += ICE_DIMINISH;
+						if (this.iceVX > 0) {
+							this.iceVX = 0;
+						}
+					}
+				} else if (this.dx > 0) {
+					this.iceVX += ICE_DIMINISH;
+				} else if (this.dx < 0) {
+					this.iceVX -= ICE_DIMINISH;
+				}
+				
+				this.dx = this.iceVX;
+				if (this.dx > ICE_MAX_SPEED) {
+					this.dx = ICE_MAX_SPEED;
+				} else if (this.dx < -ICE_MAX_SPEED) {
+					this.dx = -ICE_MAX_SPEED;
+				}
+				this.cameFromIce = true;
+			} else {
+				this.iceVX = 0;
+				if (this.onGround) {
+					this.cameFromIce = false;
+				}
+			}
+			
+			this.moving = this.dx != 0 || this.dy != 0;
+			this.collidedWall = false;
+			// side-to-side calcuation is done first, independent of whether you are on the ground.
+			if (this.dx != 0) {
+				if (inWater && isPlayer) {
+					float maxDX = this.onGround ? 1.0 : 1.5;
+					if (this.dx < -maxDX) {
+						this.dx = -maxDX;
+					} else if (this.dx > maxDX) {
+						this.dx = maxDX;
+					}
+				}
+					
+				float newX = this.modelX + this.dx;
+				
+				// isCollision ignores collisions near the sprite's feet
+				// if you are near ground, you will be automatically placed standing
+				// upon it at the end of the vertical adjustment phase.
+				if (this.ghost || !scene.isCollision(newX, areaTop, newX, areaBottom)) {
+					if (this.cling) {
+						if ((int) Math.floor(newX / 16) != (int) Math.floor(this.modelX / 16)) {
+							newX = this.modelX;
+						}
+					}
+					this.modelX = newX;
+					if (this.dx > 0) {
+						this.lastDirection = 'right';
+					} else {
+						this.lastDirection = 'left';
+					}
+				} else {
+					this.iceVX = 0;
+					this.collidedWall = !this.ghost;
+				}
+				this.dx = 0;
+			}
+			
+			tileX = (int) Math.floor(this.modelX / 16);
+			int tileY = (int) Math.floor(this.modelY / 16);
+			
+			bool offScreen = tileX < 0 || tileX >= scene.cols || tileY < 0 || tileY >= scene.rows;
+			bool onScreen = !offScreen;
+			
+			if (bikePhysics && this.collidedWall) {
+				scene.next = new DeathOverrideScene(scene, 'lava');
+			}
+			
+			// vertical adjustment phase
+			// assume sprite is flying through the air unless you see ground
+			bool wasOnGround = this.onGround; // save the previous ground state. If you weren't on ground before but suddenly are, then you "landed" and a sound should be played. 
+			this.onGround = false;
+			
+			if (wasOnGround || this.floats) {
+				this.vy = 0;
+			} else {
+				if (inWater) {
+					this.vy += WATER_G;
+				} else if (scene.context.gravity) {
+					this.vy += STRONG_G;
+				} else {
+					this.vy += G;
+				}
+			}
+			
+			bool rocketJump = false;
+			if (inWater && isPlayer && this.vy < 0) {
+				tileY = floor(this.modelY / 16) - 1;
+				if (tileY >= 0) {
+					if (!scene.tiles[tileX][tileY].isWater) {
+						// moving up, bottom half is in water, top half is not
+						rocketJump = true; // jump out with high velocity
+					}
+				}
+			}
+			
+			// If you're clinging to a ladder, then throw out the vy entirely.
+			// Use this.ladderDY instead
+			if (this.cling) {
+				this.dy = this.ladderDY;
+				this.vy = 0;
+				if (this.dy != 0) {
+					this.moving = true;
+				}
+			} else {
+				this.dy += this.vy;
+			}
+			
+			int oldLadderDY = this.ladderDY;
+			this.ladderDY = 0;
+			
+			int maxDY = 10;
+			if (this.dy > 4 && inWater) {
+				this.dy = 4;
+			}
+			
+			if (this.dy > maxDY) {
+				this.dy = maxDY;
+			} else if (this.dy < -maxDY) {
+				this.dy = -maxDY;
+			}
+			
+			if (rocketJump) {
+				this.dy = -15;
+			}
+			
+			bool wasCling = this.cling;
+			bool movedUp = false;
+			
+			float newBottom = areaBottom + this.dy;
+			float newTop = areaTop + this.dy;
+			
+			bool no = false;
+			
+			if (this.ghost) {
+				// just go with it
+			} else {
+				if (this.dy < 0) {
+					// Going Up
+					if (newTop < 0) {
+						// TODO: do top transitions here.
+						no = true;
+					} else {
+						int newTileTop = (int) Math.floor(newTop / 16);
+						
+						bool offScreen = tileX < 0 || tileX >= scene.cols || newTileTop < 0 || newTileTop >= scene.rows;
+						onScreen = !offScreen;
+						
+						if (onScreen) {
+							Tile t = scene.tiles[tileX][newTileTop];
+							if (t.solid || (waterOnly && !t.isWater)) {
+								if (wasOnGround) {
+									this.onGround = true;
+								}
+								no = true;
+								
+								if (this.modelY % 16 == 8) {
+									no = false;
+								}
+								this.vy = 0;
+								this.dy = 0;
+								if (this == scene.player) {
+									playNoise('head_bonk');
+								}
+							} else {
+								movedUp = true;
+							}
+						} else {
+							movedUp = true;
+						}
+					}
+				} else {
+					// Going Down (or staying the same)
+					// The philosophy here is different. When you encounter a collision,
+					// rather than stop the movement, you find where the top of the collided
+					// tile is and place the sprite there.
+					
+					int newTileBottom = (int) Math.floor(newBottom / 16);
+					
+					// If the player fell off the bottom
+					if (isPlayer && newTileBottom >= height) {
+						// TODO: check if there is a transition registered with the map.
+						// If so begin that transition instead of killing the player.
+						playNoise('fall_to_death');
+						scene.next = new DeathOverrideScene(scene, 'fall');
+						no = true;
+					} else {
+						offScreen = tileX < 0 || tileX >= scene.cols || newTileBottom < 0 || newTileBottom >= scene.rows;
+						onScreen = !offScreen;
+						
+						if (onScreen) {
+							Tile t = scene.tiles[tileX][newTileBottom];
+							bool topStop = false;
+							if (t.isTop) {
+								int oldTileBottom = (int) Math.floor(areaBottom / 16);
+								if (newTileBottom > oldTileBottom) {
+									topStop = true;
+								} else if (newTileBottom == oldTileBottom && areaBottom == newBottom) {
+									topStop = true;
+								}
+							}
+							
+							if (t.solid || topStop) {
+								no = true;
+								this.cling = false;
+								this.onGround = true;
+								this.modelY = newTileBottom * 16 - 8;
+								this.vy = 0;
+								if (!wasOnGround && this == scene.player) {
+									playNoise('land_on_ground');
+								}
+							}
+						} else {
+							no = true;
+						}
+					}
+				}
+			}
+					
+			if (!no) {
+				this.modelY = newBottom - 8;
+			}
+			
+			this.x = floor(this.modelX);
+			this.y = floor(this.modelY);
+			this.dy = 0; // TODO: isn't this supposed to be this.dx?
+			this.dy = 0;
+			
+			int tileY = (int) Math.floor(this.modelY / 16);
+			
+			offScreen = tileX < 0 || tileX >= scene.cols || tileY < 0 || tileY >= scene.rows;
+			onScreen = !offScreen;
+			if (onScreen && scene.tiles[tileX][tileY].isLadder) {
+				// TODO: why are there so many inverted expressions like this?
+			} else {
+				this.cling = false;
+			}
+			
+			if (movedUp && wasCling && !this.cling) {
+				this.modelY = 16 * tileY; // maybe?
+			}
+		} else {
+			this.moving = false;
+			if (this.dx != 0 || this.dy != 0) {
+				this.moving = true;
+				
+				if (this.dy < 0) {
+					this.lastDirection = 'up';
+				} else if (this.dy > 0) {
+					this.lastDirection = 'down';
+				} else if (this.dx < 0) {
+					this.lastDirection = 'left';
+				} else {
+					this.lastDirection = 'right';
+				}
+				
+				// TODO: this is silly. Break the vector down into horizontal and vertical
+				// components and do a TryMove approach.
+				List<float> xs = Sprite.xs;
+				List<float> ys = Sprite.ys;
+				
+				xs[0] = this.modelX + this.dx;
+				xs[1] = this.modelX + this.dx * 3.0 / 4;
+				xs[2] = this.modelX + this.dx / 2.0;
+				xs[3] = this.modelX + this.dx / 4.0;
+				xs[4] = this.modelX;
+				
+				ys[0] = this.modelY + this.dy;
+				ys[1] = this.modelY + this.dy * 3.0 / 4;
+				ys[2] = this.modelY + this.dy / 2.0;
+				ys[3] = this.modelY + this.dy / 4.0;
+				
+				for (List<int> pairing : Sprite.XY_PAIRINGS) {
+					float newx = xs[pairing[0]];
+					float newy = ys[pairing[1]];
+					int col = (int) Math.floor(newx / 16);
+					int row = (int) Math.floor(newy / 16);
+
+					if (this.checkNeighborCollision(scene, col, row, newx, newy)) {
+						this.modelX = newx;
+						this.modelY = newy;
+						this.x = floor(this.modelX);
+						this.y = floor(this.modelY);
+						break;
+					}
+				}
+				
+				this.dx = 0;
+				this.dy = 0;
+			}
+		}
+	}
+	
+	private static List<float> xs = new List<float>() { 0.0 } * 5;
+	private static List<float> ys = new List<float>() { 0.0 } * 4;
+	
+	public void render(PlayScene scene, int offsetX, int offsetY, int rc) {
+		if (this.blinkCounter < 0 || (this.blinkCounter & 1) == 0) {
+			this.renderImpl.render(scene, offsetX, offsetY, rc);
+		}
+	}
+	
+	public bool isCollision(Sprite other) {
+		int left = this.x - 8;
+		int oleft = other.x - 8;
+		int right = left + 16;
+		int oright = oleft + 16;
+		
+		if (left >= oright || right <= oleft) {
+			return false;
+		}
+		
+		int bottom = this.y + 8;
+		int obottom = other.y + 8;
+		int top = bottom - this.height;
+		int otop = obottom - other.height;
+		
+		if (top >= obottom || otop >= bottom)
+			return false;
+		return true;
+	}
+	
+	public void hit(PlayScene scene, int amount) {
+		this.blinkCounter = 40;
+		scene.context.adjustHealth(scene, -amount);
+		
+		if (scene.id != 'bike_level') {
+			List<List<Tile>> tiles = scene.tiles;
+			int tx = this.x / 16;
+			int ty = this.y / 16;
+			
+			bool inWater = false;
+			if (tx >= 0 && ty >= 0 && tx < scene.cols && ty < scene.rows) {
+				Tile t = tiles[tx][ty];
+				inWater = t.isWater;
+			}
+			
+			this.damageDir = this.lastDirection;
+			if (this.lastDirection == 'left') {
+				this.ddx = 3;
+			} else {
+				this.ddx = -3;
+			}
+			this.onGround = false;
+			if (inWater) {
+				this.vy = -1;
+			} else {
+				this.vy = -6;
+			}
+		}
+	}
+}

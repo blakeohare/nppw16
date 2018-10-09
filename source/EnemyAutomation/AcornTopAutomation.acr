@@ -1,0 +1,109 @@
+import Math;
+
+const float ACORN_TOP_SPEED = 4.5;
+
+class AcornTopAutomation : AbstractAutomation {
+
+	static List<List<float>> TRAIL = new List<List<float>>();
+
+	static constructor() {
+		// this is the best I can come up with off the top of my head. I'm sure there's a faster way to create a parametric function of the acorn top path
+
+		List<float> ball = new List<float>() { 0, 0 };
+
+		List<List<float>> waypoints = new List<List<float>>() {
+			new List<float>() { -1, 0 },
+			new List<float>() { -6, 0 },
+			new List<float>() { -6.6, -0.4 },
+			new List<float>() { -7, -1 },
+			new List<float>() { -6.6, -1.6 },
+			new List<float>() { -6, -2 },
+			new List<float>() { -1, -2 },
+			new List<float>() { -0.4, -1.6 },
+			new List<float>() { 0, -1 },
+			new List<float>() { 0, -.5}
+		};
+
+		float v = ACORN_TOP_SPEED + 0.0;
+
+		// TODO: use foreach loop?
+		for (int i = 0; i < waypoints.length; ++i) {
+			List<float> target = waypoints[i];
+			float tx = target[0] * 16.0;
+			float ty = target[1] * 16.0;
+			
+			bool done = false;
+			while (!done) {
+				float dx = tx - ball[0];
+				float dy = ty - ball[1];
+				float distance = (dx ** 2 + dy ** 2) ** .5;
+				if (distance <= v) {
+					done = true;
+					ball = new List<float>() { tx, ty };
+					AcornTopAutomation.TRAIL.add(ball.clone());
+				} else {
+					dx *= v / distance;
+					dy *= v / distance;
+					ball[0] += dx;
+					ball[1] += dy;
+					AcornTopAutomation.TRAIL.add(new List<float>() {
+						// TODO: figure out what's going on here with the weird rounding.
+						0.1 * (int) Math.floor(10 * ball[0]),
+						0.1 * (int) Math.floor(10 * ball[1]) });
+				}
+			}
+		}
+	}
+
+	private List<List<float>> trail;
+	private int trailIndex = 0;
+	private float startX;
+	private float startY;
+	internal bool completed = false;
+	private bool goLeft = true;
+	private int xSign = 1;
+	private int ySign = 1;
+	//field body;
+	
+	public constructor(Sprite sprite) : base(sprite) {
+		this.trail = AcornTopAutomation.TRAIL.clone();
+		this.startX = sprite.modelX;
+		this.startY = sprite.modelY;
+	}
+	
+	public void setGoLeft(bool goLeft) {
+		this.goLeft = goLeft;
+		this.xSign = this.goLeft ? 1 : -1;
+	}
+	
+	public void setGoUp(bool goUp) {
+		this.ySign = goUp ? 1 : -1;
+	}
+	
+	public override void doStuff(PlayScene scene) {
+		if (this.trailIndex < this.trail.length) {
+			
+			float rawX = this.trail[this.trailIndex][0];
+			float rawY = this.trail[this.trailIndex][1];
+			
+			rawX *= this.xSign;
+			rawY *= this.ySign;
+			
+			float targetX = this.startX + rawX;
+			float targetY = this.startY + rawY;
+			
+			float dx = targetX - this.sprite.modelX;
+			float dy = targetY - this.sprite.modelY;
+			
+			this.sprite.dx = dx;
+			this.sprite.dy = dy;
+			
+			this.trailIndex++;
+		} else {
+			if (this.completed) {
+				this.sprite.dead = true;
+			}
+			this.completed = true;
+		}
+	}
+}

@@ -1,0 +1,19 @@
+class RocketBikeAutomation : AbstractAutomation {
+	private int counter = 0;
+	private bool used = false;
+
+	constructor(Sprite sprite) : base(sprite) {
+		this.sprite = sprite;
+	}
+	
+	public override void doStuff(PlayScene scene) {
+		Sprite p = scene.player;
+		int dx = p.x - this.sprite.x;
+		int dy = p.y - this.sprite.y;
+		if (dx * dx + dy * dy < 10 ** 2) {
+			if (((BirdFeeder)scene.special[0]).seedsLeft == 0) {
+				scene.next = new PlayScene('bike_level', 8, 7, scene.context);
+			}
+		}
+	}
+}

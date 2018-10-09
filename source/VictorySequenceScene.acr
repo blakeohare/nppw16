@@ -1,0 +1,54 @@
+import Audio;
+import Graphics2D;
+
+public class VictorySequenceScene : LegacyAbstractScene {
+	
+	public PlayScene bg;
+	private List<GraphicsTexture> images;
+	public Sprite player = null;
+	private int counter = 0;
+	
+	constructor(PlayScene bg) : base() {
+		this.bg = bg;
+		this.images = new List<GraphicsTexture>() {
+			ImageLibrary.get('slides/close1.png'),
+			ImageLibrary.get('slides/close2.png')
+		};
+	}
+	
+	public override void processInput(List<MyEvent> events, Dictionary<string, bool> pressed) { }
+	
+	public override void update() {
+		// TODO: move this to JukeBox
+		Audio.Music.stop();
+		this.counter++;
+	}
+	
+	public override void render(int rc) {
+		Graphics2D.Draw.fill(0, 0, 0);
+		
+		GraphicsTexture img;
+		if (this.counter < 60) {
+			img = this.images[0];
+		} else if (this.counter > 120) {
+			img = this.images[1];
+		} else {
+			img = this.images[this.counter & 1];
+		}
+		
+		if (this.counter == 60) {
+			playNoise('screen_shaking');
+		}
+		
+		if (this.counter == 150) {
+			this.next = new DialogScene(this, 'CloseDialog', false, true, false);
+			this.counter++;
+		}
+		
+		if (this.counter == 160) {
+			this.next = new CreditsScene();
+		}
+		
+		img.draw(0, 16);
+	}
+}

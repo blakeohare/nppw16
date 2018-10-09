@@ -1,0 +1,27 @@
+import Graphics2D;
+import TwoCansAlpha3;
+
+public class ImageLibrary {
+	private static Dictionary<string, GraphicsTexture> images = new Dictionary<string, GraphicsTexture>();
+	private static Dictionary<string, GraphicsTexture> flipped = new Dictionary<string, GraphicsTexture>();
+	
+	public constructor() { }
+	
+	public static GraphicsTexture get(string path) {
+		GraphicsTexture img = ImageLibrary.images.get(path, null);
+		if (img == null) {
+			img = (GraphicsTexture) Images.get('images/' + path);
+			ImageLibrary.images[path] = img;
+		}
+		return img;
+	}
+	
+	public static GraphicsTexture getBackwards(string path) {
+		GraphicsTexture img = ImageLibrary.flipped.get(path, null);
+		if (img == null) {
+			img = (GraphicsTexture) Images.get('images/' + path, ImageOptions.FLIP_X);
+			ImageLibrary.flipped[path] = img;
+		}
+		return img;
+	}
+}

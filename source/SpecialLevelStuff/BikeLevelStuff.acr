@@ -1,0 +1,67 @@
+import Graphics2D;
+import Math;
+import Random;
+
+public class Point {
+	float x;
+	float y;
+	float vx;
+	float vy;
+	
+	constructor() { }
+}
+
+public class BikeLevelStuff : SpecialLevelStuff {
+	private List<Point> particles = new List<Point>();
+	private int counter = 0;
+	
+	public constructor(PlayScene scene) : base(scene) { 
+		this.hasUpdate = true;
+		this.hasRender = true;
+	}
+		
+	public override void update() {
+		if (this.counter == 0) {
+			this.scene.sprites.add(new Sprite('bird2', 16, 48));
+		}
+		
+		this.counter++;
+		
+		PlayScene scene = this.scene;
+		Sprite player = scene.player;
+		if (player.x > (scene.cols - 1) * 16) { // one less because you can't technically go off screen
+			scene.next = new VictorySequenceScene(scene);
+		}
+		
+		if (this.counter % 2 == 0) {
+			Point pt = new Point();
+			pt.x = player.x;
+			pt.y = player.y;
+			pt.vx = 16 * (float) Random.randomFloat() - 8;
+			pt.vy = 6 * (float) Random.randomFloat() - 5;
+			this.particles.add(pt);
+		}
+		
+		for (Point pt : this.particles) {
+			pt.x += pt.vx;
+			pt.y += pt.vy;
+			pt.vy += 2;
+		}
+	}
+	
+	public override void render(int rc, int offsetX, int offsetY) {
+		Sprite p = this.scene.player;
+		for (Point pt : this.particles) {
+			Graphics2D.Draw.rectangle(
+				(int) Math.floor(pt.x + offsetX),
+				(int) Math.floor(pt.y + offsetY),
+				3,
+				3, 
+				255, 255, 128);
+		}
+		
+		if (this.particles.length > 40) {
+			this.particles = this.particles[1:];
+		}
+	}
+}

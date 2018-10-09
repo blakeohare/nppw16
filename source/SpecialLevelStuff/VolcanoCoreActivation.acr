@@ -1,0 +1,130 @@
+import Math;
+
+public class VolcanoCoreActivation : SpecialLevelStuff {
+	private int id;
+	private int spotX = 11;
+	private int spotY = 9;
+	private int sequenceCounter = -1;
+	private bool done = false;
+	private bool warpBack = false;
+	
+	public constructor(PlayScene scene, int id) : base(scene) {
+		this.id = id;
+		this.scene = scene;
+		this.hasUpdate = true;
+		this.hasPostInit = true;
+		this.lavaLevel = 0;
+		this.shakeScreen = false;
+		this.freeze = false;
+	}
+		
+	public override void update() {
+		Sprite player = this.scene.player;
+		int tx = player.x / 16;
+		int ty = player.y / 16;
+		
+		if (tx == this.spotX && (int) Math.abs(ty - this.spotY) < 2 && !this.done) {
+			this.doLavaSequence(false);
+		}
+		
+		this.freeze = false;
+		this.shakeScreen = false;
+		this.scene.player.sprinkle = false;
+		
+		if (this.sequenceCounter >= 0) {
+			int SPRINKLE = 30; // player sprinkles mix
+			int SHAKE = 60; // screenshakes 
+			int RISE_RATE = 30; // this happens 3 times
+			
+			this.freeze = true;
+			int sc = this.sequenceCounter;
+			float progress = 0.0;
+			if (sc < SPRINKLE) {
+				this.scene.player.sprinkle = true;
+				if (sc == 0) {
+					playNoise('sprinkle_lava_packet');
+				}
+				progress = 1.0 * sc / SPRINKLE;
+			} else {
+				sc -= SPRINKLE;
+				if (sc < SHAKE) {
+					if (sc == 0) {
+						playNoise('screen_shaking');
+					}
+					this.shakeScreen = (sc & 1) == 0;
+				} else {
+					sc -= SHAKE;
+					if (sc < RISE_RATE) {
+						if (sc == 0) {
+							playNoise('lava_rise');
+						}
+						this.lavaLevel = 1;
+					} else {
+						sc -= RISE_RATE;
+						if (sc < RISE_RATE) {
+							if (sc == 0) {
+								playNoise('lava_rise');
+							}
+							this.lavaLevel = 2;
+						} else {
+							sc -= RISE_RATE;
+							this.lavaLevel = 3;
+							if (sc < RISE_RATE) {
+								if (sc == 0) {
+									playNoise('lava_rise');
+								}
+							} else {
+								this.freeze = false;
+								if (this.warpBack) {
+									this.scene.next = new VolcanoCompleteScene(this.scene, this.context);
+								}
+							}
+						}
+					}
+				}
+			}
+			this.sequenceCounter += 1;
+		}
+	}
+
+	public override void postInit() {
+		bool isLavaOn = false;
+		if (this.id == 1) {
+			isLavaOn = this.context.volcanoA;
+		} else if (this.id == 2) {
+			isLavaOn = this.context.volcanoB;
+		} else if (this.id == 3) {
+			isLavaOn = this.context.volcanoC;
+		}
+		
+		if (isLavaOn) {
+			this.doLavaSequence(true);
+		}
+	}
+	
+	public void doLavaSequence(bool instant) {
+		this.done = true;
+		if (instant) {
+			this.sequenceCounter = 9999999;
+		} else {
+			this.sequenceCounter = 0;
+		}
+		
+		bool complete = this.context.volcanoA && this.context.volcanoB && this.context.volcanoC;
+		
+		if (!complete) {
+			if (this.id == 1) {
+				this.context.volcanoA = true;
+			} else if (this.id == 2) {
+				this.context.volcanoB = true;
+			} else if (this.id == 3) {
+				this.context.volcanoC = true;
+			}
+			
+			complete = this.context.volcanoA && this.context.volcanoB && this.context.volcanoC;
+			if (complete) {
+				this.warpBack = true;
+			}
+		}
+	}
+}

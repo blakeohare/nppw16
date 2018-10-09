@@ -1,0 +1,750 @@
+import Graphics2D;
+import Math;
+import Random;
+
+// TODO: in the dynamically typed days, the PowerupDrop and PowerUpParseUnit objects were
+// passed around interchangeably and both have .id and .type fields. Clean this up and
+// figure out which one is the real one that needs to be on the Sprite class.
+public class AbstractPowerupThing {
+	public string id = null;
+	public string type = null;
+	constructor() { } 
+}
+
+public class PowerupDrop : AbstractPowerupThing {
+	constructor(string type) : base() { 
+		this.type = type;
+	}
+}
+
+const int BIKE_SPEED = 6;
+
+class PlayScene : LegacyAbstractScene {
+	private static List<int> GOOD_HEALTH_COLOR = new List<int>() { 255, 255, 255 };
+	private static List<int> POOR_HEALTH_COLOR = new List<int>() { 255, 128, 128 };
+	
+	public List<object> startArgs;
+	public int updateCounter = 0;
+	public Context context;
+	public string id;
+	public bool hasAtmosphere;
+	public string bg;
+	public List<GraphicsTexture> stars;
+	private int runCounter;
+	private string runCounterValidFor;
+	public int cols;
+	public int rows;
+	private List<List<TileTemplate>> upper;
+	private List<List<TileTemplate>> lower;
+	public bool side;
+	public int lazor_cooldown = 0;
+	public List<List<Tile>> tiles;
+	private Dictionary<string, List<List<string>>> doorSwaps;
+	private int cameraX = 0;
+	private int cameraY = 0;
+	public Sprite player;
+	public List<Sprite> sprites;
+	public Dictionary<string, string> overlayTriggers;
+	public List<SpecialLevelStuff> special;
+	private bool shooting;
+	
+	constructor(string mapId, int startCol, int startRow, Context context) 
+		: base() {
+		
+		this.flags = 'M';
+		this.startArgs = new List<object>() { mapId, startCol, startRow };
+		
+		this.context = context;
+		string levelname = mapId.split('.')[0];
+		this.id = levelname;
+		if (!mapId.endsWith('.map'))
+			mapId += '.map';
+		MapParser mapParser = new MapParser(mapId);
+		Map map = mapParser.parse();
+		
+		this.hasAtmosphere = context.volcanoA && context.volcanoB && context.volcanoC;
+
+		this.bg = getBackground(levelname);
+		List<GraphicsTexture> stars = new List<GraphicsTexture>();
+		for (int i = 1; i <= 5; ++i) {
+			stars.add(ImageLibrary.get('tiles/background/stars' + i + '.png'));
+		}
+		stars.concat(new List<GraphicsTexture>() { null } * 10);
+		stars *= 3;
+		stars.shuffle();
+		this.stars = stars;
+		this.runCounter = 0;
+		this.runCounterValidFor = ':P';
+		
+		this.cols = map.width;
+		this.rows = map.height;
+		this.upper = map.upper;
+		this.lower = map.lower;
+		this.side = map.side;
+		
+		this.lazor_cooldown = 0;
+		
+		this.tiles = makeTileGrid(this.cols, this.rows);
+		
+		this.doorSwaps = map.doorSwaps;
+		
+		List<Door> doorTiles = new List<Door>();
+		Dictionary<string, List<int>> ladderTiles = new Dictionary<string, List<int>>();
+		for (int y = this.rows - 1; y >= 0; --y) {
+			for (int x = 0; x < this.cols; ++x) {
+				
+				Tile t = makeTile(this.lower[x][y], this.upper[x][y], x, y);
+				this.tiles[x][y] = t;
+				if (t.isDoor) {
+					doorTiles.add(new Door(x + '|' + y, t));
+					if (this.side && y + 1 < this.rows) {
+						// add the tile below the door to the potential door tiles
+						// the door list from the map parser will check for the tile below a door iff it's a tall door and is 
+						// expecting to find it in this list. If not, then this gets safely ignored
+						doorTiles.add(new Door(x + '|' + (y + 1), this.tiles[x][y + 1]));
+					}
+				}
+				if (t.isLadder) {
+					ladderTiles[x + '|' + y] = new List<int>() { x, y };
+				}
+			}
+		}
+		
+		for (string lk : ladderTiles.keys()) {
+			List<int> coord = ladderTiles[lk];
+			int x = coord[0];
+			int y = coord[1];
+			if (y > 0) {
+				if (ladderTiles.get(x + "|" + (y - 1), null) == null) {
+					this.tiles[x][y].isTop = true;
+				}
+			}
+		}
+		Dictionary<string, DoorParseUnit> doorLookup = new Dictionary<string, DoorParseUnit>();
+		for (DoorParseUnit door : map.doors) {
+			int x = door.sx;
+			int y = door.sy;
+			doorLookup[x + "|" + y] = door;
+			if (this.side) {
+				doorLookup[x + "|" + (y + 1)] = door;
+			}
+		}
+		
+		for (Door door : doorTiles) {
+			string dk = door.locationKey;
+			DoorParseUnit doorData = doorLookup.get(dk, null);
+			if (doorData != null) {
+				door.tile.door = doorData;
+				door.tile.collisions = new List<List<int>>();
+				door.tile.solid = false;
+			}
+		}
+		
+		this.cameraX = 0;
+		this.cameraY = 0;
+		
+		this.player = new Sprite(
+			'player_' + (this.side ? 'side' : 'over'), 
+			startCol * 16 + 8, 
+			startRow * 16 + 7);
+		this.sprites = new List<Sprite>() { this.player };
+		
+		if (levelname == 'bike_level') {
+			this.player.bikemode = true;
+			this.player.floats = true;
+		}
+		
+		for (EnemiesParseUnit enemy : map.enemies) {
+			Sprite sprite = new Sprite(enemy.id, enemy.col * 16 + 8, enemy.row * 16 + 8);
+			sprite.isEnemy = true;
+			this.sprites.add(sprite);
+		}
+		
+		this.overlayTriggers = map.overlayTriggers;
+		
+		for (PowerUpParseUnit powerup : map.powerups) {
+			string puid = powerup.id;
+			if (!context.powerupsTaken.get(puid, false)) {
+				Sprite powerupSprite = new Sprite('powerup', powerup.col * 16 + 8, powerup.row * 16 + 7);
+				powerupSprite.powerupInfo = powerup;
+				this.sprites.add(powerupSprite);
+			}
+		}
+		
+		this.special = getSpecialLevelStuff(levelname, this);
+		for (SpecialLevelStuff special : this.special) {
+			if (special.hasPostInit) {
+				special.postInit();
+			}
+		}
+	}
+	
+	public Tile playersTile(int offsetX = 0, int offsetY = 0) {
+		if (this.player == null) return null;
+		Sprite p = this.player;
+		int tx = (int) Math.floor(p.modelX / 16) + offsetX;
+		int ty = (int) Math.floor(p.modelY / 16) + offsetY;
+		if (tx >= 0 && ty >= 0 && tx < this.cols && ty < this.rows) {
+			return this.tiles[tx][ty];
+		}
+		return null;
+	}
+	
+	public override void processInput(List<MyEvent> events, Dictionary<string, bool> pressed) {
+		bool frozen = false;
+		for (SpecialLevelStuff s : this.special) {
+			if (s.freeze) {
+				frozen = true;
+			}
+		}
+		
+		this.shooting = this.lazor_cooldown > 0;
+		
+		bool pause = false;
+		
+		if (!frozen) {
+			if (this.side) {
+				float dx = 0;
+				float dy = 0;
+				bool running = false;
+				float v = 2.5;
+				if (this.context.gravity) {
+					if (pressed['B'] && !this.player.cling) {
+						running = true;
+						v = 5;
+					} else {
+						v = 3;
+					}
+				}
+				
+				if (this.player.bikemode) {
+					v = 2.0;
+				}
+				
+				if (pressed['left']) {
+					dx = -v;
+					if (running && this.runCounterValidFor == 'left') {
+						this.runCounter++;
+					} else {
+						this.runCounter = 0;
+						this.runCounterValidFor = 'left';
+					}
+				} else if (pressed['right']) {
+					dx = v;
+					if (running && this.runCounterValidFor == 'right') {
+						this.runCounter++;
+					} else {
+						this.runCounter = 0;
+						this.runCounterValidFor = 'right';
+					}
+				} else {
+					this.runCounter = 0;
+					this.runCounterValidFor = 'nothing';
+				}
+					
+				Tile pt = null;
+				if (pressed['up']) {
+					if (this.player.bikemode) {
+						dy = -v;
+					}
+					
+					pt = this.playersTile();
+					if (pt != null && pt.isLadder) {
+						this.player.cling = true;
+						//this.player.onGround = false;
+						this.player.ladderDY = -2;
+					}
+				} else if (pressed['down']) {
+					if (this.player.bikemode) {
+						dy = v;
+					}
+					
+					pt = this.playersTile();
+					if (pt != null && pt.isLadder) {
+						this.player.ladderDY = 2;
+					} else {
+						pt = this.playersTile(0, 1);
+						if (pt != null && pt.isLadder) {
+							this.player.modelY += 8;
+							this.player.ladderDY = 2;
+							this.player.cling = true;
+						}
+					}
+				}
+				
+				if (this.player != null) {
+					if (this.player.bikemode)
+						dx += BIKE_SPEED;
+					this.player.dx = dx;
+					this.player.dy = dy;
+				}
+				
+				for (MyEvent event : events) {
+					if (event.action == 'A') {
+						if (event.down) {
+							pt = this.playersTile();
+							if (this.player.onGround || this.player.cling || (pt != null && pt.isWater)) {
+								this.player.onGround = false;
+								this.player.cling = false;
+								this.player.ladderDY = 0;
+								if (pt.isWater) {
+									this.player.vy += WATER_JUMPING_VY;
+									playNoise('swim');
+								} else {
+									this.player.vy = JUMPING_VY;
+									if (this.runCounter > 5 && this.context.gravity)
+										this.player.vy = RUN_JUMPING_VY;
+									playNoise('jump');
+								}
+							}
+						} else {
+							if (this.player.vy < 0) {
+								this.player.vy = this.player.vy / 4.0; // maybe set to 0 instead?
+							}
+						}
+					} else if (event.action == 'B' && event.down) {
+						// SHOOT UR LAZOR PEW PEW!!!!1
+						if (this.lazor_cooldown <= 0) { // && !this.player.cling) {
+							bool lazorLeft = this.player.lastDirection == 'left';
+							if (this.player.damageDir != null) {
+								lazorLeft = this.player.damageDir == 'left';
+							}
+							int lazorVX = 8;
+							if (lazorLeft) {
+								lazorVX = -8;
+							}
+							
+							int x = this.player.x + lazorVX;
+							int y = this.player.y - 8;
+							
+							if (this.player.spawns == null) {
+								this.player.spawns = new List<Sprite>();
+							}
+							
+							playNoise('lazor');
+							Sprite bullet = new Sprite('lazor', x, y);
+							bullet.bvx = lazorVX;
+							bullet.isBullet = true;
+							bullet.ghost = true;
+							bullet.floats = true;
+							this.player.spawns.add(bullet);
+							this.lazor_cooldown = 6;
+						}
+					} else if (event.action == 'start' && event.down) {
+						this.next = new PauseScene(this);
+					}
+				}
+			} else {
+				int v = 3;
+				int dx = 0;
+				int dy = 0;
+				
+				if (pressed['left']) {
+					dx = -v;
+				} else if (pressed['right']) {
+					dx = v;
+				}
+					
+				if (pressed['up']) {
+					dy = -v;
+				} else if (pressed['down']) {
+					dy = v;
+				}
+				
+				for (MyEvent event : events) {
+					if (event.action == 'start' && event.down) {
+						this.next = new PauseScene(this);
+					}
+				}
+				
+				this.player.dx = dx;
+				this.player.dy = dy;
+			}
+		}
+	}
+	
+	public override void playMusic() {
+		JukeBox.playSongForLevelMaybe(this.id);
+	}
+	
+	public override void update() {
+		this.updateCounter++;
+		this.playMusic();
+		
+		this.lazor_cooldown--;
+		List<Sprite> allBullets = new List<Sprite>();
+		for (int i = 0; i < this.sprites.length; ++i) { // use an indexed loop instead of for loop since you're adding spawned sprites to the list while iterating through it.
+			Sprite sprite = this.sprites[i];
+			if (sprite != null && !sprite.dead) {
+				sprite.update(this);
+				if (sprite.isEnemy && this.player != null) {
+					if (sprite.isCollision(this.player)) {
+						this.playerHit();
+					}
+				}
+				
+				if (sprite.spawns != null) {
+					for (Sprite spawn : sprite.spawns) {
+						this.sprites.add(spawn);
+					}
+				}
+				sprite.spawns = null;
+				
+				if (sprite.isBullet) {
+					allBullets.add(sprite);
+				}
+			}
+		}
+		List<Sprite> new_sprites = new List<Sprite>();
+		
+		for (int i = 0; i < this.sprites.length; ++i) {
+			Sprite sprite = this.sprites[i];
+			if (allBullets.length > 0 && sprite.type != 'bird1' && sprite.type != 'bird2') {
+				if (sprite.isEnemy) {
+					int left = sprite.x - 8;
+					int right = sprite.x + 8;
+					int bottom = sprite.y + 8;
+					int top = bottom - sprite.height;
+					
+					for (int j = 0; j < allBullets.length; ++j) {
+						Sprite bullet = allBullets[j];
+						int bleft = bullet.x - 8;
+						int bright = bleft + 16;
+						int bbottom = bullet.y + 4;
+						int btop = bbottom - 8;
+						
+						// WAT?
+						// I probably wrote this when I was about to collapse during PyWeek.
+						if (bleft > right) { }
+						else if (bright < left) { }
+						else if (btop > bottom) { }
+						else if (bbottom < top) { }
+						else {
+							sprite.dead = true;
+							bullet.dead = true;
+							switch (sprite.type) {
+								case 'acorn':
+								case 'acorntop':
+								case 'byat':
+								case 'moonsquid':
+								case 'lavamonster':
+									int dropN = (int) Random.randomInt(200);
+									string drop = null;
+									if (dropN == 0) {
+										drop = '1up';
+									} else if (dropN < 8) {
+										drop = 'life_big';
+									} else if (dropN < 30) {
+										drop = 'life_small';
+									}
+									
+									if (drop != null) {
+										// Can't do spawns since it'll get filtered out before then.
+										Sprite powerup = new Sprite('powerup', sprite.x, sprite.y - 1);
+										PowerupDrop info = new PowerupDrop(drop);
+										powerup.powerupInfo = info;
+										new_sprites.add(powerup);
+									}
+									break;
+									
+								default:
+									break;
+							}
+							string poofType = 'poof_small';
+							if (sprite.type == 'lavamonster') {
+								poofType = 'poof_big';
+							}
+							
+							Sprite poof = new Sprite(poofType, sprite.x, sprite.y);
+							new_sprites.add(poof);
+							playNoise('enemy_dies');
+						}
+					}
+				}
+			}
+			
+			if (!sprite.dead) {
+				new_sprites.add(sprite);
+			}
+		}
+		this.sprites = new_sprites;
+		
+		int player_tx = (int) Math.floor(this.player.modelX / 16);
+		int player_ty = (int) Math.floor(this.player.modelY / 16);
+		Tile activeTile = this.tiles[player_tx][player_ty];
+		if (activeTile.door != null) {
+			DoorParseUnit door = activeTile.door;
+			string target = door.target;
+			List<List<string>> swaps = this.doorSwaps.get(target, null);
+			
+			if (swaps != null) {
+				Context ctx = this.context;
+				for (List<string> swap : swaps) {
+					string trigger = swap[0];
+					if ((trigger == 'gravity' && ctx.gravity) ||
+						(trigger == 'lavaA' && ctx.volcanoA) ||
+						(trigger == 'lavaB' && ctx.volcanoB) ||
+						(trigger == 'lavaC' && ctx.volcanoC) ||
+						(trigger == 'waterA' && ctx.balloonA) ||
+						(trigger == 'waterB' && ctx.balloonB) ||
+						(trigger == 'waterC' && ctx.balloonC) ||
+						(trigger == 'waterD' && ctx.balloonD)) {
+						target = swap[1];
+						break;
+					}
+				}
+			}
+			
+			for (SpecialLevelStuff special : this.special) {
+				if (special.hasDoorTrigger) {
+					target = special.doorTrigger(target);
+					break;
+				}
+			}
+			
+			if (target != null) {
+				this.next = new PlayScene(target, door.tx, door.ty, this.context);
+			}
+		}
+		
+		Tile pUp = this.playersTile(0, -1);
+		Tile pDown = this.playersTile(0, 0);
+		
+		if ((pUp != null && pUp.isSpike) || (pDown != null && pDown.isSpike)) {
+			this.playerHit(3);
+		}
+		
+		if ((pUp != null && pUp.isLava) || (pDown != null && pDown.isLava)) {
+			this.next = new DeathOverrideScene(this, 'lava');
+		}
+		
+		for (SpecialLevelStuff special : this.special) {
+			if (special.hasUpdate) {
+				special.update();
+			}
+		}
+	}
+	
+	public void playerHit(int amount = 1) {
+		if (this.player.blinkCounter < 0) {
+			this.player.hit(this, amount);
+		}
+	}
+	
+	public bool isCollision(float pLeft, float pTop, float pRight, float pBottom) {
+		if (pLeft < 0) return true;
+		if (pTop < 0) return true;
+		int tLeft = (int) Math.floor(pLeft / 16);
+		int tRight = (pRight == pLeft) ? tLeft : (int) Math.floor(pRight / 16);
+		int tTop = (int) Math.floor(pTop / 16);
+		
+		// potentially a bug
+		// bottom row of sprite is technically top row of ground below. This intersection should be ignored.
+		int tBottom = Math.floor((pBottom - 3) / 16);
+		
+		if (tLeft < 0) return true;
+		if (tTop < 0) return true;
+		if (tRight >= this.cols) return true;
+		if (tBottom >= this.rows) return true;
+		
+		for (int y = tTop; y <= tBottom; ++y) {
+			for (int x = tLeft; x <= tRight; ++x) {
+				if (this.tiles[x][y].solid) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public void renderOverlay() {
+		Graphics2D.Draw.rectangle(0, 0, 256, 8, 0, 0, 0);
+		ImageLibrary.get('misc/lives.png').draw(0, 0);
+		drawText(255, 255, 255, 'x' + this.context.lives, 8, 0);
+		
+		int x = 112;
+		drawText(255, 255, 255, 'HEALTH', x, 0);
+		
+		x += 'HEALTH'.length * 8 + 8;
+		
+		int health = this.context.lifemeter;
+		List<int> color = PlayScene.GOOD_HEALTH_COLOR;
+		if (health < 4) {
+			color = PlayScene.POOR_HEALTH_COLOR;
+		}
+		for (int i = 0; i < 5; ++i) {
+			Graphics2D.Draw.rectangle(x, 0, 16, 8, 128, 128, 128);
+			if (health >= ((i + 1) * 2)) {
+				Graphics2D.Draw.rectangle(x + 1, 1, 14, 6, color[0], color[1], color[2]);
+			} else if (health == 2 * i + 1) {
+				Graphics2D.Draw.rectangle(x + 1, 1, 7, 6, color[0], color[1], color[2]);
+			}
+			x += 16;
+		}
+		
+		List<object> cat = this.context.getCurrentCountAndType();
+		if (cat != null) {
+			int cnt = (int) cat[1];
+			int total;
+			GraphicsTexture img;
+			if (cat[0] == 'W') {
+				img = ImageLibrary.get('misc/water_icon.png');
+				total = 4;
+			} else {
+				img = ImageLibrary.get('misc/volcano_icon.png');
+				total = 3;
+			}
+							
+			img.draw(48, 0);
+			drawText(255, 255, 255, cnt + '/' + total, 56, 0);
+		}
+	}
+	
+	public override void render(int rc) {
+		if (this.bg == 'stars') {
+			Graphics2D.Draw.fill(0, 0, 0);
+		} else if (this.bg == 'cave') {
+		} else if (this.bg == 'volcano') {
+		} else {
+			Graphics2D.Draw.fill(0, 0, 40); // sky
+		}
+		
+		int colStart = 0;
+		int colEnd = this.cols - 1;
+		
+		int rowStart = 0;
+		int rowEnd = this.rows - 1;
+		
+		int offsetX = -(this.player.x - 128);
+		int offsetY = -(this.player.y - 112);
+		
+		if (this.player.bikemode) {
+			offsetX = -(this.updateCounter * BIKE_SPEED);
+		}
+		
+		if (offsetX > 0) offsetX = 0;
+		if (offsetY > 0) offsetY = 0;
+		
+		int right = -(this.cols * 16 - 256);
+		if (offsetX < right) offsetX = right;
+		
+		int bottom = -(this.rows * 16 - 224);
+		if (offsetY < bottom) offsetY = bottom;
+		
+		if (this.cols * 16 < 256)
+			offsetX = (256 - this.cols * 16) / 2;
+		if (this.rows * 16 < 224)
+			offsetY = (224 - this.rows * 16) / 2;
+		
+		GraphicsTexture cave = ImageLibrary.get('tiles/background/cave.png');
+		GraphicsTexture volcano_bg = ImageLibrary.get('tiles/background/volcano.png');
+		int starlen = this.stars.length;
+		List<GraphicsTexture> stars = this.stars;
+		int counter = 0;
+		
+		int idealColStart = -(int) Math.floor(offsetX / 16) - 1;
+		if (idealColStart > colStart)
+			colStart = idealColStart;
+		
+		int idealColEnd = colStart + 17;
+		if (idealColEnd < colEnd)
+			colEnd = idealColEnd;
+		
+		int idealRowStart = -(int) Math.floor(offsetY / 16) - 1;
+		if (idealRowStart > rowStart)
+			rowStart = idealRowStart;
+		
+		int idealRowEnd = rowStart + 15;
+		if (idealRowEnd < rowEnd)
+			rowEnd = idealRowEnd;
+		
+		int lavaLevel = 0;
+		int shake = 0;
+		for (SpecialLevelStuff s : this.special) {
+			lavaLevel = (int) Math.max(lavaLevel, s.lavaLevel);
+			shake = (int) Math.max(shake, s.shakeScreen ? 3 : 0);
+		}
+		
+		offsetX += shake;
+		offsetY += shake / 3;
+		
+		string lavaRowType = null;
+		
+		for (int row = rowStart; row <= rowEnd; ++row) {
+			int fromBottom = rowEnd - row + 1;
+			GraphicsTexture lu;
+			if (lavaLevel > 0) {
+				if (fromBottom == lavaLevel) {
+					lavaRowType = 'upper';
+					int lc = (int) Math.floor((rc / 4) % 4) + 1;
+					lu = ImageLibrary.get('tiles/fluids/lava' + lc + '.png');
+				} else if (fromBottom < lavaLevel) {
+					lavaRowType = 'inner' ;
+					lu = ImageLibrary.get('tiles/fluids/lava.png');
+				}
+			}
+			
+			for (int col = colStart; col <= colEnd; ++col) {
+				counter++;
+				int x = col * 16 + offsetX;
+				int y = row * 16 + offsetY;
+				if (this.bg == 'cave') {
+					cave.draw(x, y);
+				} else if (this.bg == 'volcano') {
+					volcano_bg.draw(x, y);
+					if (lavaRowType != null) {
+						lu.draw(x, y);
+					}
+				} else if (this.bg == 'stars') {
+					GraphicsTexture bgimg = stars[(col + this.rows * row + row * row) % starlen];
+					if (bgimg != null) {
+						bgimg.draw(x, y);
+					}
+				}
+				
+				for (TileTemplate template : this.tiles[col][row].templates) {
+					template.getImage(rc).draw(x, y);
+				}
+			}
+		}
+		
+		List<List<int>> re_render = new List<List<int>>();
+		int arc = rc / 4;
+		for (Sprite sprite : this.sprites) {
+			if (sprite != null && !sprite.dead) {
+				sprite.render(this, offsetX, offsetY, arc);
+				if (sprite.inBackground) {
+					int tx = sprite.x / 16;
+					int ty = (sprite.y + 8) / 16;
+					re_render.add(new List<int>() { tx, ty });
+					re_render.add(new List<int>() { tx, ty - 1 });
+					re_render.add(new List<int>() { tx, ty - 2 });
+				}
+			}
+		}
+		
+		for (List<int> rr : re_render) {
+			int col = rr[0];
+			int row = rr[1];
+			if (row >= 0) {
+				int x = col * 16 + offsetX;
+				int y = row * 16 + offsetY;
+				for (TileTemplate template : this.tiles[col][row].templates) {
+					template.getImage(rc).draw(x, y);
+				}
+			}
+		}
+		
+		for (SpecialLevelStuff s : this.special) {
+			if (s.hasRender) {
+				s.render(rc, offsetX, offsetY);
+			}
+		}
+		
+		this.renderOverlay();
+	}
+	
+	public void triggerDialog(string id, bool slightDelay = false) {
+		this.next = new DialogScene(this, id, slightDelay);
+	}
+}

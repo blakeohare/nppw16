@@ -1,0 +1,78 @@
+import Math;
+import Random;
+
+class ByatAutomation : AbstractAutomation {
+	private int counter = 0;
+	private string mode = 'perch'; // TODO: replace with enum.
+	public bool perched = true;
+	private int dropHeight = 10;
+	private int targetY;
+	private bool swoopLeft;
+
+	constructor(Sprite sprite) : base(sprite) {
+		this.sprite = sprite;
+	}
+		
+	public override void doStuff(PlayScene scene) {
+		this.counter++;
+		Sprite sprite = this.sprite;
+		List<List<Tile>> tiles = scene.tiles;
+		
+		if (this.mode == 'perch') {
+			this.perched = true;
+			if (this.counter > 3 * 30) {
+				this.counter = 0;
+				this.mode = 'down';
+				this.perched = false;
+				int dropHeight = (int) Random.randomInt(1, 6) * 16;
+				this.targetY = sprite.y + dropHeight;
+				//this.originalY = sprite.y;
+			}
+		} else if (this.mode == 'down') {
+			sprite.dy = 2;
+			if (sprite.y >= this.targetY || sprite.collidedWall || sprite.onGround) {
+				this.mode = 'swoop';
+				this.counter = 0;
+				this.swoopLeft = scene.player.x < sprite.x;
+			}
+		} else if (this.mode == 'swoop') {
+			float swoopSpeed = 1.6;
+			sprite.dy = Math.sin(this.counter * 40 / (2 * 3.14159)) * 4;
+			sprite.dx = this.swoopLeft ? -swoopSpeed : swoopSpeed;
+			if (this.counter > 30 * 6) {
+				this.mode = 'up';
+				this.counter = 0;
+			} else if (sprite.collidedWall) {
+				this.swoopLeft = !this.swoopLeft;
+			}
+		} else if (this.mode == 'up') {
+			sprite.dy = -3.5;
+			int mt = sprite.x & 15;
+			if (mt < 4) {
+				sprite.dx = 1;
+			} else if (mt > 12) {
+				sprite.dx = -1;
+			}
+			bool stop = false;
+			if (this.sprite.collidedWall) {
+				stop = true;
+			} else {
+				int tx = sprite.x / 16;
+				int ty = (sprite.y - 8) / 16;
+				if (tx < 0 || tx >= scene.cols || ty < 0 || ty >= scene.rows) {
+					stop = true;
+				} else {
+					Tile t = tiles[tx][ty];
+					if (t.isTop || t.solid) {
+						stop = true;
+					}
+				}
+			}
+			
+			if (stop) {
+				this.mode = 'perch';
+				this.counter = 0;
+			}
+		}
+	}
+}

@@ -1,0 +1,17 @@
+
+class PoofAutomation : AbstractAutomation {
+	public int counter = 0;
+	public bool isBig;
+	
+	constructor(Sprite sprite, bool isBig) : base(sprite) {
+		this.sprite = sprite;
+		this.isBig = isBig;
+	}	
+	
+	public override void doStuff(PlayScene scene) {
+		this.counter++;
+		if (this.counter == 15) {
+			this.sprite.dead = true;
+		}
+	}
+}

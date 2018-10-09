@@ -1,0 +1,135 @@
+import Graphics2D;
+import Math;
+
+class DialogScene : LegacyAbstractScene {
+	
+	private LegacyAbstractScene bg;
+	private bool storyMode;
+	private bool forceArrow;
+	private int delayCounter;
+	private List<string> activeStanza;
+	private List<List<string>> stanzas;
+	private int stanzaIndex = 0;
+	private float textCursor = 0;
+	private List<string> showLines = new List<string>();
+	private bool blink = false;
+	private string id;
+	private List<int> generalLoc = null;
+	
+	constructor(LegacyAbstractScene bg, string dialogId, bool slightDelay, bool storyMode = false, bool forceArrow = false) 
+		: base() {
+		
+		this.bg = bg;
+		this.storyMode = storyMode;
+		this.forceArrow = forceArrow;
+		Sprite player = bg is PlayScene ? ((PlayScene)bg).player : null;
+		if (player != null) {
+			player.moving = false;
+			player.lastDirection = 'left';
+		}
+		this.delayCounter = slightDelay ? 45 : 0;
+		this.stanzas = Dialogs.DIALOGS[dialogId];
+		this.id = dialogId;
+		
+		this.generalLoc = null;
+		if (dialogId.length == 2 && dialogId[0] == 'T')
+			this.generalLoc = new List<int>() { 4 * 16, 6 * 16 };
+	}
+	
+	public override void processInput(List<MyEvent> events, Dictionary<string, bool> pressed) {
+		if (this.blink) {
+			for (MyEvent event : events) {
+				if (event.down && (event.action == 'A' || event.action == 'B' || event.action == 'start')) {
+					this.stanzaIndex++;
+					this.textCursor = 0;
+				}
+			}
+		} else {
+			if (pressed['A'] || pressed['B'] || pressed['start']) {
+				if (this.delayCounter < 0) {
+					this.textCursor += 2.2;
+				}
+			}
+		}
+	}
+	
+	public override void update() {
+		if (this.bg.flags.contains('M')) {
+			this.bg.playMusic();
+		}
+		
+		this.delayCounter--;
+		
+		if (this.stanzaIndex >= this.stanzas.length) {
+			this.next = this.bg;
+			this.bg.next = this.bg;
+			
+			// Total hack...
+			//if (this.id == 'WaterDone')
+			//	this.next = new PlayScene('ship_1', 8, 9, this.bg.context);
+		} else {
+			this.activeStanza = this.stanzas[this.stanzaIndex];
+			string rawLines = this.activeStanza.join('\n');
+			this.blink = false;
+			int cursor = Math.floor(this.textCursor);
+			if (cursor >= rawLines.length)
+				this.blink = true;
+			else
+				rawLines = rawLines[:cursor];
+			List<string> showLinesStr = rawLines.split('\n');
+			List<string> showLines = new List<string>();
+			for (string line : showLinesStr) {
+				if (line.length > 0) {
+					showLines.add(line);
+				}
+			}
+			this.showLines = showLines;
+		}
+		
+		if (this.delayCounter < 0) {
+			this.textCursor += 0.3;
+		}
+	}
+	
+	public override void render(int rc) {
+		this.bg.render(rc);
+		
+		if (this.delayCounter > 0) return;
+		
+		if (this.generalLoc != null) {
+			int index = (rc / 4) & 3;
+			string path = 'tiles/screen-static/screen' + (index == 0 ? '' : ('' + index)) + '.png';
+			ImageLibrary.get(path).draw(this.generalLoc[0], this.generalLoc[1]);
+		}
+		
+		if (!this.storyMode) {
+			drawBox(16, 16, 28, 9);
+		}
+		int x = 32;
+		int y = 32;
+		int space = 8;
+		if (this.storyMode) {
+			y += 16 * 7;
+			space = 16;
+		}
+		
+		int startY = y;
+		for (string line : this.showLines) {
+			drawText(255, 255, 255, line, x, y);
+			y += space;
+		}
+		
+		if (this.blink && ((rc / 7) & 1) == 0) {
+			List<int> pos = new List<int>() { 256 - 40, startY + space * 4 };
+			if (!this.forceArrow && this.stanzaIndex == this.stanzas.length - 1) {
+				Graphics2D.Draw.rectangle(pos[0], pos[1], 8, 8, 255, 255, 255);
+			} else {
+				drawText(255, 255, 255, '^', pos[0], pos[1]);
+			}
+		}
+		
+		if (!this.blink && rc % 5 == 0) {
+			playNoise('text_char');
+		}
+	}
+}

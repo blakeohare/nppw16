@@ -1,0 +1,126 @@
+import Math;
+
+public class BalloonPopping : SpecialLevelStuff {
+	private string id;
+	private bool done = false;
+	private Dictionary<string, Tile> balloonCoords = new Dictionary<string, Tile>();
+	
+	// ID's: water1, water2, water3, water4, lava1, lava2, lava3
+	constructor(PlayScene scene, string id) : base(scene) {
+		this.id = id;
+		this.scene = scene;
+		this.context = scene.context;
+		this.hasUpdate = true;
+		this.hasPostInit = true;
+		
+		if (id.startsWith('water')) {
+			int rows = scene.rows;
+			int cols = scene.cols;
+			for (int y = 0; y < rows; ++y) {
+				for (int x = 0; x < cols; ++x) {
+					if (scene.tiles[x][y].isBalloon) {
+						this.balloonCoords[x + '|' + y] = scene.tiles[x][y];
+					}
+				}
+			}
+		}
+	}
+	
+	public override void update() {
+		if (!this.done) {
+			Sprite player = this.scene.player;
+			int tx = player.x / 16;
+			int ty = player.y / 16;
+			
+			if (this.id == 'water1' && ty > 18) return;
+			if (this.id == 'water4' && ty < 18) return;
+			
+			Tile tile = this.balloonCoords.get(tx + '|' + ty, null);
+			if (tile != null) {
+				this.applyOverlayAndSaveContext(
+					true,
+					tx + tile.primaryBalloonOffset[0],
+					ty + tile.primaryBalloonOffset[1]);
+			}
+		}
+	}
+
+	public override void postInit() {
+		switch (this.id) {
+			case 'water1':
+				if (this.context.balloonA) this.applyOverlayAndSaveContext();
+				break;
+				
+			case 'water2':
+				if (this.context.balloonB) this.applyOverlayAndSaveContext();
+				break;
+				
+			case 'water3':
+				if (this.context.balloonC) this.applyOverlayAndSaveContext();
+				break;
+				
+			case 'water4':
+				if (this.context.balloonD) this.applyOverlayAndSaveContext();
+				break;
+				
+			case 'lava1':
+				if (this.context.volcanoA) this.applyOverlayAndSaveContext();
+				break;
+				
+			case 'lava2':
+				if (this.context.volcanoB) this.applyOverlayAndSaveContext();
+				break;
+				
+			case 'lava3':
+				if (this.context.volcanoC) this.applyOverlayAndSaveContext();
+				break;
+			
+			default: break;
+		}
+	}
+	
+	public void applyOverlayAndSaveContext(
+		bool showPop = false,
+		int balloonX = 0,
+		int balloonY = 0) {
+		
+		if (this.done) return;
+		
+		string overlayMapName = this.scene.overlayTriggers[this.id]; // Go ahead and crash if not present. Game is busted at this point anyway.
+		
+		PlayScene overlay = new PlayScene(overlayMapName, 0, 0, new Context());
+		PlayScene original = this.scene;
+		
+		int width = (int) Math.min(original.cols, original.cols);
+		int height = (int) Math.min(original.rows, original.rows);
+		List<List<Tile>> grid = original.tiles;
+		List<List<Tile>> overlayTiles = overlay.tiles;
+		for (int y = 0; y < height; ++y) {
+			for (int x = 0; x < width; ++x) {
+				if (overlay.tiles[x][y].originalTemplates.length > 0) {
+					List<TileTemplate> templates = grid[x][y].originalTemplates + overlay.tiles[x][y].originalTemplates;
+					grid[x][y] = new Tile(templates, x, y);
+				}
+			}
+		}
+		
+		switch (this.id) {
+			case 'water1': this.context.balloonA = true; break;
+			case 'water2': this.context.balloonB = true; break;
+			case 'water3': this.context.balloonC = true; break;
+			case 'water4': this.context.balloonD = true; break;
+			default: break;
+		}
+		
+		this.done = true;
+		
+		if (showPop) {
+			playNoise('water_pop');
+			original.sprites.add(new Sprite('waterpop', balloonX * 16 + 8, balloonY * 16 + 8));
+			
+			if (this.context.balloonA && this.context.balloonB && this.context.balloonC && this.context.balloonD) {
+				this.scene.next = new DialogScene(this.scene, 'WaterDone', true, false, false);
+			}
+		}
+	}
+}

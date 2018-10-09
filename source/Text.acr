@@ -1,0 +1,91 @@
+import Graphics2D;
+
+static class TextRenderer {
+	private static Dictionary<string, string> TEXT_FILENAMES = new Dictionary<string, string>() {
+		';': 'sc',
+		'<': 'left',
+		'>': 'right',
+		'^': 'up',
+		'&': 'am',
+		'=': 'eq',
+		':': 'col',
+		'(': 'op',
+		')': 'cp',
+		'*': 'as',
+		'?': 'qu',
+		'.': 'pe',
+		'/': 'sl',
+		'\'': 'ap',
+		'"': 'qt',
+		'!': 'ex',
+		'`': 'q2',
+		'-': 'hy',
+		',': 'cm',
+	};
+
+	private static Dictionary<string, Dictionary<string, GraphicsTexture>> lookup_by_color = 
+		new Dictionary<string, Dictionary<string, GraphicsTexture>>();
+	
+	public static void drawText(string colorname, string text, int x, int y) {
+		Dictionary<string, GraphicsTexture> lookup = TextRenderer.lookup_by_color.get(colorname, null);
+		if (lookup == null) {
+			lookup = new Dictionary<string, GraphicsTexture>();
+			List<string> lettersBuilder = new List<string>();
+			for (int i = 0; i < 10; ++i) {
+				lettersBuilder.add('' + i);
+			}
+			
+			int a = (int) Core.ord('a');
+			for (int i = 0; i < 26; ++i) {
+				lettersBuilder.add((string) Core.chr(i + a));
+			}
+			
+			for (string key : TextRenderer.TEXT_FILENAMES.keys()) {
+				lettersBuilder.add(key);
+			}
+			
+			for (string c : lettersBuilder) {
+				c = c.lower();
+				GraphicsTexture img = ImageLibrary.get('text/' + colorname + '-' + TextRenderer.TEXT_FILENAMES.get(c, c) + '.png');
+				lookup[c] = img;
+				lookup[c.upper()] = img;
+			}
+			TextRenderer.lookup_by_color[colorname] = lookup;
+		}
+		
+		for (string c : text) {
+			GraphicsTexture img = lookup.get(c, null);
+			
+			if (img == null && c != ' ') {
+				img = lookup.get('?', null);
+			}
+			
+			if (img != null) {
+				img.draw(x, y);
+			}
+			
+			x += 8;
+		}
+	}
+}
+
+public void drawText(int r, int g, int b, string text, int x, int y) {
+	// TODO: change this to just pass in the color name as an enum.
+	string color = null;
+	if (r == 255) {
+		if (g == 255 && b == 255) {
+			color = 'white';
+		} else if (g == 255 && b == 0) {
+			color = 'yellow';
+		} else if (g == 0 && b == 0) {
+			color = 'red';
+		}
+	} else if (r == 128) {
+		if (g == 128 && b == 128) {
+			color = 'gray';
+		}
+	}
+	
+	if (color == null) throw new InvalidArgumentException(false, "Unknown color: " + r + ', ' + g + ', ' + b);
+	TextRenderer.drawText(color, text, x, y);
+}

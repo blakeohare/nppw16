@@ -1,0 +1,51 @@
+import Math;
+
+class BirdAutomation : AbstractAutomation {
+	private int counter = 0;
+	// TODO: replace with enum.
+	private string mode = 'stalk'; // 'right' | 'left'
+	private bool bikeLevel;
+
+	constructor(Sprite sprite, bool onBikeLevel) : base(sprite) {
+		sprite.isEnemy = true;
+		this.bikeLevel = onBikeLevel;
+	}
+		
+	public override void doStuff(PlayScene scene) {
+		this.counter++;
+		Sprite p = scene.player;
+		Sprite sprite = this.sprite;
+		if (this.mode == 'stalk') {
+			int dy = p.y - this.sprite.y;
+			
+			if ((int) Math.abs(dy) < 6) {
+				this.mode = 'right';
+			} else if (dy > 0) {
+				this.sprite.dy += 3;
+			} else {
+				this.sprite.dy -= 3;
+			}
+		} else if (this.mode == 'right') {
+			if (sprite.x < p.x) {
+				sprite.dx = 6;
+			} else {
+				this.mode = 'left';
+			}
+		} else { // mode == 'left'
+			int spriteX = sprite.x;
+			if (this.bikeLevel) {
+				spriteX -= this.counter * BIKE_SPEED;
+			}
+			
+			if (spriteX > 7) {
+				sprite.dx = -6;
+			} else {
+				this.mode = 'stalk';
+			}
+		}
+		
+		if (this.bikeLevel) {
+			sprite.dx += BIKE_SPEED;
+		}
+	}
+}

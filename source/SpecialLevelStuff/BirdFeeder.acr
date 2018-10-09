@@ -1,0 +1,45 @@
+public class BirdFeeder : SpecialLevelStuff {
+	private int counter = 0;
+	public int seedsLeft;
+	private bool closingShown = false;
+	
+	public constructor(PlayScene scene) : base(scene) {
+		this.hasPostInit = true;
+		this.hasUpdate = true;
+		List<List<int>> seeds = new List<List<int>>() {
+			new List<int>() { 4, 36 },
+			new List<int>() { 11, 30 },
+			new List<int>() { 4, 24 },
+			new List<int>() { 11, 18 },
+			new List<int>() { 4, 12 },
+			new List<int>() { 11, 6 }
+		};
+		
+		this.seedsLeft = seeds.length;
+		
+		for (List<int> seed : seeds) {
+			scene.sprites.add(new Sprite('seeds', seed[0] * 16 + 8, seed[1] * 16 + 7));
+		}
+		
+		Sprite bike = new Sprite('rocketbike', 12 * 16 + 8, 39 * 16 + 8);
+		bike.floats = true;
+		scene.sprites.add(bike);
+	}
+		
+	public override void update() {
+		Sprite p = this.scene.player;
+		this.counter++;
+		
+		if (this.counter == 3) {
+			this.scene.next = new DialogScene(this.scene, "Feeder1", false, false, false);
+		}
+		
+		if (this.seedsLeft == 0 && !this.closingShown) {
+			this.scene.next = new DialogScene(this.scene, "Feeder2", false, false, false);
+			this.scene.sprites.add(new Sprite('bird1', 8, 8));
+			this.closingShown = true;
+		}
+	}
+		
+	public override void postInit() { }
+}

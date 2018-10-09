@@ -1,0 +1,81 @@
+import Graphics2D;
+import Math;
+import TwoCansAlpha3;
+
+const string cred_BO = "BLAKE O'HARE";
+const string cred_TB = "TED BURTON";
+const string cred_SC = "STEVE CRAWFORD";
+const string cred_LF = "LAURA FREER";
+const string cred_CS = "CHRISTINE SANDQUIST";
+const string cred_AM = "ANGEL MCLAUGHLIN";
+const string cred_AC = "ADRIAN CLINE";
+
+class CreditsScene : LegacyAbstractScene {
+
+	private static List<List<object>> CREDITS = new List<List<object>>() {
+		new List<object>() { 'TEAM NERD PARADISE', new List<string>() },
+		new List<object>() { 'PROGRAMMING', new List<string>() { cred_BO } },
+		new List<object>() { 'LEVEL DESIGN', new List<string>() { cred_TB, cred_SC, cred_LF } },
+		new List<object>() { 'CHARACTER ART', new List<string>() { cred_CS } },
+		new List<object>() { 'LEVEL ART', new List<string>() { cred_AM } },
+		new List<object>() { 'MUSIC AND SFX', new List<string>() { cred_AC } },
+		new List<object>() { 'DIALOG', new List<string>() { cred_LF } },
+		new List<object>() { 'AND YOU!', new List<string>() { 'FOR PLAYING', 'OR SOMETHING LIKE THAT' } },
+		new List<object>() { '', new List<string>() { 'THE END' } },
+	};
+
+	private int counter = 0;
+	private List<string> images = new List<string>();
+	private List<int> imageYs = new List<int>();
+	
+	public constructor() : base() {
+		this.flags = 'M';
+		int y = 0;
+		for (int i = 0; i < CreditsScene.CREDITS.length; ++i) {
+			this.images.add((string) CreditsScene.CREDITS[i][0]);
+			this.imageYs.add(y);
+			
+			y += 16;
+			for (string person : (List<string>) CreditsScene.CREDITS[i][1]) {
+				this.images.add(person);
+				this.imageYs.add(y);
+				y += 8;
+			}
+			
+			y += 64;
+		}
+	}
+	
+	public override void processInput(List<MyEvent> events, Dictionary<string, bool> pressed) {
+		if (this.counter > 900) {
+			for (MyEvent event : events) {
+				if (event.down) {
+					if (event.action == 'start' || event.action == 'A' || event.action == 'B') {
+						this.next = new TitleScene();
+					}
+				}
+			}
+		}
+	}
+	
+	public override void update() {
+		this.playMusic();
+		this.counter++;
+	}
+	
+	public override void render(int rc) {
+		Graphics2D.Draw.fill(0, 0, 0);
+		
+		int counter = (int) Math.min(this.counter, 892);
+		
+		int imagesLength = this.images.length;
+		for (int i = 0; i < imagesLength; ++i) {
+			
+			drawText(255, 255, 255, this.images[i], 64, this.imageYs[i] - counter + 224);
+		}
+	}
+	
+	public override void playMusic() {
+		JukeBox.ensureSong('credits');
+	}
+}

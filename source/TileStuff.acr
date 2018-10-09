@@ -1,0 +1,260 @@
+import Graphics2D;
+import Resources;
+
+class TileStore {
+
+	private static Dictionary<string, TileTemplate> _tileStore = null;
+	
+	public static TileTemplate getTile(string id) {
+		if (TileStore._tileStore == null) {
+			TileStore.initTileStore();
+		}
+		
+		return TileStore._tileStore.get(id, null);
+	}
+
+	public static void initTileStore() {
+		string t = (string) Resources.readText('images/tiles/manifest.txt');
+		TileStore._tileStore = new Dictionary<string, TileTemplate>();
+		
+		for (string line : t.split('\n')) {
+			List<string> parts = line.split('#')[0].trim().split('\t');
+			if (parts.length == 3) {
+				string id = parts[0].trim();
+				string flags = parts[1].trim();
+				List<string> imagePaths = parts[2].trim().split(',');
+				
+				TileTemplate tile = new TileTemplate(id, flags, imagePaths);
+				TileStore._tileStore[id] = tile;
+			}
+		}
+	}
+}
+
+public class TileTemplate {
+	public string id;
+	public bool solid = false;
+	public bool coveredA = false;
+	public bool coveredB = false;
+	public bool coveredC = false;
+	public bool coveredD = false;
+	public bool isDoor = false;
+	public bool isLadder = false;
+	public bool isTop = false;
+	public bool isSpike = false;
+	public bool isLava = false;
+	public bool isIce = false;
+	public bool isBalloon = false;
+	public bool isWater;
+	public List<int> primaryBalloonOffset = null; // Location of top-middle balloon tile relative to this
+	public List<GraphicsTexture> images = new List<GraphicsTexture>();
+	public GraphicsTexture staticImage = null;
+	public int imageCount;
+	
+	constructor(string id, string flags, List<string> imagePaths) {
+		this.id = id;
+
+		this.isWater = id == 'water' || id == 'watertop';
+		for (string flag : flags) {
+			switch (flag) {
+				case 'x':
+					this.solid = true;
+					break;
+				case 'A':
+					this.coveredA = true;
+					break;
+				case 'B':
+					this.coveredB = true;
+					break;
+				case 'C':
+					this.coveredC = true;
+					break;
+				case 'D':
+					this.coveredD = true;
+					break;
+				case 'r':
+				case 'R':
+					this.isDoor = true;
+					break;
+				case 'L':
+					this.isLadder = true;
+					break;
+				case 'J':
+					this.isTop = true;
+					break;
+				case 'S':
+					this.isSpike = true;
+					break;
+				case 'V':
+					this.isLava = true;
+					break;
+				case 'I':
+					this.isIce = true;
+					break;
+				case 'o':
+					this.isBalloon = true;
+					int bid = (int) Core.parseInt(id[-1]);
+					List<int> pOffset;
+					if (bid == 1) {
+						pOffset = new List<int>() { 1, 0 };
+					} else if (bid == 3) {
+						pOffset = new List<int>() { -1, 0 };
+					} else if (bid == 4) {
+						pOffset= new List<int>() { 1, -1 };
+					} else if (bid == 5) {
+						pOffset = new List<int>() { 0, -1 };
+					} else if (bid == 6) {
+						pOffset = new List<int>() { -1, -1 };
+					} else {
+						pOffset = new List<int>() { 0, 0 };
+					}
+					this.primaryBalloonOffset = pOffset;
+					break;
+				default:
+					break;
+			}
+		}
+		for (string path : imagePaths) {
+			this.images.add(ImageLibrary.get('tiles/' + path));
+		}
+		if (this.images.length == 1) {
+			this.staticImage = this.images[0];
+		}
+		this.imageCount = this.images.length;
+	}
+	
+	GraphicsTexture getImage(int rc) {
+		return this.staticImage ?? this.images[(rc / 4) % this.imageCount];
+	}
+}
+
+public Tile makeTile(TileTemplate lower, TileTemplate upper, int col, int row) {
+	if (lower == null && upper == null) {
+		return new Tile(new List<TileTemplate>(), col, row);
+	}
+	
+	if (lower == null) {
+		return new Tile(new List<TileTemplate>() { upper }, col, row);
+	}
+	
+	if (upper == null) {
+		return new Tile(new List<TileTemplate>() { lower }, col, row);
+	}
+	
+	return new Tile(new List<TileTemplate>() { lower, upper }, col, row);
+}
+
+public class Tile {
+	public List<TileTemplate> originalTemplates;
+	public int col;
+	public int row;
+	public List<TileTemplate> templates = new List<TileTemplate>();
+	public bool isDoor = false;
+	public bool isLadder = false;
+	public bool isTop = false;
+	public bool isLava = false;
+	public bool isWater = false;
+	public bool isIce = false;
+	public DoorParseUnit door = null;
+	public bool isSpike = false;
+	public bool isBalloon = false;
+	public List<int> primaryBalloonOffset = null;
+	public List<List<int>> collisions = new List<List<int>>();
+	public bool solid = false;
+	
+	public constructor(List<TileTemplate> templates, int col, int row) {
+		this.originalTemplates = templates;
+		this.col = col;
+		this.row = row;
+		
+		for (TileTemplate tile : templates) {
+			if (tile != null) {
+				this.templates.add(tile);
+				if (tile.isDoor) this.isDoor = true;
+				if (tile.isLadder) this.isLadder = true;
+				if (tile.isTop) this.isTop = true;
+				if (tile.isWater) this.isWater = true;
+				if (tile.isSpike) this.isSpike = true;
+				if (tile.isLava) this.isLava = true;
+				if (tile.isIce) this.isIce = true;
+				if (tile.isBalloon) {
+					this.isBalloon = true;
+					this.primaryBalloonOffset = tile.primaryBalloonOffset;
+				}
+			}
+		}
+		
+		bool coveredA = false;
+		bool coveredB = false;
+		bool coveredC = false;
+		bool coveredD = false;
+		
+		for (TileTemplate t : this.templates) {
+			if (t.solid) {
+				coveredA = true;
+				coveredB = true;
+				coveredC = true;
+				coveredD = true;
+				this.solid = true;
+			} else {
+				coveredA = coveredA || t.coveredA;
+				coveredB = coveredB || t.coveredB;
+				coveredC = coveredC || t.coveredC;
+				coveredD = coveredD || t.coveredD;
+			}
+		}
+		
+		bool leftCovered = coveredA && coveredC;
+		bool rightCovered = coveredB && coveredD;
+		bool topCovered = coveredA && coveredB;
+		bool bottomCovered = coveredC && coveredD;
+		
+		if (leftCovered && rightCovered) {
+			this.collisions.add(new List<int>() { 0, 0, 2, 2 });
+			coveredA = false;
+			coveredB = false;
+			coveredC = false;
+			coveredD = false;
+			this.solid = true;
+		} else if (leftCovered) {
+			this.collisions.add(new List<int>() { 0, 0, 1, 2 });
+			coveredA = false;
+			coveredC = false;
+		} else if (rightCovered) {
+			this.collisions.add(new List<int>() { 1, 0, 1, 2 });
+			coveredB = false;
+			coveredD = false;
+		} else if (topCovered) {
+			this.collisions.add(new List<int>() { 0, 0, 2, 1 });
+			coveredA = false;
+			coveredB = false;
+		} else if (bottomCovered) {
+			this.collisions.add(new List<int>() { 0, 1, 2, 1 });
+			coveredC = false;
+			coveredD = false;
+		}
+		
+		if (coveredA)
+			this.collisions.add(new List<int>() { 0, 0, 1, 1 });
+		if (coveredB)
+			this.collisions.add(new List<int>() { 1, 0, 1, 1 });
+		if (coveredC)
+			this.collisions.add(new List<int>() { 0, 1, 1, 1 });
+		if (coveredD)
+			this.collisions.add(new List<int>() { 1, 1, 1, 1 });
+		
+		for (int i = 0; i < this.collisions.length; ++i) {
+			List<int> c = this.collisions[i];
+			c[0] = c[0] * 8 + col * 16;
+			c[1] = c[1] * 8 + row * 16;
+			c[2] = c[0] + c[2] * 8;
+			c[3] = c[1] + c[3] * 8;
+			this.collisions[i] = c;
+		}
+		
+		if (this.solid) {
+			this.isTop = false;
+			this.isLadder = false;
+		}
+	}
+}

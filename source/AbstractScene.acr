@@ -1,0 +1,15 @@
+class LegacyAbstractScene {
+	
+	public LegacyAbstractScene next;
+	public string flags = '';
+	
+	constructor() { 
+		this.next = this;
+	}
+	
+	public void processInput(List<MyEvent> events, Dictionary<string, bool> pressed) { }
+	public void update() { }
+	public void render(int rc) { }
+	
+	public void playMusic() { }
+}

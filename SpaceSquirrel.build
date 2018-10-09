@@ -6,6 +6,7 @@
 	<description>A squirrel terraforms the moon</description>
 	<crayonpath>C:\Things\TwoCans\api</crayonpath>
 	<icon>assets/icon32.png,assets/icon256.png</icon>
+	<programminglanguage>Acrylic</programminglanguage>
 	
 	<imagesheets>
 		<sheet id="twocans_everything">

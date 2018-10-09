@@ -1,0 +1,12 @@
+
+public class MyEvent {
+	public string action;
+	public bool up;
+	public bool down;
+
+	public constructor(string action, bool down)  {
+		this.action = action;
+		this.down = down;
+		this.up = !down;
+	}
+}

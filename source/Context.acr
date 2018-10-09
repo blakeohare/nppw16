@@ -1,0 +1,191 @@
+import Random;
+
+const int FULL_LIFE = 10;
+const int START_LIFE = 10;
+const int START_LIVES = 3;
+
+const string ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+class Context {
+
+	public int lifemeter = START_LIFE;
+	public int lives = START_LIVES;
+	public bool volcanoA = false;
+	public bool volcanoB = false;
+	public bool volcanoC = false;
+	public bool balloonA = false;
+	public bool balloonB = false;
+	public bool balloonC = false;
+	public bool balloonD = false;
+	public bool gravity = false;
+	public bool transmission1 = false;
+	public bool transmission2 = false;
+	public bool transmission3 = false;
+	public bool transmission4 = false;
+	public Dictionary<string, bool> powerupsTaken = new Dictionary<string, bool>();
+	
+	constructor() { }
+	
+	public string convertToPassword() {
+		
+		int count = 0;
+		if (this.balloonA || this.balloonB || this.balloonC || this.balloonD)
+			count = 3;
+		else if (this.volcanoA || this.volcanoB || this.volcanoC)
+			count = 2;
+		else if (this.gravity)
+			count = 1;
+		
+		string password = '';
+		
+		if (count == 1)
+			password = 'A';
+		else if (count == 2)
+			password = 'B';
+		else if (count == 3)
+			password = 'C';
+		else
+			password = this.randomChar(ALPHABET[3:]);
+		
+		if (count >= 1) {
+			if (this.gravity)
+				password += this.randomChar(ALPHABET[:13]);
+			else
+				password += this.randomChar(ALPHABET[13:]);
+		} else {
+			password += this.randomChar(ALPHABET);
+		}
+		
+		if (count >= 2) {
+			int value = (this.volcanoA ? 1 : 0) + (this.volcanoB ? 2 : 0) + (this.volcanoC ? 4 : 0);
+			string letter = (string) Core.chr(value + (int) Core.ord('0'));
+			password += letter;
+		} else {
+			password += this.randomChar('0123456789');
+		}
+		
+		if (count >= 3) {
+			int value = (this.balloonA ? 1 : 0) + (this.balloonB ? 2 : 0) + (this.balloonC ? 4 : 0) + (this.balloonD ? 8 : 0);
+			string letter = (string) Core.chr(value + ((int) Core.ord('A') - 1));
+			password += letter;
+		} else {
+			password += this.randomChar(ALPHABET);
+		}
+		
+		return password;
+	}
+	
+	/*
+	First letter:
+	A - 2nd letter is password, 3rd and 4th are random
+	B - 2nd and 3rd letter are password, 4th is random
+	C - All 3 are used
+	D+ - password is random, no state
+	
+	Second letter when not random
+	<= M - gravity is on
+	>= N - gravity is off
+	
+	Third letter when not random
+	1 - volcanos 1, 0, 0
+	2 - volcanos 0, 1, 0
+	3 - volcanos 1, 1, 0
+	4 - volcanos 0, 0, 1
+	5 - volcanos 1, 0, 1
+	6 - volcanos 0, 1, 1
+	7 - volcanos 1, 1, 1
+	>= 8 - volcanos 0, 0, 0
+	
+	Fourth letter when not random
+	same pattern for volcanos, but for water, also uses letters instead of numbers
+	*/
+	
+	private string randomChar(string characters) {
+		return characters[(int) Random.randomInt(characters.length)];
+	}
+	
+	private string enforceLetter(string letter) {
+		letter = letter.upper();
+		if ((int) Core.ord(letter) < (int) Core.ord('A'))
+			return 'A';
+		if ((int) Core.ord(letter) > (int) Core.ord('Z'))
+			return 'Z';
+		return letter;
+	}
+	
+	private string enforceNumber(string c) {
+		if ((int) Core.ord(c) < (int) Core.ord('0'))
+			return '0';
+		if ((int) Core.ord(c) > (int) Core.ord('9'))
+			return '9';
+		return c;
+	}
+	
+	void convertFromPassword(string password) {
+		string p1 = this.enforceLetter(password[0]);
+		string p2 = this.enforceLetter(password[1]);
+		string p3 = this.enforceNumber(password[2]);
+		string p4 = this.enforceLetter(password[3]);
+		
+		if ('ABC'.contains(p1)) {
+			if ((int) Core.ord(p2) <= (int) Core.ord('M')) {
+				this.gravity = true;
+			}
+		}
+		
+		if ('BC'.contains(p1)) {
+			int value = (int) Core.ord(p3) - (int) Core.ord('1') + 1;
+			this.volcanoA = (value & 1) != 0;
+			this.volcanoB = (value & 2) != 0;
+			this.volcanoC = (value & 4) != 0;
+		}
+		
+		if (p1 == 'C') {
+			int value = (int) Core.ord(p4) - (int) Core.ord('A') + 1;
+			this.balloonA = (value & 1) != 0;
+			this.balloonB = (value & 2) != 0;
+			this.balloonC = (value & 4) != 0;
+			this.balloonD = (value & 8) != 0;
+		}
+		
+		this.lifemeter = START_LIFE;
+		this.lives = START_LIVES;
+	}
+	
+	List<object> getCurrentCountAndType() {
+		int vcount = (this.volcanoA ? 1 : 0) + (this.volcanoB ? 1 : 0) + (this.volcanoC ? 1 : 0);
+		int wcount = (this.balloonA ? 1 : 0) + (this.balloonB ? 1 : 0) + (this.balloonC ? 1 : 0) + (this.balloonD ? 1 : 0);
+		if (this.gravity) {
+			if (vcount == 3) {
+				if (wcount == 4) {
+					return null; // bird seed
+				}
+				return new List<object>() { 'W', wcount };
+			}
+			return new List<object>() { 'V', vcount };
+		}
+		return null; // gravity
+	}
+
+	void adjustHealth(PlayScene scene, int amount) {
+		this.lifemeter += amount;
+		if (this.lifemeter <= 0) {
+			this.lifemeter = 0;
+			scene.next = new DeathOverrideScene(scene, 'collapse');
+		} else {
+			if (amount < 0) {
+				if (this.lifemeter < 4) {
+					playNoise('low_health');
+				} else {
+					playNoise('get_hit');
+				}
+			} else {
+				playNoise('raise_health');
+			}
+		}
+		
+		if (this.lifemeter > 10) {
+			this.lifemeter = 10;
+		}
+	}
+}

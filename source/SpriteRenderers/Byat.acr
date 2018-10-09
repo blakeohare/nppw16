@@ -1,0 +1,31 @@
+import Graphics2D;
+
+public class ByatRenderer : AbstractSpriteRenderer {
+	
+	public constructor(Sprite sprite) : base(sprite) { }
+	
+	public override void render(PlayScene scene, int offsetX, int offsetY, int arc) {
+		Sprite sprite = this.sprite;
+		int left = sprite.x + offsetX - 8;
+		int top = sprite.y + offsetY - 8;
+		string path;
+		if (((ByatAutomation)sprite.automation).perched) {
+			path = 'sprites/byat_hang.png';
+		} else {
+			if ((arc & 1) == 0) {
+				path = 'sprites/byat_fly_1.png';
+			} else {
+				path = 'sprites/byat_fly_2.png';
+			}
+		}
+		
+		GraphicsTexture img;
+		if (sprite.lastDirection == 'left') {
+			img = ImageLibrary.getBackwards(path);
+		} else {
+			img = ImageLibrary.get(path);
+		}
+		
+		img.draw(left, top);
+	}
+}

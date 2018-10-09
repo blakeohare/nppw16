@@ -1,0 +1,76 @@
+import Math;
+import TwoCansAlpha3;
+
+const int FPS = 30;
+const int WIDTH = 800;
+const int HEIGHT = 600;
+
+const int GAME_WIDTH = 256;
+const int GAME_HEIGHT = 224;
+const bool SOUND_ENABLED = false && $var['sound_enabled'];
+
+// Skips intro cutscene
+const bool DEBUG_MODE = false;
+
+class AdapterScene : AbstractScene {
+	
+	private int renderCounter = 0;
+	private Dictionary<string, bool> pressedActions = new Dictionary<string, bool>();
+	private List<MyEvent> events = new List<MyEvent>();
+	private LegacyAbstractScene activeScene;
+	
+	public constructor() : base() {
+		this.activeScene = new TitleScene();
+		
+		for (string action : 'left up down right A B start'.split(' ')) {
+			this.pressedActions[action] = false;
+		}
+	}
+	
+	public override object update(object inputManager, object events) {
+		this.events.clear();
+		for (object eventObj : (List<object>) events) {
+			Event event = (Event)eventObj;
+			bool down = false;
+			string action = null;
+			
+			switch ((int) event.type) {
+				
+				case EventType.KEY:
+					down = event.down;
+					switch ((int) event.key) {
+						case KeyboardKey.ENTER:
+						case KeyboardKey.SPACE:
+							action = 'start';
+							break;
+						case KeyboardKey.A: action = 'A'; break;
+						case KeyboardKey.B: action = 'B'; break;
+						case KeyboardKey.LEFT: action = 'left'; break;
+						case KeyboardKey.RIGHT: action = 'right'; break;
+						case KeyboardKey.UP: action = 'up'; break;
+						case KeyboardKey.DOWN: action = 'down'; break;
+						default: break;
+					}
+					break;
+			}
+			
+			if (action != null) {
+				this.events.add(new MyEvent(action, down));
+				this.pressedActions[action] = down;
+			}
+		}
+		
+		this.activeScene.processInput(this.events, this.pressedActions);
+		this.activeScene.update();
+	}
+	
+	public override object render() {
+		this.activeScene.render(this.renderCounter++);
+		this.activeScene = this.activeScene.next;
+		return null;
+	}
+}
+
+public void main(List<string> args) {
+	TwoCansAlpha3.startGame();
+}

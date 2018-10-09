@@ -1,0 +1,24 @@
+public class PowerupRenderer : AbstractSpriteRenderer {
+	
+	public constructor(Sprite sprite) : base(sprite) { }
+	
+	public override void render(PlayScene scene, int offsetX, int offsetY, int arc) {
+		
+		Sprite sprite = this.sprite;
+		if (((PowerupAutomation)sprite.automation).visible) {
+			int left = sprite.x + offsetX - 8;
+			int top = sprite.y + offsetY - 8;
+			string type = sprite.powerupInfo.type;
+			string path;
+			if (type == '1up') {
+				path = 'sprites/1up.png';
+			} else if (type == 'life_small') {
+				path = 'sprites/life_small.png';
+			} else if (type == 'life_big') {
+				path = 'sprites/life_big.png';
+			}
+			
+			ImageLibrary.get(path).draw(left, top);
+		}
+	}
+}

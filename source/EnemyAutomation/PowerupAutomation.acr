@@ -1,0 +1,54 @@
+class PowerupAutomation : AbstractAutomation {
+	private int counter = 0;
+	public bool visible = true;
+
+	constructor(Sprite sprite) : base(sprite) {
+		this.sprite = sprite;
+	}
+		
+	public override void doStuff(PlayScene scene) {
+		Sprite player = scene.player;
+		if (this.sprite.powerupInfo.id == null) {
+			this.counter++;
+			if (this.counter > 8 * 30) {
+				this.sprite.dead = true;
+			} else if (this.counter > 6 * 30) {
+				this.visible = (this.counter & 1) == 0;
+			}
+		}
+			
+		for (int playerY : new List<int>() { player.y, player.y - 16 }) {
+			int x = player.x;
+			int y = playerY;
+			int dx = this.sprite.x - x;
+			int dy = this.sprite.y - y;
+			if (dx * dx + dy * dy < 12 ** 2) {
+				this.applyPowerup(scene.context);
+			}
+		}
+	}
+	
+	private void applyPowerup(Context context) {
+		this.sprite.dead = true;
+		AbstractPowerupThing info = this.sprite.powerupInfo;
+		string id = info.id;
+		string type = info.type;
+		if (id != null) {
+			context.powerupsTaken[id] = true;
+		}
+		
+		if (type == 'life_small') {
+			playNoise('raise_health');
+			context.lifemeter += 2;
+			if (context.lifemeter > 10) {
+				context.lifemeter = 10;
+			}
+		} else if (type == 'life_big') {
+			playNoise('raise_health');
+			context.lifemeter = 10;
+		} else if (type == '1up') {
+			playNoise('1up');
+			context.lives++;
+		}
+	}
+}

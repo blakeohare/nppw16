@@ -1,0 +1,55 @@
+public List<SpecialLevelStuff> getSpecialLevelStuff(string id, PlayScene scene) {
+	List<SpecialLevelStuff> output = new List<SpecialLevelStuff>();
+	switch (id) {
+		case 'main':
+			output.add(new BalloonPopping(scene, 'water1'));
+			output.add(new BalloonPopping(scene, 'water4'));
+			output.add(new BalloonPopping(scene, 'lava1'));
+			break;
+		case 'ship_1': output.add(new ShipTransmission(scene)); break;
+		case 'grav_core': output.add(new GravityCorePlacement(scene)); break;
+		case 'grav_ascent': output.add(new GravityAscentExit(scene)); break;
+		case 'volcano_1_core': output.add(new VolcanoCoreActivation(scene, 1)); break;
+		case 'volcano_2_core': output.add(new VolcanoCoreActivation(scene, 2)); break;
+		case 'volcano_3_core': output.add(new VolcanoCoreActivation(scene, 3)); break;
+		case 'balloon_2_overland': output.add(new BalloonPopping(scene, 'water2')); break;
+		case 'balloon_3_overland': output.add(new BalloonPopping(scene, 'water3')); break;
+		case 'bike_level': output.add(new BikeLevelStuff(scene)); break;
+		case 'volcano_2_overland': output.add(new BalloonPopping(scene, 'lava2')); break;
+		case 'volcano_3_overland': output.add(new BalloonPopping(scene, 'lava3')); break;
+		case 'birdfeeder': output.add(new BirdFeeder(scene)); break;
+		default: break;
+	}
+	return output;
+}
+
+public class SpecialLevelStuff {
+	protected PlayScene scene;
+	protected Context context;
+	protected List<List<Tile>> tiles;
+	public bool hasUpdate = false;
+	public bool hasPostInit = false;
+	public bool hasDoorTrigger = false;
+	public bool hasRender = false;
+	
+	// TODO: remove these specific hacks
+	public int lavaLevel = 0;
+	public bool shakeScreen = false;
+	public bool freeze = false;
+	
+	constructor(PlayScene scene) {
+		this.scene = scene;
+		this.context = scene.context;
+		this.tiles = scene.tiles;
+	}
+	
+	// override and return None if you want that door to do something special. 
+	// The doorId will be post-swapped.
+	public string doorTrigger(string doorId) {
+		return doorId;
+	}
+	
+	public void update() { }
+	public void postInit() { }
+	public void render(int rc, int offsetX, int offsetY) { }
+}

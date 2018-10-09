@@ -1,0 +1,37 @@
+import Graphics2D;
+
+public class PoofRenderer : AbstractSpriteRenderer {
+	
+	public constructor(Sprite sprite) : base(sprite) { }
+	
+	public override void render(PlayScene scene, int offsetX, int offsetY, int arc) {
+		
+		Sprite sprite = this.sprite;
+		PoofAutomation pa = (PoofAutomation)sprite.automation;
+		bool isBig = pa.isBig;
+		int left = sprite.x + offsetX - 8;
+		int top = sprite.y + offsetY - 8;
+		
+		int c = pa.counter;
+		string num;
+		if (c <= 3) {
+			num = '1';
+		} else if (c <= 6) {
+			num = '2';
+		} else if (c <= 9) {
+			num = '3';
+		} else {
+			return;
+		}
+		
+		GraphicsTexture img;
+		if (isBig) {
+			top -= 16;
+			img = ImageLibrary.get('sprites/large_poof_' + num + '.png');
+		} else {
+			img = ImageLibrary.get('sprites/small_poof_' + num + '.png');
+		}
+		
+		img.draw(left, top);
+	}
+}

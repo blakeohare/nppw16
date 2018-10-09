@@ -1,0 +1,90 @@
+import Graphics2D;
+
+public class TitleScene : LegacyAbstractScene {
+	
+	public int flash_counter = 0;
+	public List<List<string>> options = new List<List<string>>() {
+		"start|Start Game".split('|'),
+		"quickstart|Quick Start".split('|'), // TODO: play intro vs play
+		"password|Enter Password".split('|'),
+	};
+	public int index = 0;
+	
+	constructor() : base() { }
+	
+	public override void processInput(List<MyEvent> events, Dictionary<string, bool> pressedKeys) {
+		for (MyEvent event : events) {
+			if (this.flash_counter < 0) {
+				if (event.down) {
+					switch (event.action) {
+						case 'start':
+						case 'A':
+						case 'B':
+							this.flash_counter = 30;
+							playNoise('menu_select');
+							break;
+						
+						case 'up':
+							if (this.index > 0) {
+								this.index--;
+								playNoise('menu_move');
+							}
+							break;
+						
+						case 'down':
+							if (this.index < 2) {
+								this.index++;
+								playNoise('menu_move');
+							}
+							break;
+							
+						default:
+							break;
+					}
+				}
+			}
+		}
+	}
+	
+	public override void update() {
+		this.flash_counter--;
+		if (this.flash_counter == 1) {
+			string action = this.options[this.index][0];
+			if (action == 'start')
+				this.next = new IntroScene(false);
+			else if (action =='quickstart')
+				this.next = new IntroScene(true);
+			else if (action == 'password')
+				this.next = new PasswordScene();
+			else
+				throw new Exception("Unknown option");
+		}
+	}
+	
+	public override void render(int renderCounter) {
+		JukeBox.ensureSong('title');
+		
+		Graphics2D.Draw.fill(0, 0, 0);
+		
+		ImageLibrary.get('slides/title.png').draw(0, 0);
+		
+		bool showText = true; // (renderCounter // 10) % 3 != 0;
+		if (this.flash_counter > 0)
+			showText = renderCounter % 4 < 2;
+		
+		int index = 0;
+		int y = 136;
+		int left = 64;
+		
+		drawBox(left - 32, y - 16, 24, 9);
+		for (List<string> option : this.options) {
+			if (index == this.index) {
+				drawText(255, 255, 255, ">", left - 16, y);
+			}
+			if (index != this.index || showText)
+				drawText(255, 255, 255, option[1], left, y);
+			index++;
+			y += 16;
+		}
+	}
+}

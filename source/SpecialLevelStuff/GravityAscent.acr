@@ -1,0 +1,15 @@
+
+public class GravityAscentExit : SpecialLevelStuff {
+	
+	public constructor(PlayScene scene) : base(scene) {
+		this.hasDoorTrigger = true;
+	}
+	
+	public override string doorTrigger(string doorId) {
+		if (doorId == 'XXXXX') {
+			this.scene.next = new PlayScene('ship_1', 8, 9, this.scene.context);
+			return null;
+		}
+		return doorId;
+	}
+}
