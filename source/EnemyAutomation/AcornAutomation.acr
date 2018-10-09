@@ -18,11 +18,12 @@ class AcornAutomation : AbstractAutomation {
 	public override void doStuff(PlayScene scene) {
 		this.countdown--;
 		bool walk = false;
-		AcornTopAutomation ata = (AcornTopAutomation) this.top.automation;
+		AcornTopAutomation ata = this.top != null ? (AcornTopAutomation) this.top.automation : null;
 		if (this.mode == 'patrolling') {
 			if (this.countdown <= 0) {
 				this.mode = 'throwing';
 				this.top = new Sprite('acorntop', this.sprite.x, this.sprite.y);
+				ata = (AcornTopAutomation) this.top.automation;
 				this.top.acorntopdir = this.sprite.lastDirection;
 				this.top.goLeft = this.top.acorntopdir == 'left';
 				ata.setGoLeft(this.sprite.lastDirection == 'left');

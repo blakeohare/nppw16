@@ -15,7 +15,10 @@ public class BikeLevelStuff : SpecialLevelStuff {
 	private List<Point> particles = new List<Point>();
 	private int counter = 0;
 	
-	public constructor(PlayScene scene) : base(scene) { }
+	public constructor(PlayScene scene) : base(scene) { 
+		this.hasUpdate = true;
+		this.hasRender = true;
+	}
 		
 	public override void update() {
 		if (this.counter == 0) {

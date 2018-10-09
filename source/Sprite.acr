@@ -142,8 +142,12 @@ public class Sprite {
 				this.automation = new RocketBikeAutomation(this);
 				this.ghost = true;
 				break;
-			default:
+			case 'player_side':
+			case 'player_over':
+				this.renderImpl = new PlayerRenderer(this);
 				break;
+			default:
+				throw new Exception("No sprite info defined for " + type);
 		}
 	}
 	
