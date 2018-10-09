@@ -7,6 +7,7 @@ class DialogDatabaseBuilder {
 		}
 		
 		this.activeBuilder = this.database[name];
+		return this;
 	}
 	
 	public DialogDatabaseBuilder addPage1(string a) {

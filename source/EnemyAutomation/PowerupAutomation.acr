@@ -1,6 +1,6 @@
 class PowerupAutomation : AbstractAutomation {
 	private int counter = 0;
-	private bool visible = true;
+	public bool visible = true;
 
 	constructor(Sprite sprite) : base(sprite) {
 		this.sprite = sprite;

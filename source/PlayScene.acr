@@ -24,7 +24,7 @@ class PlayScene : LegacyAbstractScene {
 	private static List<int> POOR_HEALTH_COLOR = new List<int>() { 255, 128, 128 };
 	
 	public List<object> startArgs;
-	private int updateCounter = 0;
+	public int updateCounter = 0;
 	public Context context;
 	public string id;
 	public bool hasAtmosphere;
@@ -32,20 +32,20 @@ class PlayScene : LegacyAbstractScene {
 	public List<GraphicsTexture> stars;
 	private int runCounter;
 	private string runCounterValidFor;
-	private int cols;
-	private int rows;
+	public int cols;
+	public int rows;
 	private List<List<TileTemplate>> upper;
 	private List<List<TileTemplate>> lower;
-	private bool side;
-	private int lazor_cooldown = 0;
-	private List<List<Tile>> tiles;
+	public bool side;
+	public int lazor_cooldown = 0;
+	public List<List<Tile>> tiles;
 	private Dictionary<string, List<List<string>>> doorSwaps;
 	private int cameraX = 0;
 	private int cameraY = 0;
-	private Sprite player;
-	private List<Sprite> sprites;
-	private Dictionary<string, string> overlayTriggers;
-	private List<SpecialLevelStuff> special;
+	public Sprite player;
+	public List<Sprite> sprites;
+	public Dictionary<string, string> overlayTriggers;
+	public List<SpecialLevelStuff> special;
 	private bool shooting;
 	
 	constructor(string mapId, int startCol, int startRow, Context context) 

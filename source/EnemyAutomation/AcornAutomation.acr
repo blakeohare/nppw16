@@ -7,7 +7,7 @@ const int ACORN_DELAY_FOR_TOP_THROWING = 5 * 30;
 class AcornAutomation : AbstractAutomation {
 	private int countdown;
 	// TODO: replace with enum
-	private string mode = 'patrolling'; // patrolling | throwing | baldpatrolling
+	public string mode = 'patrolling'; // patrolling | throwing | baldpatrolling
 	private Sprite top = null;
 	private bool walkingLeft = true;
 	

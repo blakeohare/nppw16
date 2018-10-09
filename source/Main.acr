@@ -29,7 +29,8 @@ class AdapterScene : AbstractScene {
 	
 	public override object update(object inputManager, object events) {
 		this.events.clear();
-		for (Event event : (List<Event>) events) {
+		for (object eventObj : (List<object>) events) {
+			Event event = (Event)eventObj;
 			bool down = false;
 			string action = null;
 			

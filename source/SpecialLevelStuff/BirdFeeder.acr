@@ -1,6 +1,6 @@
 public class BirdFeeder : SpecialLevelStuff {
 	private int counter = 0;
-	private int seedsLeft;
+	public int seedsLeft;
 	private bool closingShown = false;
 	
 	public constructor(PlayScene scene) : base(scene) {

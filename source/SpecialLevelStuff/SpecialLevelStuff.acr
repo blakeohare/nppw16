@@ -27,15 +27,15 @@ public class SpecialLevelStuff {
 	protected PlayScene scene;
 	protected Context context;
 	protected List<List<Tile>> tiles;
-	protected bool hasUpdate = false;
-	protected bool hasPostInit = false;
-	protected bool hasDoorTrigger = false;
-	protected bool hasRender = false;
+	public bool hasUpdate = false;
+	public bool hasPostInit = false;
+	public bool hasDoorTrigger = false;
+	public bool hasRender = false;
 	
 	// TODO: remove these specific hacks
-	protected int lavaLevel = 0;
-	protected bool shakeScreen = false;
-	protected bool freeze = false;
+	public int lavaLevel = 0;
+	public bool shakeScreen = false;
+	public bool freeze = false;
 	
 	constructor(PlayScene scene) {
 		this.scene = scene;

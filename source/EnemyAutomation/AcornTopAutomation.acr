@@ -4,7 +4,7 @@ const float ACORN_TOP_SPEED = 4.5;
 
 class AcornTopAutomation : AbstractAutomation {
 
-	static List<List<int>> TRAIL = new List<List<int>>();
+	static List<List<float>> TRAIL = new List<List<float>>();
 
 	static constructor() {
 		// this is the best I can come up with off the top of my head. I'm sure there's a faster way to create a parametric function of the acorn top path
@@ -59,7 +59,7 @@ class AcornTopAutomation : AbstractAutomation {
 	private int trailIndex = 0;
 	private float startX;
 	private float startY;
-	private bool completed = false;
+	internal bool completed = false;
 	private bool goLeft = true;
 	private int xSign = 1;
 	private int ySign = 1;

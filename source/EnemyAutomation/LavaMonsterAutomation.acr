@@ -4,7 +4,7 @@ const int WAIT_INTERVAL = FPS * 4;
 class LavaMonsterAutomation : AbstractAutomation {
 	private int counter = 0;
 	private string mode ='wait'; // { wait | rise | shoot | fall }
-	private bool mouthOpen = false;
+	public bool mouthOpen = false;
 	
 	constructor(Sprite sprite) : base(sprite) { }
 	
