@@ -1,5 +1,5 @@
 import Graphics2D;
-import TwoCansAlpha3;
+import TwoCansAlpha4;
 
 public class ImageLibrary {
 	private static Dictionary<string, GraphicsTexture> images = new Dictionary<string, GraphicsTexture>();

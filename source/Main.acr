@@ -1,5 +1,5 @@
 import Math;
-import TwoCansAlpha3;
+import TwoCansAlpha4;
 
 const int FPS = 30;
 const int WIDTH = 800;
@@ -71,6 +71,3 @@ class AdapterScene : AbstractScene {
 	}
 }
 
-public void main(List<string> args) {
-	TwoCansAlpha3.startGame();
-}

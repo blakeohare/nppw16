@@ -1,97 +1,62 @@
-<build>
-	<projectname>SpaceSquirrel</projectname>
-	<title>Space Squirrel</title>
-	<source>source/</source>
-	<output>output/%TARGET_NAME%</output>
-	<description>A squirrel terraforms the moon</description>
-	<crayonpath>C:\Things\TwoCans\api</crayonpath>
-	<icon>assets/icon32.png,assets/icon256.png</icon>
-	<programminglanguage>Acrylic</programminglanguage>
+{
+	"id": "SpaceSquirrel",
+	"title": "Space Squirrel",
+	"source": "source/",
+	"output": "output/%TARGET_NAME%",
+	"description": "A squirrel terraforms the moon",
+	"delegate-main-to": "TwoCansAlpha4",
 	
-	<imagesheets>
-		<sheet id="twocans_everything">
-			<prefix>*</prefix>
-		</sheet>
-	</imagesheets>
+	"deps": [
+		"%TWOCANS_SDK%/TwoCansAlpha4"
+	],
+	"icons": [
+		"assets/icon32.png",
+		"assets/icon256.png"
+	],
+	"programming-language": "Acrylic",
 	
-	<guidseed>com.noisyprotozoa.variousvegetables,v2.0,%TARGET_NAME%</guidseed>
+	"image-sheets": [
+		{
+			"id": "twocans_everything",
+			"prefix": "*"
+		}
+	],
 	
-	<!-- Set your game title here. -->
-    <var type="string">
-      <id>game_title</id>
-      <value>Space Squirrel</value>
-    </var>
-    
-	<!-- The class name of your starting scene. -->
-    <var type="string">
-      <id>initial_scene</id>
-      <value>AdapterScene</value>
-    </var>
-    
-	<!-- Set this value to true to run at 60 fps. Default is 30 fps. -->
-    <var type="boolean">
-      <id>use_60_fps</id>
-      <value>false</value>
-    </var>
+	"version": "2.0",
+	"guidseed": "com.noisyprotozoa.spacesquirrel,%VERSION%,%TARGET_NAME%",
 	
-	<!-- Set this to true to alias the WASD keys to arrow keys -->
-    <var type="boolean">
-      <id>enable_wasd</id>
-      <value>false</value>
-    </var>
+	"vars": [
+		{ "name": "game_title", "value": "Space Squirrel" },
+		{ "name": "initial_scene", "value": "AdapterScene" },
+		{ "name": "use_60_fps", "value": false },
+		{ "name": "enable_wasd", "value": false },
+		{ "name": "sound_enabled", "value": true },
+		{ "name": "game_width", "value": 256 },
+		{ "name": "game_height", "value": 224 }
+	],
 	
-	<var type="boolean">
-		<id>sound_enabled</id>
-		<value>true</value>
-	</var>
-	
-	<var type="int">
-		<id>game_width</id>
-		<value>256</value>
-	</var>
-	<var type="int">
-		<id>game_height</id>
-		<value>224</value>
-	</var>
-	
-	<!-- Targets -->
-	<target name="javascript_crayonlang">
-		<platform>javascript-app-gl</platform>
-		<jsfileprefix>/demos/spacesquirrel/</jsfileprefix>
-	</target>
-	
-	<target name="javascript_noisyprotozoa">
-		<platform>javascript-app-gl</platform>
-		<jsfileprefix>/games/spacesquirrel/</jsfileprefix>
-	</target>
-	
-	<target name="games_browser">
-		<platform>javascript-app-gl</platform>
-		<jsfileprefix>/games/spacesquirrel/</jsfileprefix>
-	</target>
-	
-	<target name="csharp">
-		<platform>csharp-app</platform>
-	</target>
-	
-	<target name="java">
-		<platform>java-app</platform>
-		<var type="boolean">
-			<id>sound_enabled</id>
-			<value>false</value>
-		</var>
-	</target>
-	
-	<target name="python">
-		<platform>python-app</platform>
-	</target>
-	
-	<target name="android">
-		<platform>java-app-android</platform>
-		<orientation>landscape</orientation>
-		<var type="boolean">
-			<id>sound_enabled</id>
-			<value>false</value>
-		</var>
-	</target>
-</build>
+	"targets": [
+		{
+			"name": "csharp",
+			"platform": "csharp-app"
+		},
+		{
+			"name": "java",
+			"platform": "java-app",
+			"vars": [ { "name": "sound_enabled", "value": false } ]
+		},
+		{
+			"name": "python",
+			"platform": "python-app"
+		},
+		{
+			"name": "android",
+			"platform": "javascript-app-android",
+			"vars": [ { "name": "sound_enabled", "value": false } ]
+		},
+		{
+			"name": "javascript",
+			"platform": "javascript-app"
+		}
+	]
+}

@@ -1,6 +1,6 @@
 import Graphics2D;
 import Math;
-import TwoCansAlpha3;
+import TwoCansAlpha4;
 
 const string cred_BO = "BLAKE O'HARE";
 const string cred_TB = "TED BURTON";
