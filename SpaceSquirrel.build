@@ -32,7 +32,8 @@
 		{ "name": "enable_wasd", "value": false },
 		{ "name": "sound_enabled", "value": true },
 		{ "name": "game_width", "value": 256 },
-		{ "name": "game_height", "value": 224 }
+		{ "name": "game_height", "value": 224 },
+		{ "name": "thumbnail", "value": "assets/thumbnail.jpg" }
 	],
 	
 	"targets": [
